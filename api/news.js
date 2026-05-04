@@ -23,20 +23,30 @@ export default async function handler(req, res) {
 
   // ── FUENTE 1: Noticias Dominicanas (RSS) ──
   const dominicanFeeds = [
-    { url: 'https://listindiario.com/rss.xml',       name: 'Listín Diario' },
-    { url: 'https://www.diariolibre.com/rss',        name: 'Diario Libre' },
-    { url: 'https://www.elcaribe.com.do/feed/',      name: 'El Caribe' },
-    { url: 'https://acento.com.do/feed/',            name: 'Acento' },
-    { url: 'https://www.noticiassin.com/feed/',      name: 'Noticias SIN' },
-    { url: 'https://eldiariony.com/feed/',           name: 'El Diario NY' },
-    { url: 'https://deultimominuto.net/feed/',       name: 'De Último Minuto' },
+    // Medios principales RD
+    { url: 'https://listindiario.com/rss.xml',              name: 'Listín Diario' },
+    { url: 'https://www.diariolibre.com/rss',               name: 'Diario Libre' },
+    { url: 'https://www.elcaribe.com.do/feed/',             name: 'El Caribe' },
+    { url: 'https://acento.com.do/feed/',                   name: 'Acento' },
+    { url: 'https://www.noticiassin.com/feed/',             name: 'Noticias SIN' },
+    { url: 'https://deultimominuto.net/feed/',              name: 'De Último Minuto' },
+    // Medios adicionales RD
+    { url: 'https://www.eldinero.com.do/feed/',             name: 'El Dinero' },
+    { url: 'https://www.hoy.com.do/feed/',                  name: 'Hoy Digital' },
+    { url: 'https://almomento.net/feed/',                   name: 'Al Momento' },
+    { url: 'https://www.eldia.com.do/feed/',                name: 'El Día' },
+    { url: 'https://www.n.com.do/feed/',                    name: 'Noticias N' },
+    { url: 'https://www.elcaballito.net/feed/',             name: 'El Caballito' },
+    // Dominicanos en el exterior
+    { url: 'https://eldiariony.com/feed/',                  name: 'El Diario NY' },
+    { url: 'https://www.diariolasamericas.com/rss.xml',     name: 'Diario Las Américas' },
   ];
 
   for (const feed of dominicanFeeds) {
     try {
       const r = await fetch(feed.url, {
         headers: { 'User-Agent': 'Mozilla/5.0 (compatible; AhoraNews/1.0)' },
-        signal: AbortSignal.timeout(5000)
+        signal: AbortSignal.timeout(4000)
       });
       const xml = await r.text();
       const items = xml.match(/<item>([\s\S]*?)<\/item>/g) || [];
