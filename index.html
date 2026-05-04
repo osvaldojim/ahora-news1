@@ -7,7 +7,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg:#06070b; --s1:#0c0d13; --s2:#13141b; --s3:#1a1c24; --s4:#22242e;
+  --bg:#0e0f14; --s1:#13141b; --s2:#1a1b24; --s3:#1a1c24; --s4:#22242e;
   --red:#e8192c; --red2:#ff3347;
   --gold:#f5a623; --blue:#2d9cdb; --green:#00c98d;
   --tx:#f0ece2; --mu:#686878; --mu2:#3a3a4a;
@@ -81,13 +81,13 @@ nav{background:rgba(6,7,11,.97);backdrop-filter:blur(20px);border-bottom:1px sol
 .mini p{font-size:11px;color:var(--mu);line-height:1.5;position:relative;z-index:1;}
 
 /* MAIN */
-.wrap{max-width:1360px;margin:0 auto;padding:44px 36px;}
-.layout{display:block;width:100%;}
+.wrap{max-width:1380px;margin:0 auto;padding:36px 32px;}
+.layout{display:block;width:100%;max-width:1360px;margin:0 auto;}
 .sec-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.05em;display:flex;align-items:center;gap:10px;margin-bottom:22px;}
 .sec-title::before{content:'';width:4px;height:24px;background:var(--red);border-radius:2px;display:block;}
 
 /* CARD GRID */
-.grid{display:grid;grid-template-columns:1fr;gap:20px;}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
 .card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;overflow:hidden;display:flex;flex-direction:row;transition:transform .3s,border-color .3s,box-shadow .3s;min-height:220px;}
 .card:hover{transform:translateY(-4px);border-color:rgba(232,25,44,.28);box-shadow:0 20px 55px rgba(0,0,0,.55);}
 .card.new-card{animation:newPop .5s ease;}
@@ -230,14 +230,22 @@ footer{background:var(--s1);border-top:1px solid var(--bd);padding:28px 36px;mar
   .hero{grid-template-columns:1fr;}
   .hero-stack{display:none;}
   .layout{grid-template-columns:1fr;}
-  .grid{grid-template-columns:1fr;}
+  .grid{grid-template-columns:repeat(2,1fr);}
   nav{padding:0 16px;}
   .nav-links{display:none;}
   .wrap{padding:24px 16px;}
   .statsbar{padding:10px 16px;}
   .art-body,.cmts{padding-left:18px;padding-right:18px;}
 }
-</style>
+
+/* Loading skeleton */
+.skeleton{background:linear-gradient(90deg,var(--s2) 25%,var(--s3) 50%,var(--s2) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
+@keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+.skel-img{width:100%;height:220px;border-radius:0;}
+.skel-title{height:20px;border-radius:4px;margin:12px 16px 8px;}
+.skel-text{height:14px;border-radius:4px;margin:0 16px 6px;width:85%;}
+.skel-text2{height:14px;border-radius:4px;margin:0 16px 20px;width:65%;}
+.fcat{background:var(--s3);color:var(--mu);border:1px solid var(--bd);padding:5px 13px;border-radius:20px;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;transition:.2s;}.fcat:hover{border-color:var(--red);color:var(--tx);}.fcat.on{background:var(--red);color:#fff;border-color:var(--red);}</style>
 </head>
 <body>
 
@@ -270,7 +278,7 @@ footer{background:var(--s1);border-top:1px solid var(--bd);padding:28px 36px;mar
   </ul>
   <div class="nav-right">
     <div class="ai-pill">🤖 IA ACTIVA</div>
-    <div class="live-pill"><div class="ldot"></div>EN VIVO</div>
+    <div class="live-pill"><div class="ldot"></div>IA ACTIVA</div>
   </div>
 </nav>
 
@@ -309,21 +317,20 @@ footer{background:var(--s1);border-top:1px solid var(--bd);padding:28px 36px;mar
 <div class="wrap">
   <div class="layout">
     <!-- STATUS BAR -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
       <div class="sec-title">Últimas Noticias</div>
-      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
-        <div style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);"><span class="status-dot"></span>Online 24/7</div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);">Publicadas hoy: <b style="color:var(--gold)" id="aiN">0</b></div>
-        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);">Próximo ciclo: <b style="color:var(--gold)" id="nextCycle">40s</b></div>
-        <div style="display:flex;gap:6px;">
-          <button onclick="filterCat('',this)" style="background:var(--red);color:#fff;border:none;padding:5px 14px;border-radius:20px;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;" class="filter-active">Todo</button>
-          <button onclick="filterCat('Tecnología',this)" style="background:var(--s3);color:var(--mu);border:none;padding:5px 14px;border-radius:20px;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;">Tech</button>
-          <button onclick="filterCat('Deportes',this)" style="background:var(--s3);color:var(--mu);border:none;padding:5px 14px;border-radius:20px;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;">Deportes</button>
-          <button onclick="filterCat('Economía',this)" style="background:var(--s3);color:var(--mu);border:none;padding:5px 14px;border-radius:20px;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;">Economía</button>
-        </div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);margin-right:8px;"><span class="status-dot"></span>Motor IA activo</div>
+        <button onclick="filterCat('',this)" class="fcat on">Todo</button>
+        <button onclick="filterCat('Política',this)" class="fcat">Política</button>
+        <button onclick="filterCat('Economía',this)" class="fcat">Economía</button>
+        <button onclick="filterCat('Tecnología',this)" class="fcat">Tech</button>
+        <button onclick="filterCat('Deportes',this)" class="fcat">Deportes</button>
+        <button onclick="filterCat('Ciencia',this)" class="fcat">Ciencia</button>
+        <button onclick="filterCat('Mundo',this)" class="fcat">Mundo</button>
       </div>
     </div>
-    <div class="grid" id="newsGrid"><div style="grid-column:span 3;text-align:center;padding:40px;color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:13px;">Cargando noticias reales...</div></div>
+    <div class="grid" id="newsGrid"><div class="card"><div class="card-img-wrap"><div class="skeleton skel-img"></div></div><div class="card-body"><div class="skeleton skel-title"></div><div class="skeleton skel-text"></div><div class="skeleton skel-text2"></div></div></div><div class="card"><div class="card-img-wrap"><div class="skeleton skel-img"></div></div><div class="card-body"><div class="skeleton skel-title"></div><div class="skeleton skel-text"></div><div class="skeleton skel-text2"></div></div></div><div class="card"><div class="card-img-wrap"><div class="skeleton skel-img"></div></div><div class="card-body"><div class="skeleton skel-title"></div><div class="skeleton skel-text"></div><div class="skeleton skel-text2"></div></div></div><div class="card"><div class="card-img-wrap"><div class="skeleton skel-img"></div></div><div class="card-body"><div class="skeleton skel-title"></div><div class="skeleton skel-text"></div><div class="skeleton skel-text2"></div></div></div><div class="card"><div class="card-img-wrap"><div class="skeleton skel-img"></div></div><div class="card-body"><div class="skeleton skel-title"></div><div class="skeleton skel-text"></div><div class="skeleton skel-text2"></div></div></div><div class="card"><div class="card-img-wrap"><div class="skeleton skel-img"></div></div><div class="card-body"><div class="skeleton skel-title"></div><div class="skeleton skel-text"></div><div class="skeleton skel-text2"></div></div></div></div>
   </div>
 </div>
 
@@ -511,6 +518,7 @@ function renderTrends() {
 function filterCat(cat, el) {
   activeFilter = cat;
   document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('on');});
+  document.querySelectorAll('.fcat').forEach(function(b){b.classList.remove('on');});
   if (el) el.classList.add('on');
   renderGrid();
   return false;
@@ -626,10 +634,8 @@ function updateTicker(articles) {
 // STATS
 // ══════════════════════════════════════
 function updateStats() {
-  document.getElementById('sn').textContent = (countPublished + Math.floor(Date.now()/60000) % 100).toLocaleString();
-  document.getElementById('su').textContent = (14000 + Math.floor(Math.random()*3000)).toLocaleString();
-  document.getElementById('sl').textContent = NEWS.reduce(function(a,n){return a+n.likes;},0).toLocaleString();
-  document.getElementById('aiN').textContent = countPublished.toLocaleString();
+  var aiEl = document.getElementById('aiN');
+  if(aiEl) aiEl.textContent = countPublished.toLocaleString();
 }
 
 function updateLastTime() {
@@ -686,10 +692,7 @@ setInterval(function(){
 }, REFRESH_MS);
 
 // Live readers counter
-setInterval(function(){
-  var e=document.getElementById('su');
-  if(e) e.textContent=Math.max(14000,parseInt(e.textContent.replace(/,/g,''))+Math.floor(Math.random()*7-3)).toLocaleString();
-},3500);
+// Live counter removed - no fake stats
 
 // ══════════════════════════════════════
 // INIT
