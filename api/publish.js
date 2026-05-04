@@ -1,77 +1,64 @@
-// api/publish.js
-// Este endpoint recibe noticias desde Make.com y las guarda
-// Make.com → Claude reescribe → llama este endpoint → aparece en ahoranews.news
-
-// Almacenamiento en memoria (persiste mientras Vercel no reinicia)
-// Para producción real usar una base de datos como Supabase o Airtable
 let publishedArticles = [];
-
 const SECRET_KEY = process.env.PUBLISH_SECRET || 'ahoranews2026';
 
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // Handle CORS preflight
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  // ── GET: Devuelve los artículos publicados ──
   if (req.method === 'GET') {
-    return res.status(200).json({
-      articles: publishedArticles.slice(0, 20), // Últimos 20
-      total: publishedArticles.length
-    });
+    return res.status(200).json({ articles: publishedArticles.slice(0, 20), total: publishedArticles.length });
   }
 
-  // ── POST: Recibe y guarda un artículo nuevo ──
   if (req.method === 'POST') {
-    // Verificar clave secreta
     const auth = req.headers['authorization'] || req.body?.secret;
     if (auth !== SECRET_KEY && auth !== `Bearer ${SECRET_KEY}`) {
       return res.status(401).json({ error: 'No autorizado' });
     }
 
-    const { titulo, contenido, categoria, instagram, tiktok, imagen } = req.body;
+    // El texto completo de Claude viene en titulo o contenido
+    const rawText = req.body?.titulo || req.body?.contenido || '';
 
-    if (!titulo || !contenido) {
-      return res.status(400).json({ error: 'Título y contenido son requeridos' });
+    // Extraer partes del formato que Claude devuelve
+    function extract(text, key) {
+      const patterns = [
+        new RegExp(key + ':\\s*(.+?)(?=\\n[A-ZÁÉÍÓÚ]+:|$)', 'si'),
+        new RegExp('\\*\\*' + key + '\\*\\*:?\\s*(.+?)(?=\\n\\*\\*[A-Z]|$)', 'si'),
+      ];
+      for (const p of patterns) {
+        const m = text.match(p);
+        if (m && m[1]) return m[1].trim();
+      }
+      return null;
     }
 
-    // Crear artículo
+    const titulo    = extract(rawText, 'TÍTULO') || extract(rawText, 'TITULO') || 'Noticia de AHORA.news';
+    const contenido = extract(rawText, 'CONTENIDO') || rawText.slice(0, 800) || '';
+    const categoria = extract(rawText, 'CATEGORÍA') || extract(rawText, 'CATEGORIA') || req.body?.categoria || 'Mundo';
+    const instagram = extract(rawText, 'INSTAGRAM') || '';
+    const tiktok    = extract(rawText, 'TIKTOK') || '';
+
     const article = {
       id: Date.now(),
-      title: titulo,
-      description: contenido.slice(0, 200) + '...',
-      content: contenido,
-      category: categoria || 'Mundo',
-      urlToImage: imagen || getCategoryImage(categoria),
+      title: titulo.replace(/\*\*/g, '').trim(),
+      description: contenido.slice(0, 200).replace(/\*\*/g, '') + '...',
+      content: contenido.replace(/\*\*/g, ''),
+      category: categoria.replace(/\*\*/g, '').trim(),
+      urlToImage: getCategoryImage(categoria),
       publishedAt: new Date().toISOString(),
       source: { name: 'Redacción AHORA.news' },
-      instagram: instagram || '',
-      tiktok: tiktok || '',
+      instagram, tiktok,
       isDominican: true,
-      isEditorPick: true, // Marca especial para noticias del editor
+      isEditorPick: true,
       url: '#'
     };
 
-    // Guardar al inicio de la lista (más reciente primero)
     publishedArticles.unshift(article);
+    if (publishedArticles.length > 50) publishedArticles = publishedArticles.slice(0, 50);
 
-    // Mantener máximo 50 artículos en memoria
-    if (publishedArticles.length > 50) {
-      publishedArticles = publishedArticles.slice(0, 50);
-    }
-
-    console.log('✅ Artículo publicado:', titulo);
-
-    return res.status(200).json({
-      success: true,
-      message: 'Artículo publicado en AHORA.news',
-      article: article
-    });
+    console.log('✅ Publicado:', article.title);
+    return res.status(200).json({ success: true, article });
   }
 
   return res.status(405).json({ error: 'Método no permitido' });
