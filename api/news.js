@@ -8,56 +8,102 @@ export default async function handler(req, res) {
 
   const allArticles = [];
 
-  // ── FUENTE 1: NewsAPI ──
+  // ── FUENTE 1: Noticias Dominicanas (RSS) ──
+  const dominicanFeeds = [
+    { url: 'https://listindiario.com/rss.xml',       name: 'Listín Diario' },
+    { url: 'https://www.diariolibre.com/rss',        name: 'Diario Libre' },
+    { url: 'https://www.elcaribe.com.do/feed/',      name: 'El Caribe' },
+    { url: 'https://acento.com.do/feed/',            name: 'Acento' },
+    { url: 'https://www.noticiassin.com/feed/',      name: 'Noticias SIN' },
+    { url: 'https://eldiariony.com/feed/',           name: 'El Diario NY' },
+    { url: 'https://deultimominuto.net/feed/',       name: 'De Último Minuto' },
+  ];
+
+  for (const feed of dominicanFeeds) {
+    try {
+      const r = await fetch(feed.url, {
+        headers: { 'User-Agent': 'Mozilla/5.0 (compatible; AhoraNews/1.0)' }
+      });
+      const xml = await r.text();
+      const items = xml.match(/<item>([\s\S]*?)<\/item>/g) || [];
+      for (const item of items.slice(0, 5)) {
+        const title       = (item.match(/<title><!\[CDATA\[(.*?)\]\]><\/title>/) || item.match(/<title>(.*?)<\/title>/))?.[1] || '';
+        const description = (item.match(/<description><!\[CDATA\[(.*?)\]\]><\/description>/) || item.match(/<description>(.*?)<\/description>/))?.[1] || '';
+        const link        = (item.match(/<link>(.*?)<\/link>/) || item.match(/<guid>(.*?)<\/guid>/))?.[1] || '';
+        const pubDate     = item.match(/<pubDate>(.*?)<\/pubDate>/)?.[1] || new Date().toISOString();
+        const imgMatch    = item.match(/url="(https?:\/\/[^"]+\.(jpg|jpeg|png|webp)[^"]*)"/i)
+                         || item.match(/<media:content[^>]+url="([^"]+)"/i)
+                         || item.match(/<enclosure[^>]+url="([^"]+)"/i);
+        const img         = imgMatch?.[1] || '';
+        if (!title || title.length < 10) continue;
+        const cleanDesc = description.replace(/<[^>]*>/g, '').trim().slice(0, 300);
+        allArticles.push({
+          title, description: cleanDesc, content: cleanDesc,
+          url: link, urlToImage: img,
+          publishedAt: new Date(pubDate).toISOString(),
+          source: { name: feed.name }, isDominican: true
+        });
+      }
+    } catch(e) { console.warn(`RSS ${feed.name}:`, e.message); }
+  }
+
+  // ── FUENTE 2: NewsAPI ──
   if (NEWSAPI_KEY) {
     try {
       const topics = ['world breaking news', 'politics economy crisis', 'technology science'];
       const reqs = topics.map(q =>
-        fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(q)}&sortBy=publishedAt&pageSize=10&language=en&apiKey=${NEWSAPI_KEY}`)
+        fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(q)}&sortBy=publishedAt&pageSize=8&language=en&apiKey=${NEWSAPI_KEY}`)
           .then(r => r.json()).catch(() => ({ articles: [] }))
       );
       const results = await Promise.all(reqs);
       for (const r of results) {
         for (const a of (r.articles || [])) {
           if (!a.title || a.title === '[Removed]' || !a.urlToImage) continue;
-          if (/^\d{2}\/\d{2}\/\d{4}/.test(a.title) || a.title.includes('five minute') || a.title.includes('bulletin')) continue;
-          allArticles.push({ title:a.title, description:a.description||'', content:a.content||'', url:a.url, urlToImage:a.urlToImage, publishedAt:a.publishedAt, source:{name:a.source?.name||'NewsAPI'} });
+          if (/^\d{2}\/\d{2}\/\d{4}/.test(a.title) || /five minute|bulletin/.test(a.title)) continue;
+          allArticles.push({
+            title: a.title, description: a.description||'', content: a.content||'',
+            url: a.url, urlToImage: a.urlToImage, publishedAt: a.publishedAt,
+            source: { name: a.source?.name||'NewsAPI' }, isDominican: false
+          });
         }
       }
     } catch(e) { console.warn('NewsAPI:', e.message); }
   }
 
-  // ── FUENTE 2: GNews ──
+  // ── FUENTE 3: GNews ──
   if (GNEWS_KEY) {
     try {
       const topics = ['world','business','technology','sports','science'];
       const reqs = topics.map(t =>
-        fetch(`https://gnews.io/api/v4/top-headlines?topic=${t}&lang=en&max=5&apikey=${GNEWS_KEY}`)
+        fetch(`https://gnews.io/api/v4/top-headlines?topic=${t}&lang=en&max=4&apikey=${GNEWS_KEY}`)
           .then(r => r.json()).catch(() => ({ articles: [] }))
       );
       const results = await Promise.all(reqs);
       for (const r of results) {
         for (const a of (r.articles || [])) {
           if (!a.title || !a.image) continue;
-          allArticles.push({ title:a.title, description:a.description||'', content:a.content||'', url:a.url, urlToImage:a.image, publishedAt:a.publishedAt, source:{name:a.source?.name||'GNews'} });
+          allArticles.push({
+            title: a.title, description: a.description||'', content: a.content||'',
+            url: a.url, urlToImage: a.image, publishedAt: a.publishedAt,
+            source: { name: a.source?.name||'GNews' }, isDominican: false
+          });
         }
       }
     } catch(e) { console.warn('GNews:', e.message); }
   }
 
-  // ── FUENTE 3: Currents API ──
+  // ── FUENTE 4: Currents API ──
   if (CURRENTS_KEY) {
     try {
-      const reqs = [
-        fetch(`https://api.currentsapi.services/v1/latest-news?language=en&apiKey=${CURRENTS_KEY}`).then(r=>r.json()).catch(()=>({news:[]})),
-        fetch(`https://api.currentsapi.services/v1/search?keywords=world+politics&language=en&apiKey=${CURRENTS_KEY}`).then(r=>r.json()).catch(()=>({news:[]}))
-      ];
-      const results = await Promise.all(reqs);
-      for (const r of results) {
-        for (const a of (r.news || [])) {
-          if (!a.title || !a.image || a.image === 'None') continue;
-          allArticles.push({ title:a.title, description:a.description||'', content:a.description||'', url:a.url, urlToImage:a.image, publishedAt:a.published, source:{name:a.author||'Currents'} });
-        }
+      const r = await fetch(`https://api.currentsapi.services/v1/latest-news?language=en&apiKey=${CURRENTS_KEY}`)
+        .then(r=>r.json()).catch(()=>({news:[]}));
+      for (const a of (r.news || [])) {
+        if (!a.title || !a.image || a.image === 'None') continue;
+        allArticles.push({
+          title: a.title, description: a.description||'', content: a.description||'',
+          url: a.url, urlToImage: a.image, publishedAt: a.published,
+          source: { name: a.author||'Currents' }, isDominican: false
+        });
       }
     } catch(e) { console.warn('Currents:', e.message); }
   }
@@ -83,19 +129,20 @@ export default async function handler(req, res) {
     unique.push(a);
   }
 
-  // ── RANKING DE RELEVANCIA ──
-  const trusted = ['reuters','associated press','ap ','bbc','cnn','bloomberg','guardian','nytimes','washington post','al jazeera','france 24','abc news','nbc news','cbs news'];
-  const impact  = ['breaking','war','killed','dead','crisis','attack','explosion','emergency','historic','record','major','summit','election','president','collapse','arrest','disaster'];
+  // ── RANKING ──
+  const trusted = ['listín diario','listindiario','diario libre','el caribe','acento','noticias sin','de último minuto','reuters','associated press','bbc','cnn','bloomberg','guardian'];
+  const impact  = ['breaking','muerto','matan','crisis','ataque','explosión','histórico','record','elecciones','presidente','colapso','arresto','desastre','guerra','killed','dead','attack','disaster'];
   const now = Date.now();
 
   const scored = unique.map(a => {
     let score = 0;
     const text = ((a.title||'')+' '+(a.description||'')).toLowerCase();
     const src  = (a.source?.name||'').toLowerCase();
-    if (trusted.some(s => src.includes(s))) score += 35;
-    if (a.urlToImage?.startsWith('https'))  score += 15;
-    if ((a.title?.length||0) > 50)          score += 10;
-    if ((a.description?.length||0) > 100)   score += 10;
+    if (a.isDominican) score += 40;
+    if (trusted.some(s => src.includes(s))) score += 30;
+    if (a.urlToImage?.startsWith('https')) score += 15;
+    if ((a.title?.length||0) > 40) score += 10;
+    if ((a.description?.length||0) > 80) score += 10;
     const hours = (now - new Date(a.publishedAt).getTime()) / 3600000;
     if      (hours < 2)  score += 35;
     else if (hours < 6)  score += 25;
@@ -103,71 +150,77 @@ export default async function handler(req, res) {
     else if (hours < 24) score += 8;
     else                 score -= 10;
     score += impact.filter(w => text.includes(w)).length * 6;
-    if (/five minute|bulletin|podcast|newsletter|subscribe/.test(text)) score -= 60;
-    score += Math.random() * 4;
+    if (/five minute|bulletin|podcast|newsletter/.test(text)) score -= 60;
+    score += Math.random() * 5;
     return { ...a, score, category: detectCategory(a) };
   });
 
   scored.sort((a,b) => b.score - a.score);
 
-  const top12 = [];
+  // Top 12 — mínimo 4 dominicanas
+  const final = [];
   const srcCount = {};
-  for (const a of scored) {
+  let domCount = 0;
+
+  for (const a of scored.filter(a => a.isDominican)) {
+    if (domCount >= 4) break;
     const src = a.source?.name || 'x';
     srcCount[src] = (srcCount[src]||0) + 1;
-    if (srcCount[src] <= 3) top12.push(a);
-    if (top12.length >= 12) break;
+    if (srcCount[src] <= 2) { final.push(a); domCount++; }
+  }
+  for (const a of scored.filter(a => !a.isDominican)) {
+    if (final.length >= 12) break;
+    const src = a.source?.name || 'x';
+    srcCount[src] = (srcCount[src]||0) + 1;
+    if (srcCount[src] <= 3) final.push(a);
   }
 
-  // ── TRADUCCIÓN GRATIS con MyMemory API ──
-  // Sin registro, sin tarjeta — 5000 palabras/día gratis
+  // ── TRADUCCIÓN gratis con MyMemory ──
   async function translate(text) {
     if (!text || text.length < 3) return text;
     try {
-      const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.slice(0,500))}&langpair=en|es`;
-      const r = await fetch(url);
+      const r = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(text.slice(0,500))}&langpair=en|es`);
       const d = await r.json();
-      if (d.responseStatus === 200 && d.responseData?.translatedText) {
-        return d.responseData.translatedText;
-      }
+      if (d.responseStatus === 200 && d.responseData?.translatedText) return d.responseData.translatedText;
       return text;
     } catch(e) { return text; }
   }
 
-  // Traducir títulos y descripciones en paralelo
-  const translatePromises = top12.map(a => Promise.all([
-    translate(a.title),
-    translate(a.description)
-  ]));
-
+  const translatePromises = final.map(a =>
+    a.isDominican
+      ? Promise.resolve([a.title, a.description])
+      : Promise.all([translate(a.title), translate(a.description)])
+  );
   const translated = await Promise.all(translatePromises);
 
-  const final = top12.map((a, i) => ({
-    title:         translated[i][0] || a.title,
-    titleOriginal: a.title,
-    description:   translated[i][1] || a.description,
-    content:       a.content,
-    url:           a.url,
-    urlToImage:    a.urlToImage,
-    publishedAt:   a.publishedAt,
-    source:        a.source,
-    category:      a.category,
+  const output = final.map((a, i) => ({
+    title:          translated[i][0] || a.title,
+    titleOriginal:  a.title,
+    description:    translated[i][1] || a.description,
+    content:        a.content,
+    url:            a.url,
+    urlToImage:     a.urlToImage,
+    publishedAt:    a.publishedAt,
+    source:         a.source,
+    category:       a.category,
+    isDominican:    a.isDominican,
     relevanceScore: Math.round(a.score)
   }));
 
   res.status(200).json({
-    articles: final,
-    total: final.length,
-    sources: { newsapi:!!NEWSAPI_KEY, gnews:!!GNEWS_KEY, currents:!!CURRENTS_KEY, translation:'MyMemory (gratis)' }
+    articles: output,
+    total: output.length,
+    dominican: output.filter(a=>a.isDominican).length,
+    international: output.filter(a=>!a.isDominican).length
   });
 }
 
 function detectCategory(a) {
   const t = ((a.title||'')+(a.description||'')).toLowerCase();
-  if (/sport|football|soccer|nba|nfl|tennis|golf|olympic|league|championship/.test(t)) return 'Deportes';
-  if (/tech|ai |apple|google|microsoft|software|iphone|robot|cyber|elon|openai/.test(t)) return 'Tecnología';
-  if (/econom|stock|market|inflation|bank|dollar|trade|gdp|fed |crypto|bitcoin/.test(t)) return 'Economía';
-  if (/science|nasa|space|climate|health|medicine|virus|cancer|research|discovery/.test(t)) return 'Ciencia';
-  if (/politic|election|president|government|congress|senate|vote|minister|trump/.test(t)) return 'Política';
+  if (/deporte|sport|fútbol|football|béisbol|baseball|nba|nfl|liga|torneo|campeón|pelota/.test(t)) return 'Deportes';
+  if (/tecnolog|tech|apple|google|microsoft|ia |inteligencia artificial|software|iphone|robot/.test(t)) return 'Tecnología';
+  if (/econom|bolsa|mercado|inflaci|banco|dólar|finanz|pib|impuesto|remesa|turismo/.test(t)) return 'Economía';
+  if (/ciencia|nasa|espacio|salud|medicina|vacuna|virus|investigaci|descubri|clima/.test(t)) return 'Ciencia';
+  if (/polít|elecci|presidente|gobierno|congreso|senado|voto|ministro|abinader|partido/.test(t)) return 'Política';
   return 'Mundo';
 }
