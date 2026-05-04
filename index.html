@@ -261,7 +261,18 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;margin-
   .hero-img-wrap img,.hero-img-ph{height:200px;}
   .section-filters{display:none;}
 }
+
+/* MONETIZATION - Ad spaces */
+.ad-banner{background:#f9f9f9;border:1px solid var(--border);text-align:center;padding:16px;margin:20px 0;min-height:90px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:12px;letter-spacing:.05em;}
+.ad-sidebar{background:#f9f9f9;border:1px solid var(--border);text-align:center;padding:12px;min-height:250px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:12px;letter-spacing:.05em;margin-bottom:20px;}
+.ad-label{font-size:9px;color:#bbb;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px;}
 </style>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<meta http-equiv="x-dns-prefetch-control" content="on">
+<link rel="dns-prefetch" href="//api.mymemory.translated.net">
+<link rel="dns-prefetch" href="//newsapi.org">
+<link rel="dns-prefetch" href="//gnews.io">
 </head>
 <body>
 
@@ -348,6 +359,16 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;margin-
   </div>
 </div>
 
+<!-- AD BANNER -->
+<div style="max-width:1240px;margin:12px auto;padding:0 20px;">
+  <div class="ad-banner">
+    <div><span class="ad-label">Publicidad</span>
+    <!-- AQUI VA TU CODIGO DE GOOGLE ADSENSE -->
+    📢 Espacio publicitario — ahoranews.news
+    </div>
+  </div>
+</div>
+
 <!-- MAIN -->
 <div class="main-wrap">
   <div>
@@ -369,7 +390,13 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;margin-
         <div class="trend-item"><span class="trend-num">03</span><div><div class="skeleton" style="height:13px;margin:0 0 6px;border-radius:3px;"></div><div class="skeleton" style="height:10px;width:60%;border-radius:3px;"></div></div></div>
       </div>
     </div>
-    <div class="sb-box">
+    <div class="ad-sidebar">
+  <div><span class="ad-label">Publicidad</span>
+  <!-- AQUI VA TU CODIGO DE GOOGLE ADSENSE SIDEBAR -->
+  📢 Espacio publicitario
+  </div>
+</div>
+<div class="sb-box">
       <div class="sb-head">⚙️ Sistema IA</div>
       <div class="ai-box">
         <div class="ai-row"><span class="ai-label">Motor IA</span><span class="ai-val g">● Online 24/7</span></div>
@@ -453,7 +480,7 @@ function renderAll(){renderHero();renderGrid();renderTrends();}
 function renderHero(){
   if(!NEWS.length)return;
   var n=NEWS[0];
-  var imgH=n.img?'<div class="hero-img-wrap" onclick="openArticle(0)" style="cursor:pointer"><img src="'+n.img+'" alt="'+escH(n.title)+'" onerror="this.parentNode.innerHTML=\'<div class=hero-img-ph>📰</div>\'"></div>':'<div class="hero-img-ph" onclick="openArticle(0)" style="cursor:pointer">📰</div>';
+  var imgH=n.img?'<div class="hero-img-wrap" onclick="openArticle(0)" style="cursor:pointer"><img loading="lazy" src="'+n.img+'" alt="'+escH(n.title)+'" onerror="this.parentNode.innerHTML=\'<div class=hero-img-ph>📰</div>\'"></div>':'<div class="hero-img-ph" onclick="openArticle(0)" style="cursor:pointer">📰</div>';
   document.getElementById('heroMain').innerHTML=imgH+'<div><span class="hero-cat">'+escH(n.cat)+'</span><h1 class="hero-title" onclick="openArticle(0)">'+escH(n.title)+'</h1><p class="hero-excerpt">'+escH((n.excerpt||'').slice(0,200))+'...</p><div class="hero-meta"><span class="src-name">📰 '+escH(n.source)+'</span><span>'+n.time+'</span><span style="color:#0066cc;font-weight:600;">🤖 IA · Verificado</span></div></div>';
   var sH='';
   for(var i=1;i<=4&&i<NEWS.length;i++){var m=NEWS[i];var mI=m.img?'<img class="si-img" src="'+m.img+'" alt="" onerror="this.outerHTML=\'<div class=si-img-ph>📰</div>\'">':'<div class="si-img-ph">📰</div>';sH+='<div class="sidebar-item" onclick="openArticle('+i+')">'+(mI)+'<div><div class="si-cat">'+escH(m.cat)+'</div><div class="si-title">'+escH(m.title.slice(0,75))+'</div><div class="si-time">'+escH(m.source)+' · '+m.time+'</div></div></div>';}
@@ -466,7 +493,7 @@ function renderGrid(){
   var h='';
   for(var i=0;i<list.length;i++){
     var n=list[i];
-    var imgH=n.img?'<img src="'+n.img+'" alt="'+escH(n.title)+'" onerror="this.outerHTML=\'<div class=card-img-ph>📰</div>\'">':'<div class="card-img-ph">📰</div>';
+    var imgH=n.img?'<img loading="lazy" src="'+n.img+'" alt="'+escH(n.title)+'" onerror="this.outerHTML=\'<div class=card-img-ph>📰</div>\'">':'<div class="card-img-ph">📰</div>';
     h+='<div class="card" id="card-'+n.id+'"><div class="card-img-wrap">'+imgH+'<span class="card-cat-badge">'+escH(n.cat)+'</span><span class="card-src-badge">'+escH(n.source)+'</span></div><div class="card-body"><div class="card-title" onclick="openArticle('+n.id+')">'+escH(n.title)+'</div><p class="card-excerpt">'+escH(n.excerpt.slice(0,120))+'</p><div class="card-footer"><div class="card-meta"><span class="src">'+escH(n.source)+'</span> · '+n.time+'</div><button class="like-btn'+(n.liked?' liked':'')+'" onclick="toggleLike('+n.id+',this)">'+(n.liked?'❤️':'🤍')+' <span class="lc">'+n.likes.toLocaleString()+'</span></button></div></div></div>';
   }
   document.getElementById('newsGrid').innerHTML=h||'<div style="grid-column:span 3;text-align:center;padding:40px;color:#888;">No hay noticias en esta categoría.</div>';
@@ -501,7 +528,7 @@ function toggleLike(id,btn){
 
 function openArticle(id){
   var n=NEWS.find(function(x){return x.id===id;});if(!n)return;
-  var imgH=n.img?'<div class="art-img-wrap"><img src="'+n.img+'" alt="'+escH(n.title)+'" onerror="this.parentNode.innerHTML=\'<div class=art-img-ph>📰</div>\'"></div><div class="art-img-cap">📷 '+escH(n.source)+'</div>':'<div class="art-img-ph">📰</div>';
+  var imgH=n.img?'<div class="art-img-wrap"><img loading="lazy" src="'+n.img+'" alt="'+escH(n.title)+'" onerror="this.parentNode.innerHTML=\'<div class=art-img-ph>📰</div>\'"></div><div class="art-img-cap">📷 '+escH(n.source)+'</div>':'<div class="art-img-ph">📰</div>';
   var bodyT='<div class="art-text">'+(n.body||n.excerpt||'').split('\n\n').filter(Boolean).map(function(p){return '<p>'+p.replace(/\[\+\d+ chars\]/g,'...')+'</p>';}).join('')+'</div>';
   var cmtH=n.comments.length?n.comments.map(function(c){return '<div class="ci"><div class="av" style="background:'+c.c+';">'+c.av+'</div><div class="cb"><div class="cu">'+c.u+'</div><div class="ct">'+escH(c.t)+'</div><div class="cd">'+c.d+'</div></div></div>';}).join(''):'<div class="no-cmts">Sé el primero en comentar 💬</div>';
   document.getElementById('modalEl').innerHTML=imgH+'<div class="art-body"><span class="art-cat">'+escH(n.cat)+'</span><h1 class="art-title">'+escH(n.title)+'</h1><div class="art-byline"><span class="src-b">📰 '+escH(n.source)+'</span><span>'+n.time+'</span><span class="ail">🤖 Procesado por IA</span>'+(n.url&&n.url!=='#'?'<a href="'+n.url+'" target="_blank">Fuente original ↗</a>':'')+'</div>'+bodyT+(n.url&&n.url!=='#'?'<a class="art-read-more" href="'+n.url+'" target="_blank">📰 Leer en '+escH(n.source)+' ↗</a>':'')+'<div class="reactions"><div class="react-t">¿Cómo te hace sentir esta noticia?</div><div class="react-row"><button class="rbtn" onclick="react(this)"><span>😮</span> Sorprendido</button><button class="rbtn" onclick="react(this)"><span>😢</span> Triste</button><button class="rbtn" onclick="react(this)"><span>😡</span> Enojado</button><button class="rbtn" onclick="react(this)"><span>🎉</span> Feliz</button><button class="rbtn" onclick="react(this)"><span>🤔</span> Pensativo</button></div></div></div><div class="cmts"><h3>Comentarios <span style="color:#888;font-size:16px;font-weight:400;font-family:Source Sans 3,sans-serif;">('+n.comments.length+')</span></h3><div class="cmt-list" id="clist-'+n.id+'">'+cmtH+'</div><div class="cmt-inp-area"><div class="av" style="background:var(--red);">TÚ</div><div class="ci-wrap"><textarea id="ctxt" placeholder="¿Qué opinas sobre esta noticia?"></textarea><button onclick="submitCmt('+n.id+')">Publicar comentario</button></div></div></div>';
@@ -522,7 +549,7 @@ function submitCmt(id){
   list.prepend(d);document.getElementById('ctxt').value='';
 }
 
-function openLb(src,cap){document.getElementById('lbInner').innerHTML='<img src="'+src+'" alt="'+escH(cap)+'"><div class="lb-cap-txt">'+escH(cap)+'</div>';document.getElementById('lb').classList.add('open');}
+function openLb(src,cap){document.getElementById('lbInner').innerHTML='<img loading="lazy" src="'+src+'" alt="'+escH(cap)+'"><div class="lb-cap-txt">'+escH(cap)+'</div>';document.getElementById('lb').classList.add('open');}
 function closeLb(){document.getElementById('lb').classList.remove('open');}
 
 function showToast(m){var t=document.getElementById('toast');document.getElementById('toastMsg').textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},5000);}
