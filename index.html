@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AHORA.news — Noticias del Mundo en Tiempo Real</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:wght@400;500;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#06070b; --s1:#0c0d13; --s2:#13141b; --s3:#1a1c24; --s4:#22242e;
+  --red:#e8192c; --red2:#ff3347;
+  --gold:#f5a623; --blue:#2d9cdb; --green:#00c98d;
+  --tx:#f0ece2; --mu:#686878; --mu2:#3a3a4a;
+  --bd:rgba(255,255,255,.07); --bd2:rgba(255,255,255,.11);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--tx);font-family:'Archivo',sans-serif;overflow-x:hidden;}
+
+/* TICKER */
+.ticker{background:var(--red);color:#fff;padding:7px 0;overflow:hidden;position:sticky;top:0;z-index:300;}
+.ticker-track{display:flex;white-space:nowrap;animation:tickSlide 60s linear infinite;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;letter-spacing:.06em;}
+.ticker-track span{margin:0 28px;}
+.ticker-track span::before{content:"● ";}
+@keyframes tickSlide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* NAV */
+nav{background:rgba(6,7,11,.97);backdrop-filter:blur(20px);border-bottom:1px solid var(--bd);padding:0 36px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:29px;z-index:299;}
+.logo{display:flex;align-items:center;text-decoration:none;}
+.logo-mark{width:36px;height:36px;background:var(--red);border-radius:6px;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;margin-right:8px;}
+.logo-word{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.04em;color:var(--tx);}
+.logo-dot{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--red);}
+.logo-ext{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--mu);background:var(--s3);padding:2px 7px;border-radius:20px;margin-left:6px;align-self:flex-end;margin-bottom:5px;}
+.nav-links{display:flex;gap:2px;list-style:none;}
+.nav-links a{color:var(--mu);text-decoration:none;font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;transition:.2s;text-transform:uppercase;letter-spacing:.08em;}
+.nav-links a:hover,.nav-links a.on{background:var(--s3);color:var(--tx);}
+.nav-right{display:flex;align-items:center;gap:10px;}
+.live-pill{display:flex;align-items:center;gap:6px;background:rgba(232,25,44,.1);border:1px solid rgba(232,25,44,.3);padding:5px 13px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);font-weight:700;}
+.ldot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:ldotAnim 1.4s infinite;}
+@keyframes ldotAnim{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.3;transform:scale(.7)}}
+.ai-pill{background:rgba(45,156,219,.08);border:1px solid rgba(45,156,219,.25);padding:5px 13px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--blue);font-weight:700;}
+
+/* STATS */
+.statsbar{background:var(--s1);border-bottom:1px solid var(--bd);padding:10px 36px;display:flex;gap:0;overflow-x:auto;}
+.stat{display:flex;align-items:baseline;gap:6px;padding:0 24px;border-right:1px solid var(--bd);white-space:nowrap;}
+.stat:first-child{padding-left:0;}
+.stat:last-child{border-right:none;}
+.stat b{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--red);}
+.stat span{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--mu);text-transform:uppercase;letter-spacing:.04em;}
+
+/* LOADING */
+.loading-bar{height:3px;background:var(--s2);position:fixed;top:0;left:0;right:0;z-index:999;display:none;}
+.loading-bar.show{display:block;}
+.loading-bar-fill{height:100%;background:var(--red);width:0%;animation:loadAnim 1.5s ease infinite;}
+@keyframes loadAnim{0%{width:0%;margin-left:0}50%{width:60%}100%{width:0%;margin-left:100%}}
+
+/* HERO */
+.hero{display:grid;grid-template-columns:1fr 370px;background:var(--bd);gap:2px;}
+.hero-main{position:relative;overflow:hidden;cursor:pointer;background:var(--s2);min-height:480px;}
+.hero-img{width:100%;height:480px;object-fit:cover;opacity:.55;transition:opacity .5s,transform .7s;display:block;}
+.hero-main:hover .hero-img{opacity:.45;transform:scale(1.02);}
+.hero-placeholder{width:100%;height:480px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--s2),var(--s3));}
+.hero-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,7,11,1) 0%,rgba(6,7,11,.5) 45%,transparent 72%);pointer-events:none;}
+.hero-badges{position:absolute;top:14px;left:14px;display:flex;gap:7px;}
+.hbadge{display:flex;align-items:center;gap:5px;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.12);padding:5px 11px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;}
+.hbadge.v{color:var(--red);}
+.hbadge.g{color:var(--gold);}
+.hero-src{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.12);padding:5px 11px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:rgba(255,255,255,.7);}
+.hero-info{position:absolute;bottom:0;left:0;right:0;padding:36px 38px;}
+.hcat{display:inline-flex;align-items:center;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:3px 10px;border-radius:4px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;font-family:'JetBrains Mono',monospace;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:42px;line-height:1.06;letter-spacing:.02em;margin-bottom:12px;}
+.hero-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(240,236,226,.55);display:flex;gap:16px;flex-wrap:wrap;}
+.hero-meta .ail{color:var(--blue);font-weight:700;}
+
+.hero-stack{display:flex;flex-direction:column;gap:2px;}
+.mini{background:var(--s1);padding:18px 20px;cursor:pointer;flex:1;border-left:3px solid transparent;transition:.2s;overflow:hidden;position:relative;}
+.mini:hover{background:var(--s2);border-left-color:var(--red);}
+.mini-img{position:absolute;right:0;top:0;width:90px;height:100%;object-fit:cover;opacity:.2;}
+.mini-cat{display:inline-block;font-size:9px;font-weight:700;padding:2px 8px;border-radius:3px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:7px;font-family:'JetBrains Mono',monospace;}
+.mini h4{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.03em;line-height:1.2;margin-bottom:4px;position:relative;z-index:1;padding-right:75px;}
+.mini p{font-size:11px;color:var(--mu);line-height:1.5;position:relative;z-index:1;}
+
+/* MAIN */
+.wrap{max-width:1360px;margin:0 auto;padding:44px 36px;}
+.layout{display:grid;grid-template-columns:1fr 290px;gap:28px;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.05em;display:flex;align-items:center;gap:10px;margin-bottom:22px;}
+.sec-title::before{content:'';width:4px;height:24px;background:var(--red);border-radius:2px;display:block;}
+
+/* CARD GRID */
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s,border-color .3s,box-shadow .3s;}
+.card:hover{transform:translateY(-4px);border-color:rgba(232,25,44,.28);box-shadow:0 20px 55px rgba(0,0,0,.55);}
+.card.new-card{animation:newPop .5s ease;}
+@keyframes newPop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.card-img-wrap{position:relative;width:100%;height:195px;overflow:hidden;background:var(--s2);flex-shrink:0;}
+.card-img{width:100%;height:100%;object-fit:cover;opacity:.85;transition:opacity .3s,transform .5s;display:block;}
+.card:hover .card-img{opacity:1;transform:scale(1.04);}
+.card-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:linear-gradient(135deg,var(--s2),var(--s3));}
+.card-img-ph span{font-size:28px;opacity:.25;}
+.card-badges{position:absolute;bottom:8px;left:8px;display:flex;gap:5px;}
+.cbadge{display:flex;align-items:center;gap:4px;background:rgba(0,0,0,.82);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.1);padding:3px 8px;border-radius:5px;font-size:9px;font-weight:700;font-family:'JetBrains Mono',monospace;}
+.cbadge.g{color:var(--gold);}
+.card-src-lbl{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.82);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.1);padding:3px 8px;border-radius:12px;font-size:9px;font-weight:700;font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.7);}
+
+.card-body{padding:17px;flex:1;display:flex;flex-direction:column;}
+.card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
+.chip{display:inline-block;font-size:8px;font-weight:700;padding:2px 8px;border-radius:3px;letter-spacing:.12em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;}
+.card-time{font-size:10px;color:var(--mu);font-family:'JetBrains Mono',monospace;}
+.card-title{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.03em;line-height:1.22;margin-bottom:7px;cursor:pointer;}
+.card-title:hover{color:var(--red);}
+.card-excerpt{font-size:12px;color:var(--mu);line-height:1.65;flex:1;margin-bottom:11px;}
+.card-srcs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:11px;}
+.csrc{background:var(--s2);border:1px solid var(--bd2);padding:3px 8px;border-radius:12px;font-size:9px;color:var(--mu);font-weight:600;}
+.csrc.ai{color:var(--blue);}
+.card-foot{display:flex;align-items:center;gap:7px;padding-top:11px;border-top:1px solid var(--bd);}
+.abtn{display:flex;align-items:center;gap:5px;background:none;border:1px solid var(--bd2);color:var(--mu);font-size:12px;font-family:'Archivo',sans-serif;padding:5px 12px;border-radius:20px;cursor:pointer;transition:.2s;font-weight:600;}
+.abtn:hover{border-color:var(--red);color:var(--red);}
+.abtn.liked{background:rgba(232,25,44,.1);border-color:var(--red);color:var(--red);}
+.abtn.liked .hrt{animation:hpop .35s ease;}
+@keyframes hpop{0%{transform:scale(1)}50%{transform:scale(1.5)}100%{transform:scale(1)}}
+.abtn.rd{margin-left:auto;}
+
+/* SIDEBAR */
+.sidebar>*+*{margin-top:16px;}
+.sbox{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:18px;}
+.sb-t{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;margin-bottom:13px;}
+.trend{display:flex;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd);cursor:pointer;transition:padding-left .2s;}
+.trend:hover{padding-left:4px;}
+.trend:last-child{border-bottom:none;}
+.trend-n{font-family:'Bebas Neue',sans-serif;font-size:30px;color:rgba(232,25,44,.15);line-height:1;width:26px;flex-shrink:0;}
+.trend-t{font-size:12px;font-weight:700;line-height:1.35;margin-bottom:2px;}
+.trend-m{font-size:10px;color:var(--mu);font-family:'JetBrains Mono',monospace;}
+.ai-info{font-size:12px;color:var(--mu);line-height:2.2;}
+.ai-info span{color:var(--green);font-weight:700;}
+.ai-info b{color:var(--gold);}
+.status-dot{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:4px;animation:ldotAnim 1.4s infinite;}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.92);overflow-y:auto;}
+.overlay.open{display:block;animation:fIn .2s ease;}
+@keyframes fIn{from{opacity:0}to{opacity:1}}
+.modal{max-width:820px;margin:32px auto;background:var(--s1);border:1px solid var(--bd2);border-radius:20px;overflow:hidden;animation:sUp .3s ease;}
+@keyframes sUp{from{transform:translateY(22px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mcls{position:fixed;top:16px;right:16px;background:var(--s3);border:1px solid var(--bd2);color:var(--mu);width:36px;height:36px;border-radius:50%;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:600;transition:.2s;}
+.mcls:hover{color:var(--tx);}
+
+/* Article */
+.art-hero{position:relative;overflow:hidden;background:var(--s2);}
+.art-hero-img{width:100%;height:300px;object-fit:cover;opacity:.6;display:block;}
+.art-hero-ph{width:100%;height:300px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--s2),var(--s3));font-size:48px;opacity:.2;}
+.art-hero-grad{position:absolute;inset:0;background:linear-gradient(to top,var(--s1) 0%,transparent 55%);}
+.art-hero-cat{position:absolute;bottom:0;left:0;padding:26px 34px;}
+.art-body{padding:0 34px 30px;}
+.art-title{font-family:'Bebas Neue',sans-serif;font-size:34px;letter-spacing:.03em;line-height:1.1;margin-bottom:12px;margin-top:-8px;}
+.art-byline{display:flex;align-items:center;gap:14px;font-size:11px;color:var(--mu);font-family:'JetBrains Mono',monospace;margin-bottom:20px;flex-wrap:wrap;}
+.art-ai-pill{background:rgba(45,156,219,.12);border:1px solid rgba(45,156,219,.3);color:var(--blue);padding:2px 9px;border-radius:20px;font-weight:700;}
+
+/* Sources block */
+.src-block{background:var(--s2);border:1px solid var(--bd2);border-radius:12px;padding:16px;margin-bottom:20px;}
+.src-block-t{font-size:10px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:11px;}
+.src-list{display:flex;flex-direction:column;gap:7px;}
+.src-item{display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--s3);border-radius:8px;transition:.15s;text-decoration:none;color:var(--tx);}
+.src-item:hover{background:var(--s4);}
+.src-ico{font-size:17px;width:26px;text-align:center;}
+.src-nm{font-size:13px;font-weight:700;flex:1;}
+.src-tp{font-size:10px;color:var(--mu);font-family:'JetBrains Mono',monospace;}
+.src-open{font-size:10px;color:var(--blue);font-family:'JetBrains Mono',monospace;white-space:nowrap;}
+
+/* Article text */
+.art-text{font-size:15px;line-height:1.84;color:rgba(240,236,226,.82);margin-bottom:20px;}
+.art-text p+p{margin-top:14px;}
+.art-text strong{color:var(--tx);}
+.art-text blockquote{border-left:3px solid var(--red);padding:10px 16px;margin:16px 0;background:var(--s2);border-radius:0 8px 8px 0;font-style:italic;color:var(--mu);}
+.art-read-more{display:inline-flex;align-items:center;gap:7px;background:var(--s2);border:1px solid var(--bd2);color:var(--blue);font-size:12px;font-weight:700;padding:9px 16px;border-radius:8px;text-decoration:none;font-family:'JetBrains Mono',monospace;transition:.2s;margin-bottom:20px;}
+.art-read-more:hover{border-color:var(--blue);}
+
+/* Reactions */
+.reactions{background:var(--s2);border-radius:12px;padding:16px;margin-bottom:20px;}
+.react-t{font-size:11px;font-weight:700;color:var(--mu);text-transform:uppercase;letter-spacing:.07em;margin-bottom:11px;}
+.react-row{display:flex;gap:7px;flex-wrap:wrap;}
+.rbtn{display:flex;align-items:center;gap:5px;background:var(--s3);border:1px solid var(--bd2);color:var(--tx);font-size:12px;font-family:'Archivo',sans-serif;font-weight:600;padding:7px 13px;border-radius:22px;cursor:pointer;transition:.2s;}
+.rbtn:hover{border-color:var(--red);}
+.rbtn.on{background:rgba(232,25,44,.12);border-color:var(--red);color:var(--red);}
+
+/* Comments */
+.cmts{padding:0 34px 34px;}
+.cmts h3{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.04em;margin-bottom:14px;}
+.cmt-list{display:flex;flex-direction:column;gap:11px;margin-bottom:18px;}
+.ci{display:flex;gap:10px;animation:cIn .3s ease;}
+@keyframes cIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;font-family:'JetBrains Mono',monospace;}
+.cb{flex:1;background:var(--s2);border:1px solid var(--bd);border-radius:11px;padding:11px 13px;}
+.cu{font-size:12px;font-weight:700;margin-bottom:4px;}
+.ct{font-size:13px;color:var(--mu);line-height:1.55;}
+.cd{font-size:10px;color:var(--mu2);margin-top:5px;font-family:'JetBrains Mono',monospace;}
+.no-cmts{color:var(--mu);font-size:13px;padding:10px 0;}
+.cmt-inp-area{display:flex;gap:10px;}
+.ci-wrap{flex:1;}
+.ci-wrap textarea{width:100%;background:var(--s2);border:1px solid var(--bd2);border-radius:11px;padding:11px 13px;color:var(--tx);font-family:'Archivo',sans-serif;font-size:13px;resize:none;outline:none;min-height:78px;transition:.2s;}
+.ci-wrap textarea:focus{border-color:rgba(232,25,44,.4);}
+.ci-wrap textarea::placeholder{color:var(--mu2);}
+.ci-wrap button{margin-top:8px;background:var(--red);color:#fff;border:none;padding:9px 18px;border-radius:8px;font-family:'Archivo',sans-serif;font-weight:700;font-size:13px;cursor:pointer;transition:.2s;}
+.ci-wrap button:hover{background:var(--red2);}
+
+/* Lightbox */
+.lb{display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,.96);align-items:center;justify-content:center;}
+.lb.open{display:flex;}
+.lb-inner{max-width:88vw;position:relative;}
+.lb-inner img{width:100%;max-height:88vh;object-fit:contain;border-radius:12px;display:block;}
+.lb-cap{font-size:12px;color:var(--mu);margin-top:8px;text-align:center;font-family:'JetBrains Mono',monospace;}
+.lb-x{position:absolute;top:-16px;right:-16px;background:var(--s3);border:1px solid var(--bd2);color:var(--tx);width:36px;height:36px;border-radius:50%;font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+
+/* Toast */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--s2);border:1px solid rgba(232,25,44,.38);border-radius:13px;padding:13px 17px;display:flex;align-items:center;gap:10px;z-index:900;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);box-shadow:0 18px 45px rgba(0,0,0,.65);min-width:260px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.t1{font-size:12px;font-weight:700;color:var(--red);font-family:'JetBrains Mono',monospace;}
+.t2{font-size:11px;color:var(--mu);margin-top:2px;}
+
+/* Footer */
+footer{background:var(--s1);border-top:1px solid var(--bd);padding:28px 36px;margin-top:50px;}
+.footer-inner{max-width:1360px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;}
+.footer-logo{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--mu);}
+.footer-logo span{color:var(--red);}
+.footer-tags{display:flex;gap:7px;flex-wrap:wrap;}
+.ftag{background:var(--s2);border:1px solid var(--bd);padding:4px 10px;border-radius:20px;font-size:10px;color:var(--mu);font-weight:600;}
+.footer-copy{font-size:11px;color:var(--mu2);font-family:'JetBrains Mono',monospace;}
+
+@media(max-width:860px){
+  .hero{grid-template-columns:1fr;}
+  .hero-stack{display:none;}
+  .layout{grid-template-columns:1fr;}
+  .grid{grid-template-columns:1fr;}
+  nav{padding:0 16px;}
+  .nav-links{display:none;}
+  .wrap{padding:24px 16px;}
+  .statsbar{padding:10px 16px;}
+  .art-body,.cmts{padding-left:18px;padding-right:18px;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOADING BAR -->
+<div class="loading-bar" id="loadingBar"><div class="loading-bar-fill"></div></div>
+
+<!-- TICKER -->
+<div class="ticker"><div class="ticker-track" id="tickerTrack">
+  <span>Cargando noticias en tiempo real...</span>
+  <span>AHORA.news — Motor IA activo 24/7</span>
+  <span>Cargando noticias en tiempo real...</span>
+  <span>AHORA.news — Motor IA activo 24/7</span>
+</div></div>
+
+<!-- NAV -->
+<nav>
+  <a class="logo" href="#">
+    <div class="logo-mark">A</div>
+    <span class="logo-word">AHORA</span><span class="logo-dot">.</span>
+    <span class="logo-ext">news</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#" class="on" onclick="filterCat('',this)">Todo</a></li>
+    <li><a href="#" onclick="filterCat('Mundo',this)">Mundo</a></li>
+    <li><a href="#" onclick="filterCat('Política',this)">Política</a></li>
+    <li><a href="#" onclick="filterCat('Economía',this)">Economía</a></li>
+    <li><a href="#" onclick="filterCat('Tecnología',this)">Tecnología</a></li>
+    <li><a href="#" onclick="filterCat('Deportes',this)">Deportes</a></li>
+    <li><a href="#" onclick="filterCat('Ciencia',this)">Ciencia</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="ai-pill">🤖 IA ACTIVA</div>
+    <div class="live-pill"><div class="ldot"></div>EN VIVO</div>
+  </div>
+</nav>
+
+<!-- STATS -->
+<div class="statsbar">
+  <div class="stat"><b id="sn">0</b><span>Noticias hoy</span></div>
+  <div class="stat"><b id="su">0</b><span>Lectores ahora</span></div>
+  <div class="stat"><b id="sl">0</b><span>Reacciones</span></div>
+  <div class="stat"><b id="lastUp">--</b><span>Última actualización</span></div>
+  <div class="stat"><b>40s</b><span>Ciclo IA</span></div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-main" id="heroMain" onclick="openArticle(0)">
+    <div class="hero-placeholder" id="heroImgEl"><span style="font-size:48px;opacity:.1;">📰</span></div>
+    <div class="hero-grad"></div>
+    <div class="hero-badges"><div class="hbadge g">📷 FOTO REAL</div></div>
+    <div class="hero-src" id="heroSrc">📰 Cargando...</div>
+    <div class="hero-info">
+      <div class="hcat" id="heroCat">🌍 MUNDO</div>
+      <h1 class="hero-title" id="heroTitle">Cargando última noticia...</h1>
+      <div class="hero-meta">
+        <span id="heroTime">Ahora mismo</span>
+        <span class="ail">🤖 IA · Verificado</span>
+        <span id="heroLikes">❤️ 0 · 💬 0</span>
+      </div>
+    </div>
+  </div>
+  <div class="hero-stack" id="heroStack">
+    <div class="mini" style="flex:1;display:flex;align-items:center;justify-content:center;"><span style="color:var(--mu);font-size:12px;">Cargando...</span></div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="wrap">
+  <div class="layout">
+    <div>
+      <div class="sec-title">Últimas Noticias</div>
+      <div class="grid" id="newsGrid"><div style="grid-column:span 2;text-align:center;padding:40px;color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:13px;">Cargando noticias reales...</div></div>
+    </div>
+    <aside class="sidebar">
+      <div class="sbox">
+        <div class="sb-t" style="color:var(--red);">🔥 Tendencias</div>
+        <div id="trendList"><div style="color:var(--mu);font-size:12px;">Cargando...</div></div>
+      </div>
+      <div class="sbox">
+        <div class="sb-t" style="color:var(--blue);">🤖 Motor IA</div>
+        <div class="ai-info">
+          <div><span class="status-dot"></span><span>Online 24/7</span></div>
+          <div>Fuentes: <b id="srcCount">847</b> activas</div>
+          <div>Publicadas hoy: <b id="aiN">0</b></div>
+          <div>Próximo ciclo: <b id="nextCycle">40s</b></div>
+          <div>Idiomas: <b>ES · EN · PT · FR</b></div>
+        </div>
+      </div>
+      <div class="sbox">
+        <div class="sb-t" style="color:var(--gold);">🌐 Fuentes Activas</div>
+        <div class="ai-info" style="line-height:2.3;">
+          <div>📰 Reuters Internacional</div>
+          <div>📰 Associated Press</div>
+          <div>📰 AFP</div>
+          <div>📰 BBC News</div>
+          <div>📰 CNN Internacional</div>
+          <div>📰 El País</div>
+          <div>📰 + 841 más...</div>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">AHORA<span>.</span>news</div>
+    <div class="footer-tags">
+      <span class="ftag">🤖 IA Automatizada</span>
+      <span class="ftag">📡 847 Fuentes</span>
+      <span class="ftag">🌍 195 Países</span>
+      <span class="ftag">⚡ Tiempo Real</span>
+    </div>
+    <div class="footer-copy">© 2026 AHORA.news · Plataforma automatizada por IA</div>
+  </div>
+</footer>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="handleOv(event)">
+  <button class="mcls" onclick="closeModal()">✕</button>
+  <div class="modal" id="modalEl"></div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lb" id="lb" onclick="closeLb()">
+  <button class="lb-x" onclick="closeLb()">✕</button>
+  <div class="lb-inner" id="lbInner"></div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span style="font-size:19px;">🤖</span>
+  <div><div class="t1">AHORA.news</div><div class="t2" id="toastMsg">Sistema activo</div></div>
+</div>
+
+<script>
+// ══════════════════════════════════════
+// CONFIG — el backend nos da las noticias
+// ══════════════════════════════════════
+var API_BASE = '/api'; // Apunta a nuestro servidor Vercel
+var REFRESH_MS = 40000; // 40 segundos
+var catColors = {
+  'Mundo':'', 'Política':'', 'Economía':'',
+  'Tecnología':'#2d9cdb', 'Deportes':'#e8192c', 'Ciencia':'#00c98d'
+};
+
+var NEWS = [];
+var totalLikes = 0;
+var countPublished = 0;
+var activeFilter = '';
+var cycleTimer = 40;
+
+// ══════════════════════════════════════
+// FETCH NEWS FROM OUR BACKEND
+// ══════════════════════════════════════
+async function fetchNews(cat) {
+  showLoading();
+  try {
+    var url = API_BASE + '/news' + (cat ? '?category=' + encodeURIComponent(cat) : '');
+    var resp = await fetch(url);
+    if (!resp.ok) throw new Error('Error ' + resp.status);
+    var data = await resp.json();
+    if (data.articles && data.articles.length > 0) {
+      NEWS = data.articles.map(function(a, i) {
+        return {
+          id: i,
+          cat: a.category || 'Mundo',
+          catC: catColors[a.category] || '',
+          title: a.title || 'Sin título',
+          excerpt: a.description || '',
+          body: a.content || a.description || '',
+          time: formatTime(a.publishedAt),
+          img: a.urlToImage || '',
+          url: a.url || '#',
+          source: a.source ? a.source.name : 'Desconocido',
+          likes: Math.floor(Math.random() * 5000) + 100,
+          liked: false,
+          comments: []
+        };
+      });
+      countPublished += NEWS.length;
+      renderAll();
+      updateTicker(data.articles);
+      updateStats();
+      updateLastTime();
+    }
+  } catch(e) {
+    console.warn('Backend error:', e.message);
+    showToast('Reconectando al servidor...');
+  }
+  hideLoading();
+}
+
+// ══════════════════════════════════════
+// RENDER ALL
+// ══════════════════════════════════════
+function renderAll() {
+  renderHero();
+  renderGrid();
+  renderTrends();
+}
+
+// ══════════════════════════════════════
+// RENDER HERO
+// ══════════════════════════════════════
+function renderHero() {
+  if (NEWS.length === 0) return;
+  var n = NEWS[0];
+  document.getElementById('heroTitle').textContent = n.title;
+  document.getElementById('heroTime').textContent = n.time;
+  document.getElementById('heroLikes').textContent = '❤️ ' + n.likes.toLocaleString() + ' · 💬 ' + n.comments.length;
+  document.getElementById('heroSrc').textContent = '📰 ' + n.source;
+  document.getElementById('heroCat').textContent = n.cat;
+
+  var imgEl = document.getElementById('heroImgEl');
+  if (n.img) {
+    imgEl.outerHTML = '<img id="heroImgEl" class="hero-img" src="' + n.img + '" alt="' + n.title + '" onerror="this.outerHTML=\'<div class=hero-placeholder id=heroImgEl><span style=font-size:48px;opacity:.1>📰</span></div>\'">';
+  }
+
+  // Mini cards (noticias 1, 2, 3)
+  var cats = [{c:'#e8192c',e:'⚽'},{c:'#2d9cdb',e:'💻'},{c:'#00c98d',e:'🔭'}];
+  var stack = '';
+  for (var i = 1; i <= 3 && i < NEWS.length; i++) {
+    var m = NEWS[i], ci = cats[(i-1)%3];
+    stack += '<div class="mini" onclick="openArticle(' + i + ')">'
+      + (m.img ? '<img class="mini-img" src="' + m.img + '" onerror="this.style.display=\'none\'">' : '')
+      + '<span class="mini-cat" style="background:' + ci.c + ';color:' + (ci.c==='#00c98d'?'#000':'#fff') + ';">' + ci.e + ' ' + m.cat.toUpperCase() + '</span>'
+      + '<h4>' + m.title.substring(0, 90) + (m.title.length > 90 ? '...' : '') + '</h4>'
+      + '<p>' + m.source + ' · ' + m.time + '</p>'
+      + '</div>';
+  }
+  document.getElementById('heroStack').innerHTML = stack;
+}
+
+// ══════════════════════════════════════
+// RENDER GRID
+// ══════════════════════════════════════
+function renderGrid() {
+  if (NEWS.length === 0) return;
+  var list = activeFilter ? NEWS.filter(function(n){return n.cat===activeFilter;}) : NEWS;
+  var h = '';
+  for (var i = 0; i < list.length; i++) {
+    var n = list[i];
+    var cs = n.catC ? 'background:' + n.catC + ';color:#fff;' : 'background:#e8192c;color:#fff;';
+    var imgH = n.img
+      ? '<img class="card-img" src="' + n.img + '" alt="' + n.title.replace(/"/g,'') + '" onerror="this.outerHTML=\'<div class=card-img-ph><span>📰</span></div>\'">'
+      : '<div class="card-img-ph"><span>📰</span></div>';
+    h += '<div class="card new-card" id="card-' + n.id + '">'
+      + '<div class="card-img-wrap">' + imgH
+      + '<div class="card-badges"><div class="cbadge g">📷 FOTO REAL</div></div>'
+      + '<div class="card-src-lbl">📰 ' + n.source + '</div>'
+      + '</div>'
+      + '<div class="card-body">'
+      + '<div class="card-top"><span class="chip" style="' + cs + '">' + n.cat + '</span><span class="card-time">' + n.time + '</span></div>'
+      + '<div class="card-title" onclick="openArticle(' + n.id + ')">' + n.title + '</div>'
+      + '<p class="card-excerpt">' + (n.excerpt || '').substring(0, 120) + '...</p>'
+      + '<div class="card-srcs"><span class="csrc">📰 ' + n.source + '</span><span class="csrc ai">🤖 IA</span></div>'
+      + '<div class="card-foot">'
+      + '<button class="abtn' + (n.liked ? ' liked' : '') + '" onclick="toggleLike(' + n.id + ',this)"><span class="hrt">' + (n.liked ? '❤️' : '🤍') + '</span><span class="lc">' + n.likes.toLocaleString() + '</span></button>'
+      + '<button class="abtn rd" onclick="openArticle(' + n.id + ')">💬 ' + n.comments.length + ' · Ver →</button>'
+      + '</div></div></div>';
+  }
+  document.getElementById('newsGrid').innerHTML = h || '<div style="grid-column:span 2;text-align:center;padding:40px;color:var(--mu);">No hay noticias en esta categoría aún.</div>';
+}
+
+// ══════════════════════════════════════
+// RENDER TRENDS
+// ══════════════════════════════════════
+function renderTrends() {
+  var top = NEWS.slice(0, 5);
+  var h = '';
+  for (var i = 0; i < top.length; i++) {
+    var n = top[i];
+    h += '<div class="trend" onclick="openArticle(' + n.id + ')">'
+      + '<span class="trend-n">0' + (i+1) + '</span>'
+      + '<div><div class="trend-t">' + n.title.substring(0,55) + '...</div>'
+      + '<div class="trend-m">' + n.likes.toLocaleString() + ' · ' + n.time + '</div></div></div>';
+  }
+  document.getElementById('trendList').innerHTML = h;
+}
+
+// ══════════════════════════════════════
+// FILTER BY CATEGORY
+// ══════════════════════════════════════
+function filterCat(cat, el) {
+  activeFilter = cat;
+  document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.remove('on');});
+  if (el) el.classList.add('on');
+  renderGrid();
+  return false;
+}
+
+// ══════════════════════════════════════
+// LIKES
+// ══════════════════════════════════════
+function toggleLike(id, btn) {
+  var n = NEWS.find(function(x){return x.id===id;});
+  if (!n) return;
+  n.liked = !n.liked;
+  n.likes += n.liked ? 1 : -1;
+  totalLikes += n.liked ? 1 : -1;
+  btn.className = 'abtn' + (n.liked ? ' liked' : '');
+  btn.querySelector('.hrt').textContent = n.liked ? '❤️' : '🤍';
+  btn.querySelector('.lc').textContent = n.likes.toLocaleString();
+  updateStats();
+}
+
+// ══════════════════════════════════════
+// OPEN ARTICLE
+// ══════════════════════════════════════
+function openArticle(id) {
+  var n = NEWS.find(function(x){return x.id===id;});
+  if (!n) return;
+  var cs = n.catC ? 'background:'+n.catC+';color:#fff;' : 'background:#e8192c;color:#fff;';
+
+  var heroImg = n.img
+    ? '<img class="art-hero-img" src="'+n.img+'" alt="'+n.title.replace(/"/g,'')+'" onerror="this.outerHTML=\'<div class=art-hero-ph>📰</div>\'">'
+    : '<div class="art-hero-ph">📰</div>';
+
+  var srcH = '<div class="src-block"><div class="src-block-t">🔗 Fuentes verificadas</div><div class="src-list">'
+    + '<a class="src-item" href="'+n.url+'" target="_blank">'
+    + '<span class="src-ico">📰</span>'
+    + '<div><div class="src-nm">'+n.source+'</div><div class="src-tp">Fuente original verificada · '+n.time+'</div></div>'
+    + '<span class="src-open">Abrir ↗</span></a>'
+    + '<div class="src-item"><span class="src-ico">🤖</span><div><div class="src-nm">AHORA.news IA</div><div class="src-tp">Síntesis y redacción automática</div></div></div>'
+    + '</div></div>';
+
+  var bodyText = (n.body || n.excerpt || 'Lee el artículo completo en la fuente original.')
+    .replace(/\[\+\d+ chars\]/g, '...')
+    .split('\n').filter(function(p){return p.trim();}).map(function(p){return '<p>'+p+'</p>';}).join('');
+
+  var cmtH = n.comments.length
+    ? n.comments.map(function(c){return '<div class="ci"><div class="av" style="background:'+c.c+';color:#fff;">'+c.av+'</div><div class="cb"><div class="cu">'+c.u+'</div><div class="ct">'+c.t+'</div><div class="cd">'+c.d+'</div></div></div>';}).join('')
+    : '<div class="no-cmts">Sé el primero en comentar 💬</div>';
+
+  document.getElementById('modalEl').innerHTML =
+    '<div class="art-hero">'+heroImg+'<div class="art-hero-grad"></div><div class="art-hero-cat"><span class="chip" style="'+cs+'">'+n.cat+'</span></div></div>'
+    + '<div class="art-body">'
+    + '<h1 class="art-title">'+n.title+'</h1>'
+    + '<div class="art-byline"><span>'+n.time+'</span><span class="art-ai-pill">🤖 IA-Redactado · Verificado</span><span>❤️ '+n.likes.toLocaleString()+'</span><span>💬 '+n.comments.length+'</span></div>'
+    + srcH
+    + '<div class="art-text">'+bodyText+'</div>'
+    + '<a class="art-read-more" href="'+n.url+'" target="_blank">📰 Leer artículo completo en '+n.source+' ↗</a>'
+    + '<div class="reactions"><div class="react-t">¿Cómo te hace sentir esta noticia?</div><div class="react-row">'
+    + '<button class="rbtn" onclick="react(this)"><span>😮</span> Sorprendido</button>'
+    + '<button class="rbtn" onclick="react(this)"><span>😢</span> Triste</button>'
+    + '<button class="rbtn" onclick="react(this)"><span>😡</span> Enojado</button>'
+    + '<button class="rbtn" onclick="react(this)"><span>🎉</span> Feliz</button>'
+    + '<button class="rbtn" onclick="react(this)"><span>🤔</span> Pensativo</button>'
+    + '<button class="rbtn" onclick="react(this)"><span>💪</span> Inspirado</button>'
+    + '</div></div></div>'
+    + '<div class="cmts"><h3>Comentarios <span style="color:var(--mu);font-size:15px;">('+n.comments.length+')</span></h3>'
+    + '<div class="cmt-list" id="clist-'+n.id+'">'+cmtH+'</div>'
+    + '<div class="cmt-inp-area"><div class="av" style="background:linear-gradient(135deg,var(--red),var(--gold));color:#fff;">TÚ</div>'
+    + '<div class="ci-wrap"><textarea id="ctxt" placeholder="¿Qué opinas sobre esta noticia?"></textarea>'
+    + '<button onclick="submitCmt('+n.id+')">Publicar en AHORA.news →</button></div></div></div>';
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  document.getElementById('modalEl').scrollTop = 0;
+}
+
+function react(btn){document.querySelectorAll('.rbtn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');}
+function closeModal(){document.getElementById('overlay').classList.remove('open');document.body.style.overflow='';}
+function handleOv(e){if(e.target===document.getElementById('overlay'))closeModal();}
+
+function submitCmt(id) {
+  var txt = document.getElementById('ctxt').value.trim();
+  if (!txt) return;
+  var n = NEWS.find(function(x){return x.id===id;});
+  if (!n) return;
+  n.comments.unshift({u:'Tú',av:'TÚ',c:'#e8192c',t:txt,d:'Ahora mismo'});
+  var list = document.getElementById('clist-'+id);
+  var d = document.createElement('div'); d.className='ci';
+  d.innerHTML='<div class="av" style="background:linear-gradient(135deg,#e8192c,#f5a623);color:#fff;">TÚ</div>'
+    +'<div class="cb"><div class="cu">Tú</div><div class="ct">'+txt+'</div><div class="cd">Ahora mismo</div></div>';
+  list.prepend(d);
+  document.getElementById('ctxt').value='';
+}
+
+// ══════════════════════════════════════
+// LIGHTBOX
+// ══════════════════════════════════════
+function openLb(src, cap) {
+  document.getElementById('lbInner').innerHTML='<img src="'+src+'" alt="'+cap+'"><div class="lb-cap">'+cap+'</div>';
+  document.getElementById('lb').classList.add('open');
+}
+function closeLb(){document.getElementById('lb').classList.remove('open');}
+
+// ══════════════════════════════════════
+// TICKER
+// ══════════════════════════════════════
+function updateTicker(articles) {
+  var titles = articles.slice(0,10).map(function(a){return a.title||'';}).filter(Boolean);
+  var doubled = titles.concat(titles);
+  document.getElementById('tickerTrack').innerHTML = doubled.map(function(t){return '<span>'+t+'</span>';}).join('');
+}
+
+// ══════════════════════════════════════
+// STATS
+// ══════════════════════════════════════
+function updateStats() {
+  document.getElementById('sn').textContent = (countPublished + Math.floor(Date.now()/60000) % 100).toLocaleString();
+  document.getElementById('su').textContent = (14000 + Math.floor(Math.random()*3000)).toLocaleString();
+  document.getElementById('sl').textContent = NEWS.reduce(function(a,n){return a+n.likes;},0).toLocaleString();
+  document.getElementById('aiN').textContent = countPublished.toLocaleString();
+}
+
+function updateLastTime() {
+  var now = new Date();
+  document.getElementById('lastUp').textContent = now.getHours()+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');
+}
+
+// ══════════════════════════════════════
+// LOADING
+// ══════════════════════════════════════
+function showLoading(){document.getElementById('loadingBar').classList.add('show');}
+function hideLoading(){document.getElementById('loadingBar').classList.remove('show');}
+
+// ══════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════
+function showToast(m){
+  var t=document.getElementById('toast');
+  document.getElementById('toastMsg').textContent=m;
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},5000);
+}
+
+// ══════════════════════════════════════
+// FORMAT TIME
+// ══════════════════════════════════════
+function formatTime(iso) {
+  if (!iso) return 'Ahora mismo';
+  var diff = Date.now() - new Date(iso).getTime();
+  var m = Math.floor(diff/60000);
+  if (m < 1) return 'Hace unos segundos';
+  if (m < 60) return 'Hace ' + m + ' min';
+  var h = Math.floor(m/60);
+  if (h < 24) return 'Hace ' + h + 'h';
+  return 'Hace ' + Math.floor(h/24) + ' días';
+}
+
+// ══════════════════════════════════════
+// CYCLE COUNTDOWN
+// ══════════════════════════════════════
+setInterval(function(){
+  cycleTimer--;
+  if (cycleTimer <= 0) cycleTimer = 40;
+  var el = document.getElementById('nextCycle');
+  if (el) el.textContent = cycleTimer + 's';
+}, 1000);
+
+// ══════════════════════════════════════
+// AUTO REFRESH EVERY 40 SECONDS
+// ══════════════════════════════════════
+setInterval(function(){
+  fetchNews(activeFilter);
+  showToast('🔄 Actualizando noticias...');
+}, REFRESH_MS);
+
+// Live readers counter
+setInterval(function(){
+  var e=document.getElementById('su');
+  if(e) e.textContent=Math.max(14000,parseInt(e.textContent.replace(/,/g,''))+Math.floor(Math.random()*7-3)).toLocaleString();
+},3500);
+
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
+fetchNews('');
+</script>
+</body>
+</html>

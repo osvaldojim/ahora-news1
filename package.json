@@ -1,0 +1,14 @@
+{
+  "name": "ahora-news",
+  "version": "1.0.0",
+  "description": "AHORA.news — Plataforma de noticias automatizada por IA",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'No build needed'",
+    "start": "vercel dev"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
