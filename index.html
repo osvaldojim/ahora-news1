@@ -57,7 +57,7 @@ nav{background:rgba(6,7,11,.97);backdrop-filter:blur(20px);border-bottom:1px sol
 /* HERO */
 .hero{display:grid;grid-template-columns:1fr 370px;background:var(--bd);gap:2px;}
 .hero-main{position:relative;overflow:hidden;cursor:pointer;background:var(--s2);min-height:480px;}
-.hero-img{width:100%;height:480px;object-fit:cover;opacity:.55;transition:opacity .5s,transform .7s;display:block;}
+.hero-img{width:100%;height:520px;object-fit:cover;opacity:.55;transition:opacity .5s,transform .7s;display:block;}
 .hero-main:hover .hero-img{opacity:.45;transform:scale(1.02);}
 .hero-placeholder{width:100%;height:480px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--s2),var(--s3));}
 .hero-grad{position:absolute;inset:0;background:linear-gradient(to top,rgba(6,7,11,1) 0%,rgba(6,7,11,.5) 45%,transparent 72%);pointer-events:none;}
@@ -68,7 +68,7 @@ nav{background:rgba(6,7,11,.97);backdrop-filter:blur(20px);border-bottom:1px sol
 .hero-src{position:absolute;top:14px;right:14px;background:rgba(0,0,0,.82);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.12);padding:5px 11px;border-radius:6px;font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;color:rgba(255,255,255,.7);}
 .hero-info{position:absolute;bottom:0;left:0;right:0;padding:36px 38px;}
 .hcat{display:inline-flex;align-items:center;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:3px 10px;border-radius:4px;letter-spacing:.12em;text-transform:uppercase;margin-bottom:12px;font-family:'JetBrains Mono',monospace;}
-.hero-title{font-family:'Bebas Neue',sans-serif;font-size:42px;line-height:1.06;letter-spacing:.02em;margin-bottom:12px;}
+.hero-title{font-family:'Bebas Neue',sans-serif;font-size:52px;line-height:1.04;letter-spacing:.02em;margin-bottom:14px;}
 .hero-meta{font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(240,236,226,.55);display:flex;gap:16px;flex-wrap:wrap;}
 .hero-meta .ail{color:var(--blue);font-weight:700;}
 
@@ -82,19 +82,19 @@ nav{background:rgba(6,7,11,.97);backdrop-filter:blur(20px);border-bottom:1px sol
 
 /* MAIN */
 .wrap{max-width:1360px;margin:0 auto;padding:44px 36px;}
-.layout{display:grid;grid-template-columns:1fr 290px;gap:28px;}
+.layout{display:block;width:100%;}
 .sec-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.05em;display:flex;align-items:center;gap:10px;margin-bottom:22px;}
 .sec-title::before{content:'';width:4px;height:24px;background:var(--red);border-radius:2px;display:block;}
 
 /* CARD GRID */
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
-.card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .3s,border-color .3s,box-shadow .3s;}
+.grid{display:grid;grid-template-columns:1fr;gap:20px;}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;overflow:hidden;display:flex;flex-direction:row;transition:transform .3s,border-color .3s,box-shadow .3s;min-height:220px;}
 .card:hover{transform:translateY(-4px);border-color:rgba(232,25,44,.28);box-shadow:0 20px 55px rgba(0,0,0,.55);}
 .card.new-card{animation:newPop .5s ease;}
 @keyframes newPop{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 
-.card-img-wrap{position:relative;width:100%;height:195px;overflow:hidden;background:var(--s2);flex-shrink:0;}
-.card-img{width:100%;height:100%;object-fit:cover;opacity:.85;transition:opacity .3s,transform .5s;display:block;}
+.card-img-wrap{position:relative;width:320px;min-width:320px;height:220px;overflow:hidden;background:var(--s2);flex-shrink:0;}
+.card-img{width:100%;height:100%;object-fit:cover;opacity:.9;transition:opacity .3s,transform .5s;display:block;}
 .card:hover .card-img{opacity:1;transform:scale(1.04);}
 .card-img-ph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;background:linear-gradient(135deg,var(--s2),var(--s3));}
 .card-img-ph span{font-size:28px;opacity:.25;}
@@ -103,13 +103,13 @@ nav{background:rgba(6,7,11,.97);backdrop-filter:blur(20px);border-bottom:1px sol
 .cbadge.g{color:var(--gold);}
 .card-src-lbl{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.82);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.1);padding:3px 8px;border-radius:12px;font-size:9px;font-weight:700;font-family:'JetBrains Mono',monospace;color:rgba(255,255,255,.7);}
 
-.card-body{padding:17px;flex:1;display:flex;flex-direction:column;}
+.card-body{padding:22px 26px;flex:1;display:flex;flex-direction:column;}
 .card-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;}
 .chip{display:inline-block;font-size:8px;font-weight:700;padding:2px 8px;border-radius:3px;letter-spacing:.12em;text-transform:uppercase;font-family:'JetBrains Mono',monospace;}
 .card-time{font-size:10px;color:var(--mu);font-family:'JetBrains Mono',monospace;}
-.card-title{font-family:'Bebas Neue',sans-serif;font-size:19px;letter-spacing:.03em;line-height:1.22;margin-bottom:7px;cursor:pointer;}
+.card-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.03em;line-height:1.22;margin-bottom:10px;cursor:pointer;}
 .card-title:hover{color:var(--red);}
-.card-excerpt{font-size:12px;color:var(--mu);line-height:1.65;flex:1;margin-bottom:11px;}
+.card-excerpt{font-size:13px;color:var(--mu);line-height:1.7;flex:1;margin-bottom:14px;}
 .card-srcs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:11px;}
 .csrc{background:var(--s2);border:1px solid var(--bd2);padding:3px 8px;border-radius:12px;font-size:9px;color:var(--mu);font-weight:600;}
 .csrc.ai{color:var(--blue);}
@@ -226,7 +226,7 @@ footer{background:var(--s1);border-top:1px solid var(--bd);padding:28px 36px;mar
 .ftag{background:var(--s2);border:1px solid var(--bd);padding:4px 10px;border-radius:20px;font-size:10px;color:var(--mu);font-weight:600;}
 .footer-copy{font-size:11px;color:var(--mu2);font-family:'JetBrains Mono',monospace;}
 
-@media(max-width:860px){
+@media(max-width:860px){.card{flex-direction:column;}.card-img-wrap{width:100%;min-width:unset;height:200px;}
   .hero{grid-template-columns:1fr;}
   .hero-stack{display:none;}
   .layout{grid-template-columns:1fr;}
@@ -308,38 +308,22 @@ footer{background:var(--s1);border-top:1px solid var(--bd);padding:28px 36px;mar
 <!-- MAIN -->
 <div class="wrap">
   <div class="layout">
-    <div>
+    <!-- STATUS BAR -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;flex-wrap:wrap;gap:12px;">
       <div class="sec-title">Últimas Noticias</div>
-      <div class="grid" id="newsGrid"><div style="grid-column:span 2;text-align:center;padding:40px;color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:13px;">Cargando noticias reales...</div></div>
+      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);"><span class="status-dot"></span>Online 24/7</div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);">Publicadas hoy: <b style="color:var(--gold)" id="aiN">0</b></div>
+        <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--mu);">Próximo ciclo: <b style="color:var(--gold)" id="nextCycle">40s</b></div>
+        <div style="display:flex;gap:6px;">
+          <button onclick="filterCat('',this)" style="background:var(--red);color:#fff;border:none;padding:5px 14px;border-radius:20px;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;" class="filter-active">Todo</button>
+          <button onclick="filterCat('Tecnología',this)" style="background:var(--s3);color:var(--mu);border:none;padding:5px 14px;border-radius:20px;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;">Tech</button>
+          <button onclick="filterCat('Deportes',this)" style="background:var(--s3);color:var(--mu);border:none;padding:5px 14px;border-radius:20px;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;">Deportes</button>
+          <button onclick="filterCat('Economía',this)" style="background:var(--s3);color:var(--mu);border:none;padding:5px 14px;border-radius:20px;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;cursor:pointer;">Economía</button>
+        </div>
+      </div>
     </div>
-    <aside class="sidebar">
-      <div class="sbox">
-        <div class="sb-t" style="color:var(--red);">🔥 Tendencias</div>
-        <div id="trendList"><div style="color:var(--mu);font-size:12px;">Cargando...</div></div>
-      </div>
-      <div class="sbox">
-        <div class="sb-t" style="color:var(--blue);">🤖 Motor IA</div>
-        <div class="ai-info">
-          <div><span class="status-dot"></span><span>Online 24/7</span></div>
-          <div>Fuentes: <b id="srcCount">847</b> activas</div>
-          <div>Publicadas hoy: <b id="aiN">0</b></div>
-          <div>Próximo ciclo: <b id="nextCycle">40s</b></div>
-          <div>Idiomas: <b>ES · EN · PT · FR</b></div>
-        </div>
-      </div>
-      <div class="sbox">
-        <div class="sb-t" style="color:var(--gold);">🌐 Fuentes Activas</div>
-        <div class="ai-info" style="line-height:2.3;">
-          <div>📰 Reuters Internacional</div>
-          <div>📰 Associated Press</div>
-          <div>📰 AFP</div>
-          <div>📰 BBC News</div>
-          <div>📰 CNN Internacional</div>
-          <div>📰 El País</div>
-          <div>📰 + 841 más...</div>
-        </div>
-      </div>
-    </aside>
+    <div class="grid" id="newsGrid"><div style="grid-column:span 3;text-align:center;padding:40px;color:var(--mu);font-family:'JetBrains Mono',monospace;font-size:13px;">Cargando noticias reales...</div></div>
   </div>
 </div>
 
@@ -502,7 +486,7 @@ function renderGrid() {
       + '<button class="abtn rd" onclick="openArticle(' + n.id + ')">💬 ' + n.comments.length + ' · Ver →</button>'
       + '</div></div></div>';
   }
-  document.getElementById('newsGrid').innerHTML = h || '<div style="grid-column:span 2;text-align:center;padding:40px;color:var(--mu);">No hay noticias en esta categoría aún.</div>';
+  document.getElementById('newsGrid').innerHTML = h || '<div style="grid-column:span 3;text-align:center;padding:40px;color:var(--mu);">No hay noticias en esta categoría aún.</div>';
 }
 
 // ══════════════════════════════════════
@@ -518,7 +502,7 @@ function renderTrends() {
       + '<div><div class="trend-t">' + n.title.substring(0,55) + '...</div>'
       + '<div class="trend-m">' + n.likes.toLocaleString() + ' · ' + n.time + '</div></div></div>';
   }
-  document.getElementById('trendList').innerHTML = h;
+  var tl=document.getElementById('trendList'); if(tl) tl.innerHTML = h;
 }
 
 // ══════════════════════════════════════
