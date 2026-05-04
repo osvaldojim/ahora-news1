@@ -1,16 +1,9 @@
 {
   "version": 2,
+  "buildCommand": null,
+  "outputDirectory": ".",
   "rewrites": [
-    { "source": "/api/:path*", "destination": "/api/:path*" },
-    { "source": "/(.*)", "destination": "/public/index.html" }
-  ],
-  "headers": [
-    {
-      "source": "/api/(.*)",
-      "headers": [
-        { "key": "Access-Control-Allow-Origin", "value": "*" },
-        { "key": "Cache-Control", "value": "s-maxage=40, stale-while-revalidate=60" }
-      ]
-    }
+    { "source": "/api/news", "destination": "/api/news.js" },
+    { "source": "/((?!api).*)", "destination": "/index.html" }
   ]
 }
