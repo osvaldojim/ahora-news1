@@ -266,6 +266,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;margin-
 .ad-banner{background:#f9f9f9;border:1px solid var(--border);text-align:center;padding:16px;margin:20px 0;min-height:90px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:12px;letter-spacing:.05em;}
 .ad-sidebar{background:#f9f9f9;border:1px solid var(--border);text-align:center;padding:12px;min-height:250px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:12px;letter-spacing:.05em;margin-bottom:20px;}
 .ad-label{font-size:9px;color:#bbb;letter-spacing:.08em;text-transform:uppercase;display:block;margin-bottom:4px;}
+.card.editor-pick{border-top:3px solid var(--red);}
+.editor-badge{display:inline-block;background:var(--red);color:#fff;font-size:9px;font-weight:700;padding:2px 8px;letter-spacing:.08em;text-transform:uppercase;margin-bottom:6px;}
 </style>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -462,13 +464,29 @@ document.getElementById('dateDisplay').textContent=DAYS[n.getDay()]+', '+n.getDa
 function escH(s){if(!s)return '';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
 function formatTime(iso){if(!iso)return 'Ahora mismo';var diff=Date.now()-new Date(iso).getTime(),m=Math.floor(diff/60000);if(m<1)return 'Hace unos segundos';if(m<60)return 'Hace '+m+' min';var h=Math.floor(m/60);if(h<24)return 'Hace '+h+'h';return 'Hace '+Math.floor(h/24)+' días';}
 
+async function fetchEditorArticles() {
+  try {
+    var r = await fetch('/api/publish');
+    if (!r.ok) return [];
+    var d = await r.json();
+    return d.articles || [];
+  } catch(e) { return []; }
+}
+
 async function fetchNews(cat){
   try{
     var r=await fetch(API_BASE+'/news'+(cat?'?category='+encodeURIComponent(cat):''));
     if(!r.ok)throw new Error('Error '+r.status);
     var d=await r.json();
     if(d.articles&&d.articles.length>0){
-      NEWS=d.articles.map(function(a,i){return{id:i,cat:a.category||'Mundo',title:a.title||'',excerpt:a.description||'',body:a.content||a.description||'',time:formatTime(a.publishedAt),img:a.urlToImage||'',url:a.url||'#',source:(a.source&&a.source.name)||'AHORA.news',likes:Math.floor(Math.random()*2000)+50,liked:false,comments:[],isDominican:a.isDominican||false};});
+      // Traer artículos del editor primero
+      var editorArticles = await fetchEditorArticles();
+      var editorMapped = editorArticles.map(function(a,i){
+        return {id:'e'+i,cat:a.category||'Mundo',title:a.title||'',excerpt:a.description||'',body:a.content||'',time:formatTime(a.publishedAt),img:a.urlToImage||'',url:a.url||'#',source:(a.source&&a.source.name)||'Redacción AHORA.news',likes:Math.floor(Math.random()*500)+50,liked:false,comments:[],isDominican:true,isEditorPick:true};
+      });
+      var apiMapped = d.articles.map(function(a,i){return{id:i,cat:a.category||'Mundo',title:a.title||'',excerpt:a.description||'',body:a.content||a.description||'',time:formatTime(a.publishedAt),img:a.urlToImage||'',url:a.url||'#',source:(a.source&&a.source.name)||'AHORA.news',likes:Math.floor(Math.random()*2000)+50,liked:false,comments:[],isDominican:a.isDominican||false,isEditorPick:false};});
+      // Editor articles go FIRST
+      NEWS = editorMapped.concat(apiMapped);
       renderAll();updateTicker(NEWS);updateLastTime();
     }
   }catch(e){showToast('Reconectando al servidor...');}
@@ -528,6 +546,15 @@ function toggleLike(id,btn){
 }
 
 function openArticle(id){
+  var n=NEWS.find(function(x){return x.id===id;});
+  if(!n)return;
+  if(n.url&&n.url!=='#'&&n.url.indexOf('http')===0){
+    window.open(n.url,'_blank');
+    return;
+  }
+  showToast('No hay enlace disponible para esta noticia');
+}
+function openArticle_DISABLED(id){
   var n=NEWS.find(function(x){return x.id===id;});if(!n)return;
   var imgH=n.img?'<div class="art-img-wrap"><img loading="lazy" src="'+n.img+'" alt="'+escH(n.title)+'" onerror="this.parentNode.innerHTML=\'<div class=art-img-ph>📰</div>\'"></div><div class="art-img-cap">📷 '+escH(n.source)+'</div>':'<div class="art-img-ph">📰</div>';
   var bodyT='<div class="art-text">'+(n.body||n.excerpt||'').split('\n\n').filter(Boolean).map(function(p){return '<p>'+p.replace(/\[\+\d+ chars\]/g,'...')+'</p>';}).join('')+'</div>';
