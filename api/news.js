@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 's-maxage=120, stale-while-revalidate=60');
+  res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
 
   const NEWSAPI_KEY  = process.env.NEWS_API_KEY;
   const GNEWS_KEY    = process.env.GNEWS_API_KEY;
