@@ -7,46 +7,58 @@ export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
   if (req.method === 'OPTIONS') return res.status(200).end();
 
-  // ── GET sin parámetros: devuelve artículos publicados ──
   const { secret, text } = req.query;
 
+  // ── GET sin parámetros: devuelve artículos ──
   if (req.method === 'GET' && !text) {
     return res.status(200).json({ articles: publishedArticles.slice(0, 20), total: publishedArticles.length });
   }
 
-  // ── GET con parámetros: publicar artículo ──
+  // ── GET con text: publicar artículo ──
   if (req.method === 'GET' && text) {
-    if (secret !== SECRET_KEY) {
-      return res.status(401).json({ error: 'No autorizado' });
-    }
+    if (secret !== SECRET_KEY) return res.status(401).json({ error: 'No autorizado' });
 
     const rawText = decodeURIComponent(text);
+    let titulo, contenido, categoria, instagram, tiktok;
 
-    function extract(txt, ...keys) {
-      for (const key of keys) {
-        const p = new RegExp(key + '[:\\s]+([^\\n]+(?:\\n(?![A-ZÁÉÍÓÚ]{3,}[:\\s])[^\\n]+)*)', 'i');
-        const m = txt.match(p);
-        if (m && m[1] && m[1].trim().length > 3) return m[1].replace(/\*\*/g, '').trim();
+    // Intentar parsear como JSON primero
+    try {
+      // Limpiar posibles caracteres extras
+      const jsonStr = rawText.trim().replace(/^[^{]*/, '').replace(/[^}]*$/, '') || rawText;
+      const parsed = JSON.parse(jsonStr);
+      titulo    = parsed.titulo    || parsed.title    || '';
+      contenido = parsed.contenido || parsed.content  || '';
+      categoria = parsed.categoria || parsed.category || 'Mundo';
+      instagram = parsed.instagram || '';
+      tiktok    = parsed.tiktok    || '';
+    } catch(e) {
+      // Si no es JSON, extraer con regex
+      function extract(txt, ...keys) {
+        for (const key of keys) {
+          const p = new RegExp(key + '[:\\s]+([^\\n]+(?:\\n(?![A-ZÁÉÍÓÚ]{3,}[:\\s])[^\\n]+)*)', 'i');
+          const m = txt.match(p);
+          if (m && m[1] && m[1].trim().length > 3) return m[1].replace(/\*\*/g,'').trim();
+        }
+        return null;
       }
-      return null;
+      titulo    = extract(rawText,'TÍTULO','TITULO') || rawText.split('\n')[0].slice(0,120);
+      contenido = extract(rawText,'CONTENIDO','Contenido') || rawText;
+      categoria = extract(rawText,'CATEGORÍA','CATEGORIA') || 'Mundo';
+      instagram = extract(rawText,'INSTAGRAM') || '';
+      tiktok    = extract(rawText,'TIKTOK','TikTok') || '';
     }
-
-    const titulo    = extract(rawText, 'TÍTULO','TITULO') || rawText.split('\n')[0].slice(0,120) || 'Noticia de AHORA.news';
-    const contenido = extract(rawText, 'CONTENIDO','Contenido') || rawText;
-    const categoria = extract(rawText, 'CATEGORÍA','CATEGORIA') || 'Mundo';
-    const instagram = extract(rawText, 'INSTAGRAM') || '';
-    const tiktok    = extract(rawText, 'TIKTOK','TikTok') || '';
 
     const article = {
       id: Date.now(),
-      title: titulo.split('\n')[0].slice(0,150).trim(),
-      description: contenido.replace(/\n/g,' ').slice(0,250) + '...',
-      content: contenido,
-      category: categoria.split('\n')[0].slice(0,50).trim(),
-      urlToImage: getCategoryImage(categoria),
+      title: (titulo||'').split('\n')[0].slice(0,150).trim() || 'Noticia de AHORA.news',
+      description: (contenido||'').replace(/\n/g,' ').slice(0,250) + '...',
+      content: contenido || '',
+      category: (categoria||'Mundo').split('\n')[0].slice(0,50).trim(),
+      urlToImage: getCategoryImage(categoria||''),
       publishedAt: new Date().toISOString(),
       source: { name: 'Redacción AHORA.news' },
-      instagram, tiktok,
+      instagram: instagram || '',
+      tiktok: tiktok || '',
       isDominican: true,
       isEditorPick: true,
       url: '#'
@@ -54,33 +66,7 @@ export default async function handler(req, res) {
 
     publishedArticles.unshift(article);
     if (publishedArticles.length > 50) publishedArticles = publishedArticles.slice(0, 50);
-
     console.log('✅ Publicado:', article.title);
-    return res.status(200).json({ success: true, article });
-  }
-
-  // ── POST: también aceptar ──
-  if (req.method === 'POST') {
-    const auth = req.headers['authorization'] || req.body?.secret;
-    if (auth !== SECRET_KEY && auth !== `Bearer ${SECRET_KEY}`) {
-      return res.status(401).json({ error: 'No autorizado' });
-    }
-    const rawText = req.body?.text || req.body?.titulo || req.body?.contenido || '';
-    if (!rawText) return res.status(400).json({ error: 'No text provided' });
-
-    const article = {
-      id: Date.now(),
-      title: rawText.split('\n')[0].slice(0,150).trim() || 'Noticia de AHORA.news',
-      description: rawText.replace(/\n/g,' ').slice(0,250) + '...',
-      content: rawText,
-      category: 'Mundo',
-      urlToImage: getCategoryImage('Mundo'),
-      publishedAt: new Date().toISOString(),
-      source: { name: 'Redacción AHORA.news' },
-      isDominican: true, isEditorPick: true, url: '#'
-    };
-    publishedArticles.unshift(article);
-    if (publishedArticles.length > 50) publishedArticles = publishedArticles.slice(0, 50);
     return res.status(200).json({ success: true, article });
   }
 
