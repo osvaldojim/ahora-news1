@@ -117,7 +117,7 @@ nav{background:var(--red);position:sticky;top:0;z-index:200;box-shadow:0 2px 8px
 .overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.75);overflow-y:auto;}
 .overlay.open{display:block;animation:fIn .2s ease;}
 @keyframes fIn{from{opacity:0}to{opacity:1}}
-.modal{max-width:840px;margin:32px auto;background:var(--white);animation:sUp .3s ease;}
+.modal{max-width:1100px;margin:20px auto;background:var(--white);animation:sUp .3s ease;}
 @keyframes sUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 .mcls{position:fixed;top:16px;right:16px;background:var(--dark);border:none;color:#fff;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:600;}
 .rbtn{display:flex;align-items:center;gap:5px;background:var(--white);border:1px solid var(--border);color:var(--dark);font-size:12px;font-family:'Source Sans 3',sans-serif;font-weight:600;padding:7px 13px;cursor:pointer;transition:.2s;}
@@ -359,7 +359,28 @@ function toggleLike(id,btn){
 function openArticle(id){
   var n=NEWS.find(function(x){return String(x.id)===String(id);});if(!n)return;
   if(n.isEditor||!n.url||n.url==='#'){showModal(n);return;}
-  window.open(n.url,'_blank');
+  showIframe(n);
+}
+
+function showIframe(n){
+  document.getElementById('modalEl').innerHTML=
+    '<div style="background:#fff;padding:0;">'+
+    '<div style="display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid #e0e0e0;background:#fff;position:sticky;top:0;z-index:10;">'+
+    '<span style="background:#cc0000;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;letter-spacing:.08em;text-transform:uppercase;">'+h(n.cat)+'</span>'+
+    '<span style="font-size:13px;font-weight:700;color:#111;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">'+h(n.title)+'</span>'+
+    '<a href="'+h(n.url)+'" target="_blank" style="background:#cc0000;color:#fff;font-size:11px;font-weight:700;padding:6px 12px;text-decoration:none;font-family:Oswald,sans-serif;letter-spacing:.05em;white-space:nowrap;">ABRIR ↗</a>'+
+    '</div>'+
+    '<div style="background:#f4f4f4;padding:12px 20px;font-size:12px;color:#888;border-bottom:1px solid #e0e0e0;">'+
+    '📰 Fuente: <strong>'+h(n.source)+'</strong> · '+n.time+
+    '</div>'+
+    '<iframe src="'+h(n.url)+'" style="width:100%;height:75vh;border:none;display:block;" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>'+
+    '<div style="padding:14px 20px;background:#f9f9f9;border-top:1px solid #e0e0e0;text-align:center;">'+
+    '<a href="'+h(n.url)+'" target="_blank" style="color:#cc0000;font-weight:700;font-size:13px;text-decoration:none;">📰 Ver artículo completo en '+h(n.source)+' ↗</a>'+
+    '</div>'+
+    '</div>';
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  document.getElementById('modalEl').scrollTop=0;
 }
 
 function showModal(n){
