@@ -548,12 +548,25 @@ function toggleLike(id,btn){
 function openArticle(id){
   var n=NEWS.find(function(x){return x.id===id;});
   if(!n)return;
-  if(n.url&&n.url!=='#'&&n.url.indexOf('http')===0){
-    window.open(n.url,'_blank');
+  // Editor picks — show full article modal
+  if(!n.url||n.url==='#'||n.isEditorPick){
+    showArticleModal(n);
     return;
   }
-  showToast('No hay enlace disponible para esta noticia');
+  // External articles — open in new tab
+  window.open(n.url,'_blank');
 }
+
+function showArticleModal(n){
+  var imgH=n.img?'<div class="art-img-wrap"><img loading="lazy" src="'+n.img+'" alt="'+escH(n.title)+'" onerror="this.parentNode.innerHTML='<div class=art-img-ph>📰</div>'"></div>':'<div class="art-img-ph">📰</div>';
+  var bodyT='<div class="art-text">'+(n.body||n.excerpt||'').split('\n\n').filter(Boolean).map(function(p){return '<p>'+escH(p)+'</p>';}).join('')+'</div>';
+  var cmtH=n.comments&&n.comments.length?n.comments.map(function(c){return '<div class="ci"><div class="av" style="background:'+c.c+';">'+c.av+'</div><div class="cb"><div class="cu">'+escH(c.u)+'</div><div class="ct">'+escH(c.t)+'</div><div class="cd">'+c.d+'</div></div></div>';}).join(''):'<div class="no-cmts">Sé el primero en comentar 💬</div>';
+  document.getElementById('modalEl').innerHTML=imgH+'<div class="art-body"><span class="art-cat">'+escH(n.cat)+'</span><h1 class="art-title">'+escH(n.title)+'</h1><div class="art-byline"><span class="src-b">✍️ '+escH(n.source)+'</span><span>'+n.time+'</span><span class="ail">🤖 Redactado por IA · Verificado</span></div>'+bodyT+'<div class="reactions"><div class="react-t">¿Cómo te hace sentir esta noticia?</div><div class="react-row"><button class="rbtn" onclick="react(this)"><span>😮</span> Sorprendido</button><button class="rbtn" onclick="react(this)"><span>😢</span> Triste</button><button class="rbtn" onclick="react(this)"><span>😡</span> Enojado</button><button class="rbtn" onclick="react(this)"><span>🎉</span> Feliz</button><button class="rbtn" onclick="react(this)"><span>🤔</span> Pensativo</button></div></div></div><div class="cmts"><h3>Comentarios <span style="color:#888;font-size:16px;font-weight:400;font-family:Source Sans 3,sans-serif;">('+((n.comments&&n.comments.length)||0)+')</span></h3><div class="cmt-list" id="clist-'+n.id+'">'+cmtH+'</div><div class="cmt-inp-area"><div class="av" style="background:var(--red);">TÚ</div><div class="ci-wrap"><textarea id="ctxt" placeholder="¿Qué opinas sobre esta noticia?"></textarea><button onclick="submitCmt(\''+n.id+\'')">Publicar comentario</button></div></div></div>';
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+  document.getElementById('modalEl').scrollTop=0;
+}
+
 function openArticle_DISABLED(id){
   var n=NEWS.find(function(x){return x.id===id;});if(!n)return;
   var imgH=n.img?'<div class="art-img-wrap"><img loading="lazy" src="'+n.img+'" alt="'+escH(n.title)+'" onerror="this.parentNode.innerHTML=\'<div class=art-img-ph>📰</div>\'"></div><div class="art-img-cap">📷 '+escH(n.source)+'</div>':'<div class="art-img-ph">📰</div>';
