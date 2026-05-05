@@ -548,33 +548,62 @@ function toggleLike(id,btn){
 function openArticle(id){
   var n=NEWS.find(function(x){return x.id===id;});
   if(!n)return;
-  // Editor picks — show full article modal
-  if(!n.url||n.url==='#'||n.isEditorPick){
-    showArticleModal(n);
+  if(n.isEditorPick||!n.url||n.url==='#'){
+    showModal(n);
     return;
   }
-  // External articles — open in new tab
   window.open(n.url,'_blank');
 }
 
-function showArticleModal(n){
-  var imgH=n.img?'<div class="art-img-wrap"><img loading="lazy" src="'+n.img+'" alt="'+escH(n.title)+'" onerror="this.parentNode.innerHTML='<div class=art-img-ph>📰</div>'"></div>':'<div class="art-img-ph">📰</div>';
-  var bodyT='<div class="art-text">'+(n.body||n.excerpt||'').split('\n\n').filter(Boolean).map(function(p){return '<p>'+escH(p)+'</p>';}).join('')+'</div>';
-  var cmtH=n.comments&&n.comments.length?n.comments.map(function(c){return '<div class="ci"><div class="av" style="background:'+c.c+';">'+c.av+'</div><div class="cb"><div class="cu">'+escH(c.u)+'</div><div class="ct">'+escH(c.t)+'</div><div class="cd">'+c.d+'</div></div></div>';}).join(''):'<div class="no-cmts">Sé el primero en comentar 💬</div>';
-  document.getElementById('modalEl').innerHTML=imgH+'<div class="art-body"><span class="art-cat">'+escH(n.cat)+'</span><h1 class="art-title">'+escH(n.title)+'</h1><div class="art-byline"><span class="src-b">✍️ '+escH(n.source)+'</span><span>'+n.time+'</span><span class="ail">🤖 Redactado por IA · Verificado</span></div>'+bodyT+'<div class="reactions"><div class="react-t">¿Cómo te hace sentir esta noticia?</div><div class="react-row"><button class="rbtn" onclick="react(this)"><span>😮</span> Sorprendido</button><button class="rbtn" onclick="react(this)"><span>😢</span> Triste</button><button class="rbtn" onclick="react(this)"><span>😡</span> Enojado</button><button class="rbtn" onclick="react(this)"><span>🎉</span> Feliz</button><button class="rbtn" onclick="react(this)"><span>🤔</span> Pensativo</button></div></div></div><div class="cmts"><h3>Comentarios <span style="color:#888;font-size:16px;font-weight:400;font-family:Source Sans 3,sans-serif;">('+((n.comments&&n.comments.length)||0)+')</span></h3><div class="cmt-list" id="clist-'+n.id+'">'+cmtH+'</div><div class="cmt-inp-area"><div class="av" style="background:var(--red);">TÚ</div><div class="ci-wrap"><textarea id="ctxt" placeholder="¿Qué opinas sobre esta noticia?"></textarea><button onclick="submitCmt(\''+n.id+\'')">Publicar comentario</button></div></div></div>';
+function showModal(n){
+  var img=n.img?'<img loading="lazy" src="'+n.img+'" style="width:100%;height:360px;object-fit:cover;display:block;" onerror="this.style.display='none'">':'';
+  var body=(n.body||n.excerpt||'Artículo publicado por Redacción AHORA.news').split('\n').filter(function(p){return p.trim();}).map(function(p){return '<p style="margin-bottom:14px;">'+escH(p)+'</p>';}).join('');
+  var cmts=n.comments&&n.comments.length?n.comments.map(function(c){return '<div style="display:flex;gap:10px;margin-bottom:12px;"><div style="width:34px;height:34px;border-radius:50%;background:'+c.c+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;">'+c.av+'</div><div style="flex:1;background:#f9f9f9;border:1px solid #e0e0e0;padding:11px 13px;"><div style="font-size:12px;font-weight:700;margin-bottom:4px;">'+escH(c.u)+'</div><div style="font-size:13px;color:#444;">'+escH(c.t)+'</div></div></div>';}).join(''):'<div style="color:#888;font-size:13px;padding:10px 0;">Sé el primero en comentar 💬</div>';
+  document.getElementById('modalEl').innerHTML=
+    img+
+    '<div style="padding:28px 36px;">'+
+    '<span style="background:#cc0000;color:#fff;font-size:10px;font-weight:700;padding:3px 10px;letter-spacing:.1em;text-transform:uppercase;">'+escH(n.cat)+'</span>'+
+    '<h1 style="font-family:Playfair Display,serif;font-size:28px;font-weight:700;line-height:1.25;color:#111;margin:14px 0 12px;">'+escH(n.title)+'</h1>'+
+    '<div style="display:flex;align-items:center;gap:14px;font-size:12px;color:#888;margin-bottom:20px;border-bottom:1px solid #e0e0e0;padding-bottom:14px;">'+
+    '<span style="font-weight:700;color:#111;">✍️ '+escH(n.source)+'</span>'+
+    '<span>'+n.time+'</span>'+
+    '<span style="color:#0066cc;font-weight:600;">🤖 Redactado por IA</span>'+
+    '</div>'+
+    '<div style="font-size:16px;line-height:1.85;color:#333;margin-bottom:22px;">'+body+'</div>'+
+    '<div style="background:#f9f9f9;border:1px solid #e0e0e0;padding:16px;margin-bottom:22px;">'+
+    '<div style="font-size:12px;font-weight:700;color:#444;text-transform:uppercase;letter-spacing:.07em;margin-bottom:11px;">¿Cómo te hace sentir esta noticia?</div>'+
+    '<div style="display:flex;gap:8px;flex-wrap:wrap;">'+
+    '<button class="rbtn" onclick="react(this)"><span>😮</span> Sorprendido</button>'+
+    '<button class="rbtn" onclick="react(this)"><span>😢</span> Triste</button>'+
+    '<button class="rbtn" onclick="react(this)"><span>😡</span> Enojado</button>'+
+    '<button class="rbtn" onclick="react(this)"><span>🎉</span> Feliz</button>'+
+    '<button class="rbtn" onclick="react(this)"><span>🤔</span> Pensativo</button>'+
+    '</div></div>'+
+    '</div>'+
+    '<div style="padding:0 36px 36px;">'+
+    '<h3 style="font-family:Playfair Display,serif;font-size:22px;font-weight:700;color:#111;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #cc0000;">Comentarios ('+((n.comments&&n.comments.length)||0)+')</h3>'+
+    '<div id="clist-'+n.id+'">'+cmts+'</div>'+
+    '<div style="display:flex;gap:10px;margin-top:18px;">'+
+    '<div style="width:34px;height:34px;border-radius:50%;background:#cc0000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;">TÚ</div>'+
+    '<div style="flex:1;">'+
+    '<textarea id="ctxt" style="width:100%;background:#fff;border:1px solid #e0e0e0;padding:11px 13px;color:#111;font-family:Source Sans 3,sans-serif;font-size:13px;resize:none;outline:none;min-height:78px;" placeholder="¿Qué opinas sobre esta noticia?"></textarea>'+
+    '<button onclick="submitCmt2(''+n.id+'')" style="margin-top:8px;background:#cc0000;color:#fff;border:none;padding:10px 20px;font-family:Oswald,sans-serif;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;">Publicar comentario</button>'+
+    '</div></div></div>';
   document.getElementById('overlay').classList.add('open');
   document.body.style.overflow='hidden';
   document.getElementById('modalEl').scrollTop=0;
 }
 
-function openArticle_DISABLED(id){
-  var n=NEWS.find(function(x){return x.id===id;});if(!n)return;
-  var imgH=n.img?'<div class="art-img-wrap"><img loading="lazy" src="'+n.img+'" alt="'+escH(n.title)+'" onerror="this.parentNode.innerHTML=\'<div class=art-img-ph>📰</div>\'"></div><div class="art-img-cap">📷 '+escH(n.source)+'</div>':'<div class="art-img-ph">📰</div>';
-  var bodyT='<div class="art-text">'+(n.body||n.excerpt||'').split('\n\n').filter(Boolean).map(function(p){return '<p>'+p.replace(/\[\+\d+ chars\]/g,'...')+'</p>';}).join('')+'</div>';
-  var cmtH=n.comments.length?n.comments.map(function(c){return '<div class="ci"><div class="av" style="background:'+c.c+';">'+c.av+'</div><div class="cb"><div class="cu">'+c.u+'</div><div class="ct">'+escH(c.t)+'</div><div class="cd">'+c.d+'</div></div></div>';}).join(''):'<div class="no-cmts">Sé el primero en comentar 💬</div>';
-  document.getElementById('modalEl').innerHTML=imgH+'<div class="art-body"><span class="art-cat">'+escH(n.cat)+'</span><h1 class="art-title">'+escH(n.title)+'</h1><div class="art-byline"><span class="src-b">📰 '+escH(n.source)+'</span><span>'+n.time+'</span><span class="ail">🤖 Procesado por IA</span>'+(n.url&&n.url!=='#'?'<a href="'+n.url+'" target="_blank">Fuente original ↗</a>':'')+'</div>'+bodyT+(n.url&&n.url!=='#'?'<a class="art-read-more" href="'+n.url+'" target="_blank">📰 Leer en '+escH(n.source)+' ↗</a>':'')+'<div class="reactions"><div class="react-t">¿Cómo te hace sentir esta noticia?</div><div class="react-row"><button class="rbtn" onclick="react(this)"><span>😮</span> Sorprendido</button><button class="rbtn" onclick="react(this)"><span>😢</span> Triste</button><button class="rbtn" onclick="react(this)"><span>😡</span> Enojado</button><button class="rbtn" onclick="react(this)"><span>🎉</span> Feliz</button><button class="rbtn" onclick="react(this)"><span>🤔</span> Pensativo</button></div></div></div><div class="cmts"><h3>Comentarios <span style="color:#888;font-size:16px;font-weight:400;font-family:Source Sans 3,sans-serif;">('+n.comments.length+')</span></h3><div class="cmt-list" id="clist-'+n.id+'">'+cmtH+'</div><div class="cmt-inp-area"><div class="av" style="background:var(--red);">TÚ</div><div class="ci-wrap"><textarea id="ctxt" placeholder="¿Qué opinas sobre esta noticia?"></textarea><button onclick="submitCmt('+n.id+')">Publicar comentario</button></div></div></div>';
-  document.getElementById('overlay').classList.add('open');document.body.style.overflow='hidden';document.getElementById('modalEl').scrollTop=0;
+function submitCmt2(id){
+  var txt=document.getElementById('ctxt').value.trim();if(!txt)return;
+  var n=NEWS.find(function(x){return String(x.id)===String(id);});if(!n)return;
+  if(!n.comments)n.comments=[];
+  n.comments.unshift({u:'Tú',av:'TÚ',c:'#cc0000',t:txt,d:'Ahora mismo'});
+  var list=document.getElementById('clist-'+id);
+  if(list){var d=document.createElement('div');d.style.cssText='display:flex;gap:10px;margin-bottom:12px;';d.innerHTML='<div style="width:34px;height:34px;border-radius:50%;background:#cc0000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;">TÚ</div><div style="flex:1;background:#f9f9f9;border:1px solid #e0e0e0;padding:11px 13px;"><div style="font-size:12px;font-weight:700;margin-bottom:4px;">Tú</div><div style="font-size:13px;color:#444;">'+escH(txt)+'</div></div>';list.prepend(d);}
+  document.getElementById('ctxt').value='';
 }
+
 
 function react(btn){document.querySelectorAll('.rbtn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');}
 function closeModal(){document.getElementById('overlay').classList.remove('open');document.body.style.overflow='';}
