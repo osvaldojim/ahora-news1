@@ -773,23 +773,10 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     
     var today = new Date().toLocaleDateString('es-DO', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
     
-    fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{
-          role: 'user',
-          content: 'Hoy es ' + today + '. Dame 4 recomendaciones de trading para hoy en la bolsa de valores de EE.UU. Responde SOLO en JSON valido, sin markdown, sin texto extra. Formato exacto: [{"ticker":"AAPL","nombre":"Apple Inc","accion":"COMPRAR","precio_aprox":"$182","razon":"Razon breve de maximo 15 palabras","confianza":"Alta","color":"#007a3d"},{"ticker":"...","nombre":"...","accion":"VENDER","precio_aprox":"$...","razon":"...","confianza":"Media","color":"#cc0000"}]. Usa acciones de COMPRAR o VENDER. Colores: verde #007a3d para comprar, rojo #cc0000 para vender, naranja #e07b00 para neutro. Incluye mix de acciones tecnologicas, energia, salud y finanzas.'
-        }]
-      })
-    })
+    fetch('/api/trading')
     .then(function(r) { return r.json(); })
     .then(function(data) {
-      var text = (data.content && data.content[0] && data.content[0].text) || '[]';
-      text = text.replace(/⁠ json| ⁠/g, '').trim();
-      var recs = JSON.parse(text);
+      var recs = data.recs || [];
       
       var now = new Date();
       if (tt) tt.textContent = 'Actualizado: ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
@@ -804,7 +791,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
           + '</div>'
           + '<span style="background:' + r.color + ';color:#fff;font-size:10px;font-weight:700;padding:3px 8px;letter-spacing:.06em;text-transform:uppercase;">' + r.accion + '</span>'
           + '</div>'
-          + '<div style="font-family:Oswald,sans-serif;font-size:22px;font-weight:700;color:#111;margin-bottom:6px;">' + r.precio_aprox + '</div>'
+          + '<div style="font-family:Oswald,sans-serif;font-size:22px;font-weight:700;color:#111;margin-bottom:6px;">' + r.precio + '</div>'
           + '<div style="font-size:12px;color:#555;line-height:1.4;margin-bottom:8px;">' + r.razon + '</div>'
           + '<div style="display:flex;align-items:center;gap:4px;">'
           + '<span style="font-size:10px;color:#888;">Confianza:</span>'
