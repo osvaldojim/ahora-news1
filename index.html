@@ -603,7 +603,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   };
 
   window._more = function() {
-    PAGE++;
+    PAGE = 9999; // Mostrar todas
     renderGrid();
   };
 
@@ -762,6 +762,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
   doLoadNews();
   fetchDolar();
+
+
 
   setTimeout(function() { toast('AHORA.news — Noticias de RD y el Mundo en tiempo real'); }, 2000);
 
