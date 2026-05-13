@@ -443,7 +443,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       seen[n.url] = true;
       return true;
     });
-    return added.concat(old).slice(0, 200);
+    return added.concat(old);
   }
 
   // ── CARGAR NOTICIAS ──
@@ -527,7 +527,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     var imgH = n.img
       ? '<div class="hero-img-wrap" style="cursor:pointer" onclick="window._openN(0)"><img loading="lazy" src="' + esc(n.img) + '" alt="' + esc(n.title) + '" onerror="this.parentNode.innerHTML=\'<div class=hero-img-ph>📰</div>\'"></div>'
       : '<div class="hero-img-ph" style="cursor:pointer" onclick="window._openN(0)">📰</div>';
-    el('heroMain').innerHTML = imgH + '<div><span class="hero-cat">' + esc(n.cat) + '</span><h1 class="hero-title" onclick="window._openN(0)">' + esc(n.title) + '</h1><p class="hero-excerpt">' + esc((n.excerpt || '').slice(0, 200)) + '...</p><div class="hero-meta"><span class="src-name">' + (n.isEditor ? '✍️' : '📰') + ' ' + esc(n.source) + '</span><span>' + n.time + '</span><span style="color:#007a3d;font-weight:600;">✅ Tiempo Real</span></div></div>';
+    el('heroMain').innerHTML = imgH + '<div><span class="hero-cat">' + esc(n.cat) + '</span><h1 class="hero-title" onclick="window._openN(0)">' + esc(n.title) + '</h1><p class="hero-excerpt">' + esc((n.excerpt || '')) + '...</p><div class="hero-meta"><span class="src-name">' + (n.isEditor ? '✍️' : '📰') + ' ' + esc(n.source) + '</span><span>' + n.time + '</span><span style="color:#007a3d;font-weight:600;">✅ Tiempo Real</span></div></div>';
 
     var sH = '';
     for (var i = 1; i <= 4 && i < NEWS.length; i++) {
