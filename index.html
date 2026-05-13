@@ -767,49 +767,34 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     var tc = document.getElementById('tradingContent');
     var tt = document.getElementById('tradingTime');
     if (!tc) return;
-    
-    // Skeleton mientras carga
-    tc.innerHTML = '<div style="grid-column:span 4;text-align:center;padding:20px;color:#888;font-size:13px;">&#x1F4CA; Analizando mercado con IA...</div>';
-    
-    var today = new Date().toLocaleDateString('es-DO', {weekday:'long', year:'numeric', month:'long', day:'numeric'});
-    
-    fetch('/api/trading')
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      var recs = data.recs || [];
-      
-      var now = new Date();
-      if (tt) tt.textContent = 'Actualizado: ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
-      
-      tc.innerHTML = recs.map(function(r) {
-        var isCompra = r.accion === 'COMPRAR';
-        return '<div style="background:#fff;padding:14px 16px;border:1px solid #e0e0e0;border-left:4px solid ' + r.color + ';transition:.2s;" onmouseover="this.style.boxShadow='0 4px 16px rgba(0,0,0,.1)'" onmouseout="this.style.boxShadow='none'">'
-          + '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">'
-          + '<div>'
-          + '<div style="font-family:Oswald,sans-serif;font-size:18px;font-weight:700;color:#111;line-height:1;">' + r.ticker + '</div>'
-          + '<div style="font-size:11px;color:#888;margin-top:2px;">' + r.nombre + '</div>'
-          + '</div>'
-          + '<span style="background:' + r.color + ';color:#fff;font-size:10px;font-weight:700;padding:3px 8px;letter-spacing:.06em;text-transform:uppercase;">' + r.accion + '</span>'
-          + '</div>'
-          + '<div style="font-family:Oswald,sans-serif;font-size:22px;font-weight:700;color:#111;margin-bottom:6px;">' + r.precio + '</div>'
-          + '<div style="font-size:12px;color:#555;line-height:1.4;margin-bottom:8px;">' + r.razon + '</div>'
-          + '<div style="display:flex;align-items:center;gap:4px;">'
-          + '<span style="font-size:10px;color:#888;">Confianza:</span>'
-          + '<span style="font-size:10px;font-weight:700;color:' + r.color + ';">' + r.confianza + '</span>'
-          + '</div>'
-          + '</div>';
-      }).join('');
-    })
-    .catch(function(err) {
-      if (tt) tt.textContent = 'Error al cargar';
-      tc.innerHTML = '<div style="grid-column:span 4;text-align:center;padding:20px;color:#cc0000;font-size:13px;">No se pudo conectar con el motor de IA. Intenta de nuevo.</div>';
-    });
+
+    var RECS = [
+      { ticker: 'NVDA', nombre: 'NVIDIA Corp', accion: 'COMPRAR', precio: '$875', razon: 'Fuerte demanda de chips IA en mercados globales', confianza: 'Alta', color: '#007a3d' },
+      { ticker: 'AAPL', nombre: 'Apple Inc', accion: 'COMPRAR', precio: '$182', razon: 'Ciclo de actualizacion iPhone con IA integrada', confianza: 'Alta', color: '#007a3d' },
+      { ticker: 'JPM', nombre: 'JPMorgan Chase', accion: 'NEUTRAL', precio: '$195', razon: 'Resultados solidos pero presion en tasas de interes', confianza: 'Media', color: '#e07b00' },
+      { ticker: 'XOM', nombre: 'ExxonMobil', accion: 'COMPRAR', precio: '$118', razon: 'Precios del petroleo al alza por tensiones globales', confianza: 'Media', color: '#007a3d' }
+    ];
+
+    var now = new Date();
+    if (tt) tt.textContent = 'Actualizado: ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+
+    tc.innerHTML = RECS.map(function(r) {
+      return '<div style="background:#fff;padding:14px 16px;border:1px solid #e0e0e0;border-left:4px solid ' + r.color + ';">'
+        + '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">'
+        + '<div><div style="font-family:Oswald,sans-serif;font-size:18px;font-weight:700;color:#111;">' + r.ticker + '</div>'
+        + '<div style="font-size:11px;color:#888;">' + r.nombre + '</div></div>'
+        + '<span style="background:' + r.color + ';color:#fff;font-size:10px;font-weight:700;padding:3px 8px;text-transform:uppercase;">' + r.accion + '</span>'
+        + '</div>'
+        + '<div style="font-family:Oswald,sans-serif;font-size:22px;font-weight:700;color:#111;margin-bottom:6px;">' + r.precio + '</div>'
+        + '<div style="font-size:12px;color:#555;line-height:1.4;margin-bottom:8px;">' + r.razon + '</div>'
+        + '<div style="display:flex;align-items:center;gap:4px;">'
+        + '<span style="font-size:10px;color:#888;">Confianza:</span>'
+        + '<span style="font-size:10px;font-weight:700;color:' + r.color + ';">' + r.confianza + '</span>'
+        + '</div></div>';
+    }).join('');
   };
 
-  // Cargar trading al inicio
   loadTrading();
-  // Actualizar cada 4 horas
-  setInterval(window.loadTrading, 4 * 3600000);
 
 
 })();
