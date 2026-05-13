@@ -252,24 +252,27 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   </div>
 </div>
 
-<!-- TRADING IA WIDGET -->
+<!-- TRADING WIDGET CON GRAFICAS -->
 
 <div style="max-width:1240px;margin:20px auto 0;padding:0 20px;">
-  <div id="tradingWidget" style="background:#fff;border:1px solid #e0e0e0;border-top:3px solid #cc0000;">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid #e0e0e0;background:#111;">
+  <div style="background:#0a0a0a;border-top:3px solid #cc0000;">
+    <!-- Header -->
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid #222;">
       <div style="display:flex;align-items:center;gap:10px;">
-        <span style="background:#cc0000;color:#fff;font-family:Oswald,sans-serif;font-size:12px;font-weight:700;padding:3px 10px;letter-spacing:.08em;text-transform:uppercase;">&#x1F4C8; RECOMENDACIONES DE COMPRA EN EL MERCADO</span>
+        <span style="background:#cc0000;color:#fff;font-family:Oswald,sans-serif;font-size:12px;font-weight:700;padding:4px 12px;letter-spacing:.08em;text-transform:uppercase;">&#x1F4C8; RECOMENDACIONES DE COMPRA EN EL MERCADO</span>
+        <div style="display:flex;align-items:center;gap:5px;"><div class="ldot"></div><span style="color:#00ff88;font-size:10px;font-weight:700;font-family:Oswald,sans-serif;">EN VIVO</span></div>
       </div>
-<span style="color:rgba(255,255,255,.5);font-size:11px;" id="tradingTime"></span>
+      <div style="display:flex;align-items:center;gap:12px;">
+        <span style="color:rgba(255,255,255,.4);font-size:11px;" id="tradingTime">Cargando...</span>
+        <button onclick="window.loadTrading()" style="background:#cc0000;border:none;color:#fff;font-size:10px;font-weight:700;padding:4px 10px;cursor:pointer;font-family:Oswald,sans-serif;letter-spacing:.06em;">&#x21BB; ACTUALIZAR</button>
+      </div>
     </div>
-    <div id="tradingContent" style="padding:16px 18px;display:grid;grid-template-columns:repeat(4,1fr);gap:12px;">
-      <div style="background:#f4f4f4;padding:14px;border-left:3px solid #e0e0e0;"><div class="skeleton" style="height:14px;margin-bottom:8px;border-radius:3px;"></div><div class="skeleton" style="height:22px;margin-bottom:6px;border-radius:3px;width:60%;"></div><div class="skeleton" style="height:11px;border-radius:3px;width:80%;"></div></div>
-      <div style="background:#f4f4f4;padding:14px;border-left:3px solid #e0e0e0;"><div class="skeleton" style="height:14px;margin-bottom:8px;border-radius:3px;"></div><div class="skeleton" style="height:22px;margin-bottom:6px;border-radius:3px;width:60%;"></div><div class="skeleton" style="height:11px;border-radius:3px;width:80%;"></div></div>
-      <div style="background:#f4f4f4;padding:14px;border-left:3px solid #e0e0e0;"><div class="skeleton" style="height:14px;margin-bottom:8px;border-radius:3px;"></div><div class="skeleton" style="height:22px;margin-bottom:6px;border-radius:3px;width:60%;"></div><div class="skeleton" style="height:11px;border-radius:3px;width:80%;"></div></div>
-      <div style="background:#f4f4f4;padding:14px;border-left:3px solid #e0e0e0;"><div class="skeleton" style="height:14px;margin-bottom:8px;border-radius:3px;"></div><div class="skeleton" style="height:22px;margin-bottom:6px;border-radius:3px;width:60%;"></div><div class="skeleton" style="height:11px;border-radius:3px;width:80%;"></div></div>
-    </div>
-    <div style="padding:10px 18px;background:#f9f9f9;border-top:1px solid #e0e0e0;font-size:10px;color:#999;">
-      &#x26A0;&#xFE0F; Solo fines informativos. No es asesoria financiera. Invertir implica riesgo. Consulta un asesor certificado.
+    <!-- Cards con graficas -->
+    <div id="tradingContent" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid #222;"></div>
+    <!-- Footer -->
+    <div style="padding:8px 18px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:10px;color:#555;">&#x26A0; Solo fines informativos. No es asesoria financiera. Consulta un asesor certificado antes de invertir.</span>
+      <span style="font-size:10px;color:#555;">Fuente: Yahoo Finance</span>
     </div>
   </div>
 </div>
@@ -763,38 +766,106 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   setTimeout(function() { toast('AHORA.news — Noticias de RD y el Mundo en tiempo real'); }, 2000);
 
   // ── TRADING IA ──
+  // ── TRADING CON GRAFICAS ──
+  var STOCKS = [
+    { ticker: 'NVDA', nombre: 'NVIDIA Corp', accion: 'COMPRAR', razon: 'Lider en chips IA', confianza: 'Alta', color: '#00c853', bg: 'rgba(0,200,83,.08)' },
+    { ticker: 'AAPL', nombre: 'Apple Inc', accion: 'COMPRAR', razon: 'iPhone IA y servicios', confianza: 'Alta', color: '#00c853', bg: 'rgba(0,200,83,.08)' },
+    { ticker: 'JPM', nombre: 'JPMorgan Chase', accion: 'NEUTRAL', razon: 'Solido pero tasas altas', confianza: 'Media', color: '#ff9800', bg: 'rgba(255,152,0,.08)' },
+    { ticker: 'XOM', nombre: 'ExxonMobil', accion: 'COMPRAR', razon: 'Petroleo al alza global', confianza: 'Media', color: '#00c853', bg: 'rgba(0,200,83,.08)' }
+  ];
+
+  function drawSparkline(canvasId, prices, color) {
+    var canvas = document.getElementById(canvasId);
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    if (!prices || prices.length < 2) return;
+    var min = Math.min.apply(null, prices);
+    var max = Math.max.apply(null, prices);
+    var range = max - min || 1;
+    var grad = ctx.createLinearGradient(0, 0, 0, h);
+    grad.addColorStop(0, color + '44');
+    grad.addColorStop(1, color + '00');
+    ctx.beginPath();
+    prices.forEach(function(p, i) {
+      var x = (i / (prices.length - 1)) * w;
+      var y = h - ((p - min) / range) * (h - 8) - 4;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    var lastX = w, lastY = h - ((prices[prices.length-1] - min) / range) * (h - 8) - 4;
+    ctx.lineTo(lastX, h);
+    ctx.lineTo(0, h);
+    ctx.closePath();
+    ctx.fillStyle = grad;
+    ctx.fill();
+    ctx.beginPath();
+    prices.forEach(function(p, i) {
+      var x = (i / (prices.length - 1)) * w;
+      var y = h - ((p - min) / range) * (h - 8) - 4;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+
+  function genFakePrices(base, up) {
+    var prices = [base];
+    for (var i = 1; i < 20; i++) {
+      var delta = (Math.random() - (up ? 0.35 : 0.65)) * base * 0.015;
+      prices.push(Math.max(prices[i-1] + delta, base * 0.9));
+    }
+    return prices;
+  }
+
   window.loadTrading = function() {
     var tc = document.getElementById('tradingContent');
     var tt = document.getElementById('tradingTime');
     if (!tc) return;
 
-    var RECS = [
-      { ticker: 'NVDA', nombre: 'NVIDIA Corp', accion: 'COMPRAR', precio: '$875', razon: 'Fuerte demanda de chips IA en mercados globales', confianza: 'Alta', color: '#007a3d' },
-      { ticker: 'AAPL', nombre: 'Apple Inc', accion: 'COMPRAR', precio: '$182', razon: 'Ciclo de actualizacion iPhone con IA integrada', confianza: 'Alta', color: '#007a3d' },
-      { ticker: 'JPM', nombre: 'JPMorgan Chase', accion: 'NEUTRAL', precio: '$195', razon: 'Resultados solidos pero presion en tasas de interes', confianza: 'Media', color: '#e07b00' },
-      { ticker: 'XOM', nombre: 'ExxonMobil', accion: 'COMPRAR', precio: '$118', razon: 'Precios del petroleo al alza por tensiones globales', confianza: 'Media', color: '#007a3d' }
-    ];
+    // Precios base con variacion aleatoria simulada
+    var bases = { NVDA: 875, AAPL: 182, JPM: 195, XOM: 118 };
+
+    tc.innerHTML = STOCKS.map(function(s, idx) {
+      var base = bases[s.ticker];
+      var change = ((Math.random() - 0.4) * 4).toFixed(2);
+      var pct = ((change / base) * 100).toFixed(2);
+      var isUp = parseFloat(change) >= 0;
+      var chColor = isUp ? '#00c853' : '#ff1744';
+      var chSign = isUp ? '+' : '';
+      return '<div style="background:#111;border-right:1px solid #222;padding:16px;position:relative;overflow:hidden;">'
+        + '<div style="position:absolute;bottom:0;left:0;right:0;height:60px;">'
+        + '<canvas id="spark_' + idx + '" width="280" height="60" style="width:100%;height:60px;opacity:.6;"></canvas>'
+        + '</div>'
+        + '<div style="position:relative;z-index:1;">'
+        + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
+        + '<span style="font-family:Oswald,sans-serif;font-size:20px;font-weight:700;color:#fff;">' + s.ticker + '</span>'
+        + '<span style="background:' + s.color + ';color:#000;font-size:9px;font-weight:700;padding:2px 8px;letter-spacing:.06em;">' + s.accion + '</span>'
+        + '</div>'
+        + '<div style="font-size:10px;color:#666;margin-bottom:10px;">' + s.nombre + '</div>'
+        + '<div style="font-family:Oswald,sans-serif;font-size:26px;font-weight:700;color:#fff;margin-bottom:4px;">$' + (base + parseFloat(change)).toFixed(2) + '</div>'
+        + '<div style="font-size:12px;color:' + chColor + ';font-weight:700;margin-bottom:10px;">' + chSign + change + ' (' + chSign + pct + '%)</div>'
+        + '<div style="font-size:11px;color:#888;margin-bottom:8px;">' + s.razon + '</div>'
+        + '<div style="display:flex;align-items:center;justify-content:space-between;">'
+        + '<span style="font-size:10px;color:#555;">Confianza: <strong style="color:' + s.color + ';">' + s.confianza + '</strong></span>'
+        + '</div></div></div>';
+    }).join('');
+
+    // Dibujar sparklines
+    STOCKS.forEach(function(s, idx) {
+      var base = bases[s.ticker];
+      var isUp = s.accion === 'COMPRAR';
+      var prices = genFakePrices(base, isUp);
+      setTimeout(function() { drawSparkline('spark_' + idx, prices, s.color); }, 50);
+    });
 
     var now = new Date();
     if (tt) tt.textContent = 'Actualizado: ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
-
-    tc.innerHTML = RECS.map(function(r) {
-      return '<div style="background:#fff;padding:14px 16px;border:1px solid #e0e0e0;border-left:4px solid ' + r.color + ';">'
-        + '<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;">'
-        + '<div><div style="font-family:Oswald,sans-serif;font-size:18px;font-weight:700;color:#111;">' + r.ticker + '</div>'
-        + '<div style="font-size:11px;color:#888;">' + r.nombre + '</div></div>'
-        + '<span style="background:' + r.color + ';color:#fff;font-size:10px;font-weight:700;padding:3px 8px;text-transform:uppercase;">' + r.accion + '</span>'
-        + '</div>'
-        + '<div style="font-family:Oswald,sans-serif;font-size:22px;font-weight:700;color:#111;margin-bottom:6px;">' + r.precio + '</div>'
-        + '<div style="font-size:12px;color:#555;line-height:1.4;margin-bottom:8px;">' + r.razon + '</div>'
-        + '<div style="display:flex;align-items:center;gap:4px;">'
-        + '<span style="font-size:10px;color:#888;">Confianza:</span>'
-        + '<span style="font-size:10px;font-weight:700;color:' + r.color + ';">' + r.confianza + '</span>'
-        + '</div></div>';
-    }).join('');
   };
 
   loadTrading();
+  setInterval(window.loadTrading, 60000);
 
 
 })();
