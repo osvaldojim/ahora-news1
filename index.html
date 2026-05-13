@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -130,7 +129,7 @@ nav{background:var(--red);position:sticky;top:0;z-index:1000;box-shadow:0 3px 10
 .load-more-btn:hover{background:var(--red);}
 .skeleton{background:linear-gradient(90deg,#e8e8e8 25%,#f0f0f0 50%,#e8e8e8 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.right-sb>+{margin-top:20px;}
+.right-sb>*+*{margin-top:20px;}
 .sb-box{background:var(--white);border:1px solid var(--border);}
 .sb-head{background:var(--dark);color:#fff;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;padding:10px 16px;letter-spacing:.08em;text-transform:uppercase;}
 .sb-head.red{background:var(--red);}
@@ -194,49 +193,45 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     </a>
     <div class="header-tagline">Noticias de República Dominicana y el Mundo • Actualizadas por IA</div>
 
-
-<!-- WIDGET DÓLAR -->
-<div class="dolar-widget" onclick="toggleDolar(event)" id="dolarWidget">
-  <span class="dolar-icon">💵</span>
-  <div class="dolar-info">
-    <span class="dolar-lbl">Dólar · RD$</span>
-    <span class="dolar-rate" id="dolarRate">---.--</span>
-  </div>
-  <div class="dolar-sep"></div>
-  <div class="dolar-cv">
-    <span id="dolarCompra">Compra: ---</span>
-    <span id="dolarVenta">Venta: ---</span>
-  </div>
-  <span class="dolar-arrow" id="dolarArrow">▾</span>
-  <div class="dolar-drop" id="dolarDrop" onclick="event.stopPropagation()">
-    <div class="dd-head">💱 Tasas de Cambio — RD$
-      <button class="dd-close" onclick="closeDolar()">✕</button>
+    <!-- WIDGET DÓLAR -->
+    <div class="dolar-widget" onclick="toggleDolar(event)" id="dolarWidget">
+      <span class="dolar-icon">💵</span>
+      <div class="dolar-info">
+        <span class="dolar-lbl">Dólar · RD$</span>
+        <span class="dolar-rate" id="dolarRate">---.--</span>
+      </div>
+      <div class="dolar-sep"></div>
+      <div class="dolar-cv">
+        <span id="dolarCompra">Compra: ---</span>
+        <span id="dolarVenta">Venta: ---</span>
+      </div>
+      <span class="dolar-arrow" id="dolarArrow">▾</span>
+      <div class="dolar-drop" id="dolarDrop" onclick="event.stopPropagation()">
+        <div class="dd-head">💱 Tasas de Cambio — RD$
+          <button class="dd-close" onclick="closeDolar()">✕</button>
+        </div>
+        <div class="dd-row">
+          <span class="dd-name">🇺🇸 Dólar USA</span>
+          <div class="dd-vals"><div class="dd-main" id="ddUSD">---</div><div class="dd-sub" id="ddUSDsub">Compra / Venta</div></div>
+        </div>
+        <div class="dd-row">
+          <span class="dd-name">🇪🇺 Euro</span>
+          <div class="dd-vals"><div class="dd-main" id="ddEUR">---</div><div class="dd-sub">Referencia BCRD</div></div>
+        </div>
+        <div class="dd-row">
+          <span class="dd-name">🇨🇦 Dólar CAD</span>
+          <div class="dd-vals"><div class="dd-main" id="ddCAD">---</div><div class="dd-sub">Referencia BCRD</div></div>
+        </div>
+        <div class="dd-row">
+          <span class="dd-name">🇬🇧 Libra GBP</span>
+          <div class="dd-vals"><div class="dd-main" id="ddGBP">---</div><div class="dd-sub">Referencia BCRD</div></div>
+        </div>
+        <div class="dd-note" id="ddUpdated">Cargando tasas...</div>
+      </div>
     </div>
-    <div class="dd-row">
-      <span class="dd-name">🇺🇸 Dólar USA</span>
-      <div class="dd-vals"><div class="dd-main" id="ddUSD">---</div><div class="dd-sub" id="ddUSDsub">Compra / Venta</div></div>
-    </div>
-    <div class="dd-row">
-      <span class="dd-name">🇪🇺 Euro</span>
-      <div class="dd-vals"><div class="dd-main" id="ddEUR">---</div><div class="dd-sub">Referencia BCRD</div></div>
-    </div>
-    <div class="dd-row">
-      <span class="dd-name">🇨🇦 Dólar CAD</span>
-      <div class="dd-vals"><div class="dd-main" id="ddCAD">---</div><div class="dd-sub">Referencia BCRD</div></div>
-    </div>
-    <div class="dd-row">
-      <span class="dd-name">🇬🇧 Libra GBP</span>
-      <div class="dd-vals"><div class="dd-main" id="ddGBP">---</div><div class="dd-sub">Referencia BCRD</div></div>
-    </div>
-    <div class="dd-note" id="ddUpdated">Cargando tasas...</div>
-  </div>
-</div>
-
-
   </div>
 
   <!-- NAV — STICKY FIJO -->
-
   <nav>
     <div class="nav-inner">
       <a href="#" class="on" onclick="filterCat('',this);return false;">INICIO</a>
@@ -540,96 +535,94 @@ function showModal(n){
   var imgH=n.img?'<img loading="lazy" src="'+h(n.img)+'" style="width:100%;height:360px;object-fit:cover;display:block;" alt="'+h(n.title)+'">':'';
   var paras=(n.body||n.excerpt||'').split('\n').filter(function(p){return p.trim();}).map(function(p){return '<p style="margin-bottom:14px;">'+h(p)+'</p>';}).join('');
   document.getElementById('modalEl').innerHTML=imgH+'<div style="padding:28px 36px 0;"><span style="background:#cc0000;color:#fff;font-size:10px;font-weight:700;padding:3px 10px;letter-spacing:.1em;text-transform:uppercase;">'+h(n.cat)+'</span><h1 style="font-family:Playfair Display,serif;font-size:28px;font-weight:700;line-height:1.25;color:#111;margin:14px 0 12px;">'+h(n.title)+'</h1><div style="display:flex;align-items:center;gap:14px;font-size:12px;color:#888;margin-bottom:20px;border-bottom:1px solid #e0e0e0;padding-bottom:14px;flex-wrap:wrap;"><span style="font-weight:700;color:#111;">'+(n.isEditor?'✍️':'📰')+' '+h(n.source)+'</span><span>'+n.time+'</span><span style="color:#0066cc;font-weight:600;">🤖 Redactado por IA</span></div><div style="font-size:16px;line-height:1.85;color:#333;margin-bottom:22px;">'+paras+'</div><div style="background:#f9f9f9;border:1px solid #e0e0e0;padding:16px;margin-bottom:22px;"><div style="font-size:12px;font-weight:700;color:#444;text-transform:uppercase;letter-spacing:.07em;margin-bottom:11px;">¿Cómo te hace sentir esta noticia?</div><div style="display:flex;gap:8px;flex-wrap:wrap;"><button class="rbtn" onclick="react(this)"><span>😮</span> Sorprendido</button><button class="rbtn" onclick="react(this)"><span>😢</span> Triste</button><button class="rbtn" onclick="react(this)"><span>😡</span> Enojado</button><button class="rbtn" onclick="react(this)"><span>🎉</span> Feliz</button><button class="rbtn" onclick="react(this)"><span>🤔</span> Pensativo</button></div></div></div><div style="padding:0 36px 36px;"><h3 style="font-family:Playfair Display,serif;font-size:20px;font-weight:700;color:#111;margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #cc0000;">Comentarios ('+((n.comments&&n.comments.length)||0)+')</h3><div id="clist-'+n.id+'">'+(n.comments&&n.comments.length?n.comments.map(function(c){return '<div style="display:flex;gap:10px;margin-bottom:12px;"><div style="width:34px;height:34px;border-radius:50%;background:'+c.c+';color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;">'+c.av+'</div><div style="flex:1;background:#f9f9f9;border:1px solid #e0e0e0;padding:11px 13px;"><div style="font-size:12px;font-weight:700;margin-bottom:4px;">'+h(c.u)+'</div><div style="font-size:13px;color:#444;">'+h(c.t)+'</div></div></div>';}).join(''):'<div style="color:#888;font-size:13px;padding:10px 0;">Sé el primero en comentar 💬</div>')+'</div><div style="display:flex;gap:10px;margin-top:18px;"><div style="width:34px;height:34px;border-radius:50%;background:#cc0000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;">TÚ</div><div style="flex:1;"><textarea id="ctxt" style="width:100%;background:#fff;border:1px solid #e0e0e0;padding:11px 13px;color:#111;font-family:Source Sans 3,sans-serif;font-size:13px;resize:none;outline:none;min-height:78px;" placeholder="¿Qué opinas?"></textarea><button onclick="addComment(\''+n.id+'\')" style="margin-top:8px;background:#cc0000;color:#fff;border:none;padding:10px 20px;font-family:Oswald,sans-serif;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:.06em;text-transform:uppercase;">Publicar comentario</button></div></div></div>';
-
-document.getElementById(‘overlay’).classList.add(‘open’);
-document.body.style.overflow=‘hidden’;
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow='hidden';
 }
 
 function addComment(id){
-var txt=document.getElementById(‘ctxt’).value.trim();if(!txt)return;
-var n=NEWS.find(function(x){return String(x.id)===String(id);});if(!n)return;
-if(!n.comments)n.comments=[];
-n.comments.unshift({u:‘Tú’,av:‘TÚ’,c:’#cc0000’,t:txt,d:‘Ahora mismo’});
-var list=document.getElementById(‘clist-’+id);
-if(list){var div=document.createElement(‘div’);div.style.cssText=‘display:flex;gap:10px;margin-bottom:12px;’;div.innerHTML=’<div style="width:34px;height:34px;border-radius:50%;background:#cc0000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;">TÚ</div><div style="flex:1;background:#f9f9f9;border:1px solid #e0e0e0;padding:11px 13px;"><div style="font-size:12px;font-weight:700;margin-bottom:4px;">Tú</div><div style="font-size:13px;color:#444;">’+h(txt)+’</div></div>’;list.prepend(div);}
-document.getElementById(‘ctxt’).value=’’;
+  var txt=document.getElementById('ctxt').value.trim();if(!txt)return;
+  var n=NEWS.find(function(x){return String(x.id)===String(id);});if(!n)return;
+  if(!n.comments)n.comments=[];
+  n.comments.unshift({u:'Tú',av:'TÚ',c:'#cc0000',t:txt,d:'Ahora mismo'});
+  var list=document.getElementById('clist-'+id);
+  if(list){var div=document.createElement('div');div.style.cssText='display:flex;gap:10px;margin-bottom:12px;';div.innerHTML='<div style="width:34px;height:34px;border-radius:50%;background:#cc0000;color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;">TÚ</div><div style="flex:1;background:#f9f9f9;border:1px solid #e0e0e0;padding:11px 13px;"><div style="font-size:12px;font-weight:700;margin-bottom:4px;">Tú</div><div style="font-size:13px;color:#444;">'+h(txt)+'</div></div>';list.prepend(div);}
+  document.getElementById('ctxt').value='';
 }
 
-function react(btn){document.querySelectorAll(’.rbtn’).forEach(function(b){b.classList.remove(‘on’);});btn.classList.add(‘on’);}
-function closeModal(){document.getElementById(‘overlay’).classList.remove(‘open’);document.body.style.overflow=’’;}
-function showToast(m){var t=document.getElementById(‘toast’);document.getElementById(‘toastMsg’).textContent=m;t.classList.add(‘show’);setTimeout(function(){t.classList.remove(‘show’);},5000);}
+function react(btn){document.querySelectorAll('.rbtn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');}
+function closeModal(){document.getElementById('overlay').classList.remove('open');document.body.style.overflow='';}
+function showToast(m){var t=document.getElementById('toast');document.getElementById('toastMsg').textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show');},5000);}
 
 /* ── DÓLAR ── */
-var DOLAR_KEY=‘ahora_dolar’,DOLAR_TTL=3600000;
+var DOLAR_KEY='ahora_dolar',DOLAR_TTL=3600000;
 function saveDolar(d){try{localStorage.setItem(DOLAR_KEY,JSON.stringify({ts:Date.now(),d:d}));}catch(e){}}
 function getCachedDolar(){try{var r=localStorage.getItem(DOLAR_KEY);if(!r)return null;var o=JSON.parse(r);if(Date.now()-o.ts>DOLAR_TTL)return null;return o.d;}catch(e){return null;}}
 
 async function fetchDolar(){
-var cached=getCachedDolar();
-if(cached){applyDolar(cached);return;}
-try{
-var r=await fetch(‘https://open.er-api.com/v6/latest/USD’);
-if(!r.ok)throw new Error(‘api’);
-var data=await r.json();
-var rates=data.rates||{};
-var usd=rates.DOP||59.5;
-var result={
-usd:usd.toFixed(2),
-compra:(usd-0.5).toFixed(2),venta:(usd+0.5).toFixed(2),
-eur:(usd/(rates.EUR||0.92)).toFixed(2),
-cad:(usd/(rates.CAD||1.36)).toFixed(2),
-gbp:(usd/(rates.GBP||0.79)).toFixed(2),
-upd:new Date().toLocaleTimeString(‘es-DO’,{hour:‘2-digit’,minute:‘2-digit’})
-};
-saveDolar(result);applyDolar(result);
-}catch(e){
-applyDolar({usd:‘59.50’,compra:‘59.00’,venta:‘60.00’,eur:‘64.80’,cad:‘43.50’,gbp:‘75.20’,upd:‘Aprox. BCRD’});
-}
+  var cached=getCachedDolar();
+  if(cached){applyDolar(cached);return;}
+  try{
+    var r=await fetch('https://open.er-api.com/v6/latest/USD');
+    if(!r.ok)throw new Error('api');
+    var data=await r.json();
+    var rates=data.rates||{};
+    var usd=rates.DOP||59.5;
+    var result={
+      usd:usd.toFixed(2),
+      compra:(usd-0.5).toFixed(2),venta:(usd+0.5).toFixed(2),
+      eur:(usd/(rates.EUR||0.92)).toFixed(2),
+      cad:(usd/(rates.CAD||1.36)).toFixed(2),
+      gbp:(usd/(rates.GBP||0.79)).toFixed(2),
+      upd:new Date().toLocaleTimeString('es-DO',{hour:'2-digit',minute:'2-digit'})
+    };
+    saveDolar(result);applyDolar(result);
+  }catch(e){
+    applyDolar({usd:'59.50',compra:'59.00',venta:'60.00',eur:'64.80',cad:'43.50',gbp:'75.20',upd:'Aprox. BCRD'});
+  }
 }
 
 function applyDolar(r){
-var el=function(id){return document.getElementById(id);};
-if(el(‘dolarRate’))el(‘dolarRate’).textContent=‘RD$ ‘+r.usd;
-if(el(‘dolarCompra’))el(‘dolarCompra’).innerHTML=‘Compra: <b>’+r.compra+’</b>’;
-if(el(‘dolarVenta’))el(‘dolarVenta’).innerHTML=‘Venta: <b>’+r.venta+’</b>’;
-if(el(‘navDolarVal’))el(‘navDolarVal’).textContent=r.usd;
-if(el(‘ddUSD’))el(‘ddUSD’).textContent=’RD$ ’+r.usd;
-if(el(‘ddUSDsub’))el(‘ddUSDsub’).textContent=’Compra ‘+r.compra+’ / Venta ’+r.venta;
-if(el(‘ddEUR’))el(‘ddEUR’).textContent=’RD$ ’+r.eur;
-if(el(‘ddCAD’))el(‘ddCAD’).textContent=’RD$ ’+r.cad;
-if(el(‘ddGBP’))el(‘ddGBP’).textContent=’RD$ ’+r.gbp;
-if(el(‘ddUpdated’))el(‘ddUpdated’).textContent=‘Actualizado: ‘+r.upd+’ · Fuente: er-api / BCRD’;
+  var el=function(id){return document.getElementById(id);};
+  if(el('dolarRate'))el('dolarRate').textContent='RD$ '+r.usd;
+  if(el('dolarCompra'))el('dolarCompra').innerHTML='Compra: <b>'+r.compra+'</b>';
+  if(el('dolarVenta'))el('dolarVenta').innerHTML='Venta: <b>'+r.venta+'</b>';
+  if(el('navDolarVal'))el('navDolarVal').textContent=r.usd;
+  if(el('ddUSD'))el('ddUSD').textContent='RD$ '+r.usd;
+  if(el('ddUSDsub'))el('ddUSDsub').textContent='Compra '+r.compra+' / Venta '+r.venta;
+  if(el('ddEUR'))el('ddEUR').textContent='RD$ '+r.eur;
+  if(el('ddCAD'))el('ddCAD').textContent='RD$ '+r.cad;
+  if(el('ddGBP'))el('ddGBP').textContent='RD$ '+r.gbp;
+  if(el('ddUpdated'))el('ddUpdated').textContent='Actualizado: '+r.upd+' · Fuente: er-api / BCRD';
 }
 
 function toggleDolar(e){
-e.stopPropagation();
-var drop=document.getElementById(‘dolarDrop’);
-if(!drop)return;
-drop.classList.toggle(‘open’);
-var arr=document.getElementById(‘dolarArrow’);
-if(arr)arr.textContent=drop.classList.contains(‘open’)?‘▴’:‘▾’;
+  e.stopPropagation();
+  var drop=document.getElementById('dolarDrop');
+  if(!drop)return;
+  drop.classList.toggle('open');
+  var arr=document.getElementById('dolarArrow');
+  if(arr)arr.textContent=drop.classList.contains('open')?'▴':'▾';
 }
 function closeDolar(){
-var drop=document.getElementById(‘dolarDrop’);
-if(drop)drop.classList.remove(‘open’);
-var arr=document.getElementById(‘dolarArrow’);
-if(arr)arr.textContent=‘▾’;
+  var drop=document.getElementById('dolarDrop');
+  if(drop)drop.classList.remove('open');
+  var arr=document.getElementById('dolarArrow');
+  if(arr)arr.textContent='▾';
 }
-document.addEventListener(‘click’,function(e){
-var w=document.getElementById(‘dolarWidget’);
-if(w&&!w.contains(e.target))closeDolar();
+document.addEventListener('click',function(e){
+  var w=document.getElementById('dolarWidget');
+  if(w&&!w.contains(e.target))closeDolar();
 });
 
 /* ── TIMERS ── */
-setInterval(function(){CYCLE–;if(CYCLE<=0)CYCLE=40;var el=document.getElementById(‘nextCycle’);if(el)el.textContent=CYCLE+‘s’;},1000);
+setInterval(function(){CYCLE--;if(CYCLE<=0)CYCLE=40;var el=document.getElementById('nextCycle');if(el)el.textContent=CYCLE+'s';},1000);
 setInterval(function(){loadNews(FILTER);},REFRESH);
 setInterval(fetchDolar,3600000);
 
 /* ── INIT ── */
-loadNews(’’);
+loadNews('');
 fetchDolar();
-setTimeout(function(){showToast(‘AHORA.news — Noticias de RD y el Mundo en tiempo real’);},2000);
+setTimeout(function(){showToast('AHORA.news — Noticias de RD y el Mundo en tiempo real');},2000);
 </script>
-
 </body>
 </html>
