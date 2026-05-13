@@ -268,7 +268,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       </div>
     </div>
     <!-- Cards con graficas -->
-    <div id="tradingContent" style="display:grid;grid-template-columns:repeat(4,1fr);gap:0;border-bottom:1px solid #222;"></div>
+    <div id="tradingContent" style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-bottom:1px solid #222;"></div>
     <!-- Footer -->
     <div style="padding:8px 18px;display:flex;align-items:center;justify-content:space-between;">
       <span style="font-size:10px;color:#555;">&#x26A0; Solo fines informativos. No es asesoria financiera. Consulta un asesor certificado antes de invertir.</span>
@@ -349,7 +349,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       <span style="border:1px solid rgba(255,255,255,.15);padding:3px 10px;font-size:11px;color:rgba(255,255,255,.45);">🇩🇴 República Dominicana</span>
       <span style="border:1px solid rgba(255,255,255,.15);padding:3px 10px;font-size:11px;color:rgba(255,255,255,.45);">⚡ Tiempo Real</span>
     </div>
-    <div class="footer-copy">©️ 2026 AHORA.news · Plataforma automatizada por IA</div>
+    <div class="footer-copy">©️ 2026 AHORA.news · Desarrollada por <a href="https://instagram.com/osvaldojim" target="_blank" style="color:rgba(255,255,255,.4);text-decoration:none;">@osvaldojim</a></div>
   </div>
 </footer>
 
@@ -767,12 +767,25 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
   // ── TRADING IA ──
   // ── TRADING CON GRAFICAS ──
-  var STOCKS = [
-    { ticker: 'NVDA', nombre: 'NVIDIA Corp', accion: 'COMPRAR', razon: 'Lider en chips IA', confianza: 'Alta', color: '#00c853', bg: 'rgba(0,200,83,.08)' },
-    { ticker: 'AAPL', nombre: 'Apple Inc', accion: 'COMPRAR', razon: 'iPhone IA y servicios', confianza: 'Alta', color: '#00c853', bg: 'rgba(0,200,83,.08)' },
-    { ticker: 'JPM', nombre: 'JPMorgan Chase', accion: 'NEUTRAL', razon: 'Solido pero tasas altas', confianza: 'Media', color: '#ff9800', bg: 'rgba(255,152,0,.08)' },
-    { ticker: 'XOM', nombre: 'ExxonMobil', accion: 'COMPRAR', razon: 'Petroleo al alza global', confianza: 'Media', color: '#00c853', bg: 'rgba(0,200,83,.08)' }
+  var ALL_STOCKS = [
+    { ticker: 'NVDA', nombre: 'NVIDIA Corp', accion: 'COMPRAR', razon: 'Lider en chips IA, demanda record', confianza: 'Alta', color: '#00c853', base: 875 },
+    { ticker: 'AAPL', nombre: 'Apple Inc', accion: 'COMPRAR', razon: 'iPhone con IA integrada impulsa ventas', confianza: 'Alta', color: '#00c853', base: 182 },
+    { ticker: 'MSFT', nombre: 'Microsoft Corp', accion: 'COMPRAR', razon: 'Azure y Copilot en plena expansion', confianza: 'Alta', color: '#00c853', base: 415 },
+    { ticker: 'GOOGL', nombre: 'Alphabet Inc', accion: 'COMPRAR', razon: 'Gemini IA domina busquedas globales', confianza: 'Alta', color: '#00c853', base: 172 },
+    { ticker: 'META', nombre: 'Meta Platforms', accion: 'COMPRAR', razon: 'IA en ads genera ingresos record', confianza: 'Alta', color: '#00c853', base: 512 },
+    { ticker: 'AMZN', nombre: 'Amazon.com Inc', accion: 'COMPRAR', razon: 'AWS lider indiscutible en cloud', confianza: 'Alta', color: '#00c853', base: 188 },
+    { ticker: 'AMD', nombre: 'Advanced Micro Devices', accion: 'COMPRAR', razon: 'GPUs compitiendo fuerte vs NVIDIA', confianza: 'Media', color: '#00c853', base: 155 },
+    { ticker: 'TSLA', nombre: 'Tesla Inc', accion: 'NO COMPRAR', razon: 'Alta volatilidad, mejor esperar', confianza: 'Alta', color: '#ff1744', base: 245 },
+    { ticker: 'JPM', nombre: 'JPMorgan Chase', accion: 'NEUTRAL', razon: 'Solido pero presion en tasas altas', confianza: 'Media', color: '#ff9800', base: 195 },
+    { ticker: 'XOM', nombre: 'ExxonMobil', accion: 'COMPRAR', razon: 'Petroleo sube por tensiones globales', confianza: 'Media', color: '#00c853', base: 118 },
+    { ticker: 'NFLX', nombre: 'Netflix Inc', accion: 'COMPRAR', razon: 'Crecimiento de suscriptores con IA', confianza: 'Media', color: '#00c853', base: 635 },
+    { ticker: 'DIS', nombre: 'Walt Disney Co', accion: 'NO COMPRAR', razon: 'Perdidas en streaming, restructurando', confianza: 'Alta', color: '#ff1744', base: 95 },
+    { ticker: 'INTC', nombre: 'Intel Corp', accion: 'NO COMPRAR', razon: 'Perdiendo mercado frente a AMD/NVDA', confianza: 'Alta', color: '#ff1744', base: 21 },
+    { ticker: 'PYPL', nombre: 'PayPal Holdings', accion: 'NEUTRAL', razon: 'Competencia fuerte de Apple Pay', confianza: 'Media', color: '#ff9800', base: 68 },
+    { ticker: 'UBER', nombre: 'Uber Technologies', accion: 'COMPRAR', razon: 'Expansion a nuevos mercados globales', confianza: 'Media', color: '#00c853', base: 82 }
   ];
+  var _stockIdx = 0;
+  var STOCKS = [];
 
   function drawSparkline(canvasId, prices, color) {
     var canvas = document.getElementById(canvasId);
@@ -825,7 +838,14 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     if (!tc) return;
 
     // Precios base con variacion aleatoria simulada
-    var bases = { NVDA: 875, AAPL: 182, JPM: 195, XOM: 118 };
+    // Rotar 5 acciones diferentes cada ciclo
+    _stockIdx = (_stockIdx + 5) % ALL_STOCKS.length;
+    STOCKS = [];
+    for (var si = 0; si < 5; si++) {
+      STOCKS.push(ALL_STOCKS[(_stockIdx + si) % ALL_STOCKS.length]);
+    }
+    var bases = {};
+    STOCKS.forEach(function(s) { bases[s.ticker] = s.base; });
 
     tc.innerHTML = STOCKS.map(function(s, idx) {
       var base = bases[s.ticker];
