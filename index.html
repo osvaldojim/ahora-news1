@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+
 <!-- v3.0 AHORA.news -->
+
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -31,7 +33,7 @@ body{background:var(--bg);color:var(--dark);font-family:'Source Sans 3',sans-ser
 .live-dot-wrap{display:flex;align-items:center;gap:5px;color:var(--red);font-weight:700;font-size:11px;white-space:nowrap;}
 .ldot{width:6px;height:6px;border-radius:50%;background:var(--red);animation:blink 1.4s infinite;flex-shrink:0;}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
-header{background:var(--white);border-bottom:3px solid var(--red);padding:16px 0 0;}
+header{position:sticky;top:0;z-index:1000;background:var(--white);border-bottom:3px solid var(--red);padding:16px 0 0;box-shadow:0 2px 8px rgba(0,0,0,.1);}
 .header-top{max-width:1240px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;gap:16px;flex-wrap:wrap;}
 .logo{text-decoration:none;display:flex;align-items:baseline;}
 .logo-box{background:var(--red);color:#fff;font-family:'Oswald',sans-serif;font-size:34px;font-weight:700;padding:4px 12px;margin-right:2px;line-height:1;}
@@ -62,15 +64,12 @@ header{background:var(--white);border-bottom:3px solid var(--red);padding:16px 0
 .dd-main{font-family:'Oswald',sans-serif;font-size:17px;font-weight:700;color:var(--dark);}
 .dd-sub{font-size:10px;color:var(--light);}
 .dd-note{padding:8px 14px;font-size:10px;color:var(--light);border-top:1px solid var(--border);text-align:center;}
-nav{background:var(--red);position:sticky;top:0;z-index:1000;box-shadow:0 3px 10px rgba(0,0,0,.25);}
+nav{background:var(--red);}
 .nav-inner{max-width:1240px;margin:0 auto;padding:0 20px;display:flex;align-items:center;overflow-x:auto;scrollbar-width:none;}
 .nav-inner::-webkit-scrollbar{display:none;}
 .nav-inner a{color:rgba(255,255,255,.85);text-decoration:none;font-size:13px;font-weight:700;padding:13px 15px;letter-spacing:.06em;text-transform:uppercase;transition:.15s;white-space:nowrap;border-bottom:3px solid transparent;display:block;}
 .nav-inner a:hover,.nav-inner a.on{color:#fff;background:rgba(0,0,0,.18);border-bottom-color:rgba(255,255,255,.6);}
-.nav-dolar{margin-left:auto;display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.25);color:#fff;font-size:11px;font-weight:700;padding:6px 12px;white-space:nowrap;cursor:pointer;border:none;font-family:'Source Sans 3',sans-serif;transition:.2s;letter-spacing:.04em;}
-.nav-dolar:hover{background:rgba(0,0,0,.4);}
-.nav-dolar .ndv{font-family:'Oswald',sans-serif;font-size:14px;margin:0 2px;}
-.nav-ai{display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.25);color:#fff;font-size:11px;font-weight:700;padding:6px 12px;white-space:nowrap;margin-left:6px;}
+.nav-ai{margin-left:auto;display:flex;align-items:center;gap:6px;background:rgba(0,0,0,.25);color:#fff;font-size:11px;font-weight:700;padding:6px 12px;white-space:nowrap;}
 .hero{background:var(--white);border-bottom:1px solid var(--border);padding:28px 0;}
 .hero-inner{max-width:1240px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 320px;gap:32px;}
 .hero-main{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
@@ -125,7 +124,7 @@ nav{background:var(--red);position:sticky;top:0;z-index:1000;box-shadow:0 3px 10
 .load-more-btn:hover{background:var(--red);}
 .skeleton{background:linear-gradient(90deg,#e8e8e8 25%,#f0f0f0 50%,#e8e8e8 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.right-sb>*+*{margin-top:20px;}
+.right-sb>+{margin-top:20px;}
 .sb-box{background:var(--white);border:1px solid var(--border);}
 .sb-head{background:var(--dark);color:#fff;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;padding:10px 16px;letter-spacing:.08em;text-transform:uppercase;}
 .sb-head.red{background:var(--red);}
@@ -221,9 +220,12 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       <a href="/" id="navDeportes">DEPORTES</a>
       <a href="/" id="navTecnologia">TECNOLOGÍA</a>
       <a href="/" id="navCiencia">CIENCIA</a>
-      <button class="nav-dolar" id="navDolarBtn">💵 USD <span class="ndv" id="navDolarVal">---</span> RD$</button>
-      <div class="nav-ai"><div class="ldot"></div>🤖 IA ACTIVA</div>
-    </div>
+
+
+  <div class="nav-ai"><div class="ldot"></div>🤖 IA ACTIVA</div>
+</div>
+
+
   </nav>
 </header>
 
@@ -519,6 +521,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
     for (var i = 0; i < visible.length; i++) {
       var n = visible[i];
+      if (!n.img) continue;
       var globalIdx = NEWS.indexOf(n);
       var iH = n.img
         ? '<img loading="lazy" src="' + esc(n.img) + '" alt="' + esc(n.title) + '" onerror="this.outerHTML=\'<div class=card-img-ph>📰</div>\'">'
@@ -699,7 +702,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   }
 
   el('dolarWidget').addEventListener('click', function(e) { e.stopPropagation(); toggleDolar(); });
-  el('navDolarBtn').addEventListener('click', function(e) { e.stopPropagation(); toggleDolar(); });
   el('ddCloseBtn').addEventListener('click', function(e) {
     e.stopPropagation();
     el('dolarDrop').classList.remove('open');
@@ -740,5 +742,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
 })();
 </script>
+
 </body>
 </html>
