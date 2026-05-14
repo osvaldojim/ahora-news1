@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <!-- Fondo -->
+  <rect width="1200" height="630" fill="#0a0a0a"/>
+  <rect width="1200" height="630" fill="url(#grad)"/>
+
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a0a"/>
+      <stop offset="50%" style="stop-color:#1a0000"/>
+      <stop offset="100%" style="stop-color:#0a0a0a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Grid lines decorativas -->
+  <line x1="0" y1="105" x2="1200" y2="105" stroke="#cc0000" stroke-width="0.4" opacity="0.15"/>
+  <line x1="0" y1="210" x2="1200" y2="210" stroke="#cc0000" stroke-width="0.4" opacity="0.15"/>
+  <line x1="0" y1="315" x2="1200" y2="315" stroke="#cc0000" stroke-width="0.4" opacity="0.15"/>
+  <line x1="0" y1="420" x2="1200" y2="420" stroke="#cc0000" stroke-width="0.4" opacity="0.15"/>
+  <line x1="0" y1="525" x2="1200" y2="525" stroke="#cc0000" stroke-width="0.4" opacity="0.15"/>
+  <line x1="200" y1="0" x2="200" y2="630" stroke="#cc0000" stroke-width="0.4" opacity="0.08"/>
+  <line x1="400" y1="0" x2="400" y2="630" stroke="#cc0000" stroke-width="0.4" opacity="0.08"/>
+  <line x1="600" y1="0" x2="600" y2="630" stroke="#cc0000" stroke-width="0.4" opacity="0.08"/>
+  <line x1="800" y1="0" x2="800" y2="630" stroke="#cc0000" stroke-width="0.4" opacity="0.08"/>
+  <line x1="1000" y1="0" x2="1000" y2="630" stroke="#cc0000" stroke-width="0.4" opacity="0.08"/>
+
+  <!-- Círculos decorativos -->
+  <circle cx="1050" cy="315" r="300" fill="none" stroke="#cc0000" stroke-width="1" opacity="0.1"/>
+  <circle cx="1050" cy="315" r="200" fill="none" stroke="#cc0000" stroke-width="1" opacity="0.08"/>
+  <circle cx="1050" cy="315" r="100" fill="none" stroke="#cc0000" stroke-width="1" opacity="0.06"/>
+
+  <!-- Barra roja superior -->
+  <rect width="1200" height="8" fill="#cc0000"/>
+  <!-- Barra roja inferior -->
+  <rect y="622" width="1200" height="8" fill="#cc0000"/>
+
+  <!-- Flag RD -->
+  <text x="40" y="62" font-size="36">🇩🇴</text>
+
+  <!-- Live dot + texto -->
+  <circle cx="1120" cy="46" r="6" fill="#cc0000"/>
+  <text x="1134" y="52" font-family="Arial,sans-serif" font-size="14" font-weight="700" fill="#cc0000" letter-spacing="2">EN VIVO</text>
+
+  <!-- Logo: caja A roja -->
+  <rect x="200" y="170" width="145" height="135" fill="#cc0000"/>
+  <text x="272" y="287" font-family="Impact,'Arial Black',sans-serif" font-size="120" font-weight="900" fill="white" text-anchor="middle">A</text>
+
+  <!-- Logo: HORA. -->
+  <text x="352" y="287" font-family="Impact,'Arial Black',sans-serif" font-size="120" font-weight="900" fill="white">HORA</text>
+  <text x="788" y="287" font-family="Impact,'Arial Black',sans-serif" font-size="120" font-weight="900" fill="#cc0000">.</text>
+
+  <!-- .news pequeño -->
+  <text x="810" y="295" font-family="Georgia,serif" font-size="28" fill="rgba(255,255,255,0.4)">news</text>
+
+  <!-- Tagline -->
+  <text x="600" y="360" font-family="Georgia,serif" font-size="22" fill="rgba(255,255,255,0.55)" text-anchor="middle" letter-spacing="1">Noticias de República Dominicana y el Mundo en Tiempo Real</text>
+
+  <!-- Badges -->
+  <rect x="235" y="400" width="200" height="36" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <text x="335" y="423" font-family="Arial,sans-serif" font-size="13" fill="rgba(255,255,255,0.45)" text-anchor="middle" letter-spacing="1">🤖 IA AUTOMATIZADA</text>
+
+  <rect x="455" y="400" width="240" height="36" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <text x="575" y="423" font-family="Arial,sans-serif" font-size="13" fill="rgba(255,255,255,0.45)" text-anchor="middle" letter-spacing="1">🇩🇴 REPÚBLICA DOMINICANA</text>
+
+  <rect x="715" y="400" width="180" height="36" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="1"/>
+  <text x="805" y="423" font-family="Arial,sans-serif" font-size="13" fill="rgba(255,255,255,0.45)" text-anchor="middle" letter-spacing="1">⚡ TIEMPO REAL</text>
+
+  <!-- URL -->
+  <text x="1160" y="610" font-family="Arial,sans-serif" font-size="14" fill="rgba(255,255,255,0.2)" text-anchor="end" letter-spacing="1">ahoranews.news</text>
+</svg>
