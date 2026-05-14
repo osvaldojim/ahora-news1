@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<!-- v3.0 AHORA.news -->
+<!-- v4.0 AHORA.news -->
 
 <html lang="es">
 <head>
@@ -8,25 +8,80 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AHORA.news — Noticias de República Dominicana y el Mundo</title>
 <meta name="description" content="Las noticias más importantes de República Dominicana y el mundo, actualizadas en tiempo real por inteligencia artificial.">
-<meta name="keywords" content="noticias republica dominicana, noticias rd hoy, noticias dominicanas, ultimas noticias rd, noticias santo domingo">
+<meta name="keywords" content="noticias republica dominicana, noticias rd hoy, noticias dominicanas, ultimas noticias rd, noticias santo domingo, dolar hoy rd, noticias en vivo rd">
+<meta name="robots" content="index, follow">
+<meta name="author" content="AhoraNews">
 <meta name="geo.region" content="DO">
+<meta name="geo.placename" content="República Dominicana">
+<meta name="language" content="es">
+
+<!-- Open Graph -->
+
+<meta property="og:type" content="website">
 <meta property="og:title" content="AHORA.news — Noticias de República Dominicana y el Mundo">
 <meta property="og:description" content="Noticias de RD y el mundo en tiempo real, actualizadas por IA.">
 <meta property="og:url" content="https://www.ahoranews.news">
+<meta property="og:image" content="https://www.ahoranews.news/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:locale" content="es_DO">
+<meta property="og:site_name" content="AHORA.news">
+
+<!-- Twitter Card -->
+
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AHORA.news — Noticias de República Dominicana">
+<meta name="twitter:description" content="Noticias de RD y el mundo en tiempo real, actualizadas por IA.">
+<meta name="twitter:image" content="https://www.ahoranews.news/og-image.jpg">
+
+<!-- Canonical & Sitemap -->
+
 <link rel="canonical" href="https://www.ahoranews.news">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23cc0000' rx='10'/><text x='32' y='50' font-family='Impact,Arial Black,sans-serif' font-size='54' font-weight='900' fill='white' text-anchor='middle'>A</text></svg>">
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+
+<!-- Favicon embebido — sin archivo externo necesario -->
+
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23cc0000' rx='10'/><text x='32' y='50' font-family='Impact,Arial Black,sans-serif' font-size='54' font-weight='900' fill='white' text-anchor='middle'>A</text></svg>">
+
+<!-- Schema.org JSON-LD para Google -->
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsMediaOrganization",
+  "name": "AHORA.news",
+  "url": "https://www.ahoranews.news",
+  "description": "Las noticias más importantes de República Dominicana y el mundo",
+  "logo": "https://www.ahoranews.news/og-image.jpg",
+  "foundingLocation": {
+    "@type": "Place",
+    "name": "República Dominicana"
+  },
+  "inLanguage": "es"
+}
+</script>
+
+<!-- AdSense -->
+
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9762302016773646" crossorigin="anonymous"></script>
+
 <!-- Google Analytics -->
+
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0JBCQ28LDB"></script>
+
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-0JBCQ28LDB');
 </script>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@300;400;600;700&family=Oswald:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- Fuentes optimizadas: solo las que se usan -->
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+
 <style>
 :root{--red:#cc0000;--dark:#111;--gray:#444;--light:#888;--border:#e0e0e0;--bg:#f4f4f4;--white:#fff;--green:#007a3d;}
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -157,9 +212,6 @@ nav{background:var(--red);}
 .modal{max-width:1100px;margin:20px auto;background:var(--white);animation:sUp .3s ease;}
 @keyframes sUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 .mcls{position:fixed;top:16px;right:16px;background:var(--dark);border:none;color:#fff;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:600;}
-.rbtn{display:flex;align-items:center;gap:5px;background:var(--white);border:1px solid var(--border);color:var(--dark);font-size:12px;font-family:'Source Sans 3',sans-serif;font-weight:600;padding:7px 13px;cursor:pointer;transition:.2s;}
-.rbtn:hover{border-color:var(--red);color:var(--red);}
-.rbtn.on{background:var(--red);border-color:var(--red);color:#fff;}
 .toast{position:fixed;bottom:20px;right:20px;background:var(--dark);color:#fff;border-left:4px solid var(--red);padding:13px 17px;display:flex;align-items:center;gap:10px;z-index:900;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);min-width:260px;box-shadow:0 8px 30px rgba(0,0,0,.3);}
 .toast.show{transform:translateY(0);opacity:1;}
 footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
@@ -170,6 +222,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 @media(max-width:1000px){.hero-inner,.main-wrap{grid-template-columns:1fr;}.hero-sidebar,.right-sb{display:none;}.hero-main{grid-template-columns:1fr;}.grid{grid-template-columns:repeat(2,1fr);}.dolar-widget{display:none;}}
 @media(max-width:580px){.grid{grid-template-columns:1fr;}.section-filters{display:none;}.load-more-wrap{grid-column:span 1;}}
 </style>
+
 </head>
 <body>
 
@@ -229,12 +282,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       <a href="/" id="navDeportes">DEPORTES</a>
       <a href="/" id="navTecnologia">TECNOLOGÍA</a>
       <a href="/" id="navCiencia">CIENCIA</a>
-
-
-  <div class="nav-ai"><div class="ldot"></div>🤖 IA ACTIVA</div>
-</div>
-
-
+      <div class="nav-ai"><div class="ldot"></div>🤖 IA ACTIVA</div>
+    </div>
   </nav>
 </header>
 
@@ -265,22 +314,19 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
 <div style="max-width:1240px;margin:20px auto 0;padding:0 20px;">
   <div style="background:#0a0a0a;border-top:3px solid #cc0000;">
-    <!-- Header -->
     <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid #222;">
       <div style="display:flex;align-items:center;gap:10px;">
-        <span style="background:#cc0000;color:#fff;font-family:Oswald,sans-serif;font-size:12px;font-weight:700;padding:4px 12px;letter-spacing:.08em;text-transform:uppercase;">&#x1F4C8; RECOMENDACIONES DE COMPRA EN EL MERCADO</span>
+        <span style="background:#cc0000;color:#fff;font-family:Oswald,sans-serif;font-size:12px;font-weight:700;padding:4px 12px;letter-spacing:.08em;text-transform:uppercase;">📈 RECOMENDACIONES DE COMPRA EN EL MERCADO</span>
         <div style="display:flex;align-items:center;gap:5px;"><div class="ldot"></div><span style="color:#00ff88;font-size:10px;font-weight:700;font-family:Oswald,sans-serif;">EN VIVO</span></div>
       </div>
       <div style="display:flex;align-items:center;gap:12px;">
         <span style="color:rgba(255,255,255,.4);font-size:11px;" id="tradingTime">Cargando...</span>
-        <button onclick="window.loadTrading()" style="background:#cc0000;border:none;color:#fff;font-size:10px;font-weight:700;padding:4px 10px;cursor:pointer;font-family:Oswald,sans-serif;letter-spacing:.06em;">&#x21BB; ACTUALIZAR</button>
+        <button onclick="window.loadTrading()" style="background:#cc0000;border:none;color:#fff;font-size:10px;font-weight:700;padding:4px 10px;cursor:pointer;font-family:Oswald,sans-serif;letter-spacing:.06em;">↻ ACTUALIZAR</button>
       </div>
     </div>
-    <!-- Cards con graficas -->
     <div id="tradingContent" style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-bottom:1px solid #222;"></div>
-    <!-- Footer -->
     <div style="padding:8px 18px;display:flex;align-items:center;justify-content:space-between;">
-      <span style="font-size:10px;color:#555;">&#x26A0; Solo fines informativos. No es asesoria financiera. Consulta un asesor certificado antes de invertir.</span>
+      <span style="font-size:10px;color:#555;">⚠ Solo fines informativos. No es asesoría financiera.</span>
       <span style="font-size:10px;color:#555;">Fuente: Yahoo Finance</span>
     </div>
   </div>
@@ -421,19 +467,28 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     setTimeout(function() { t.classList.remove('show'); }, 4000);
   }
 
-  // ── CACHÉ ──
+  // ── CACHÉ con fallback a memoria si localStorage no está disponible ──
+  var memCache = { news: [], ts: 0, dolar: null, dolarTs: 0 };
+
   function saveCache(arr) {
+    memCache.news = arr;
+    memCache.ts = Date.now();
     try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), a: arr })); } catch(e) {}
   }
 
   function loadCache() {
+    // Primero intentar localStorage
     try {
       var raw = localStorage.getItem(CACHE_KEY);
-      if (!raw) return [];
-      var obj = JSON.parse(raw);
-      if (Date.now() - obj.ts > CACHE_TTL) { localStorage.removeItem(CACHE_KEY); return []; }
-      return obj.a || [];
-    } catch(e) { return []; }
+      if (raw) {
+        var obj = JSON.parse(raw);
+        if (Date.now() - obj.ts < CACHE_TTL) return obj.a || [];
+        localStorage.removeItem(CACHE_KEY);
+      }
+    } catch(e) {}
+    // Fallback a memoria
+    if (memCache.news.length && Date.now() - memCache.ts < CACHE_TTL) return memCache.news;
+    return [];
   }
 
   function mergeNews(old, fresh) {
@@ -477,10 +532,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       .then(function(data) {
         var articles = data.articles || [];
         if (!articles.length) return;
-
         var fresh = articles.map(function(a, i) { return mapArticle(a, i, false); });
-
-        // Editor articles
         fetch('/api/publish')
           .then(function(r) { return r.ok ? r.json() : { articles: [] }; })
           .catch(function() { return { articles: [] }; })
@@ -499,7 +551,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
             if (cc) cc.textContent = merged.length;
           });
       })
-      .catch(function(err) {
+      .catch(function() {
         var cached = loadCache();
         if (cached.length) {
           NEWS = cached;
@@ -526,8 +578,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     if (!NEWS.length) return;
     var n = NEWS[0];
     var imgH = n.img
-      ? '<div class="hero-img-wrap" style="cursor:pointer" onclick="window._openN(0)"><img loading="lazy" src="' + esc(n.img) + '" alt="' + esc(n.title) + '" onerror="this.parentNode.innerHTML=\'<div class=hero-img-ph>📰</div>\'"></div>'
-      : '<div class="hero-img-ph" style="cursor:pointer" onclick="window._openN(0)">📰</div>';
+      ? '<div class="hero-img-wrap" onclick="window._openN(0)"><img loading="lazy" src="' + esc(n.img) + '" alt="' + esc(n.title) + '" onerror="this.parentNode.innerHTML=\'<div class=hero-img-ph>📰</div>\'"></div>'
+      : '<div class="hero-img-ph" onclick="window._openN(0)">📰</div>';
     el('heroMain').innerHTML = imgH + '<div><span class="hero-cat">' + esc(n.cat) + '</span><h1 class="hero-title" onclick="window._openN(0)">' + esc(n.title) + '</h1><p class="hero-excerpt">' + esc((n.excerpt || '')) + '...</p><div class="hero-meta"><span class="src-name">' + (n.isEditor ? '✍️' : '📰') + ' ' + esc(n.source) + '</span><span>' + n.time + '</span><span style="color:#007a3d;font-weight:600;">✅ Tiempo Real</span></div></div>';
 
     var sH = '';
@@ -555,10 +607,10 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
     for (var i = 0; i < visible.length; i++) {
       var n = visible[i];
-      if (!n.img) continue;
       var globalIdx = NEWS.indexOf(n);
+      // FIX: mostrar cards aunque no tengan imagen
       var iH = n.img
-        ? '<img loading="lazy" src="' + esc(n.img) + '" alt="' + esc(n.title) + '" onerror="this.outerHTML=\'<div class=card-img-ph>📰</div>\'">'
+        ? '<img loading="lazy" src="' + esc(n.img) + '" alt="' + esc(n.title) + '" onerror="this.parentNode.innerHTML=\'<div class=card-img-ph>📰</div>\'">'
         : '<div class="card-img-ph">📰</div>';
       htm += '<div class="card" onclick="window._openN(' + globalIdx + ')">'
         + '<div class="card-img-wrap">' + iH
@@ -622,7 +674,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       + '<div style="display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid #e0e0e0;background:#fff;position:sticky;top:0;z-index:10;">'
       + '<span style="background:#cc0000;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;text-transform:uppercase;">' + esc(n.cat) + '</span>'
       + '<span style="font-size:13px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(n.title) + '</span>'
-      + '<a href="' + esc(n.url) + '" target="_blank" style="background:#cc0000;color:#fff;font-size:11px;font-weight:700;padding:6px 12px;text-decoration:none;">ABRIR ↗️</a>'
+      + '<a href="' + esc(n.url) + '" target="_blank" rel="noopener" style="background:#cc0000;color:#fff;font-size:11px;font-weight:700;padding:6px 12px;text-decoration:none;">ABRIR ↗️</a>'
       + '</div>'
       + '<div style="background:#f4f4f4;padding:12px 20px;font-size:12px;color:#888;border-bottom:1px solid #e0e0e0;">📰 <strong>' + esc(n.source) + '</strong> · ' + n.time + '</div>'
       + '<iframe src="' + esc(n.url) + '" style="width:100%;height:75vh;border:none;display:block;" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>'
@@ -663,7 +715,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     document.querySelectorAll('.fcat').forEach(function(b) { b.classList.remove('on'); });
     if (navId) { var n = el(navId); if (n) n.classList.add('on'); }
     renderGrid();
-    return false;
   }
 
   el('navInicio').addEventListener('click', function(e) { e.preventDefault(); setFilter('', 'navInicio'); el('fcatTodo').classList.add('on'); });
@@ -682,12 +733,11 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   el('fcatCiencia').addEventListener('click', function() { setFilter('Ciencia', 'navCiencia'); this.classList.add('on'); });
   el('fcatMundo').addEventListener('click', function() { setFilter('Mundo', 'navMundo'); this.classList.add('on'); });
 
-  // ── DÓLAR ──
+  // ── DÓLAR con fallback a memoria ──
   function applyDolar(r) {
     if (el('dolarRate')) el('dolarRate').textContent = 'RD$ ' + r.usd;
     if (el('dolarCompra')) el('dolarCompra').innerHTML = 'Compra: <b>' + r.compra + '</b>';
     if (el('dolarVenta')) el('dolarVenta').innerHTML = 'Venta: <b>' + r.venta + '</b>';
-    if (el('navDolarVal')) el('navDolarVal').textContent = r.usd;
     if (el('ddUSD')) el('ddUSD').textContent = 'RD$ ' + r.usd;
     if (el('ddUSDsub')) el('ddUSDsub').textContent = 'Compra ' + r.compra + ' / Venta ' + r.venta;
     if (el('ddEUR')) el('ddEUR').textContent = 'RD$ ' + r.eur;
@@ -697,6 +747,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   }
 
   function fetchDolar() {
+    // Intentar caché
     try {
       var raw = localStorage.getItem(DOLAR_KEY);
       if (raw) {
@@ -704,6 +755,11 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
         if (Date.now() - obj.ts < DOLAR_TTL) { applyDolar(obj.d); return; }
       }
     } catch(e) {}
+    // Fallback a memoria
+    if (memCache.dolar && Date.now() - memCache.dolarTs < DOLAR_TTL) {
+      applyDolar(memCache.dolar);
+      return;
+    }
 
     fetch('https://open.er-api.com/v6/latest/USD')
       .then(function(r) { return r.json(); })
@@ -719,6 +775,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
           gbp: (usd / (rates.GBP || 0.79)).toFixed(2),
           upd: new Date().toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit' })
         };
+        memCache.dolar = result;
+        memCache.dolarTs = Date.now();
         try { localStorage.setItem(DOLAR_KEY, JSON.stringify({ ts: Date.now(), d: result })); } catch(e) {}
         applyDolar(result);
       })
@@ -772,12 +830,9 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   doLoadNews();
   fetchDolar();
 
-
-
   setTimeout(function() { toast('AHORA.news — Noticias de RD y el Mundo en tiempo real'); }, 2000);
 
-  // ── TRADING IA ──
-  // ── TRADING CON GRAFICAS ──
+  // ── TRADING ──
   var ALL_STOCKS = [
     { ticker: 'NVDA', nombre: 'NVIDIA Corp', accion: 'COMPRAR', razon: 'Lider en chips IA, demanda record', confianza: 'Alta', color: '#00c853', base: 875 },
     { ticker: 'AAPL', nombre: 'Apple Inc', accion: 'COMPRAR', razon: 'iPhone con IA integrada impulsa ventas', confianza: 'Alta', color: '#00c853', base: 182 },
@@ -817,8 +872,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       var y = h - ((p - min) / range) * (h - 8) - 4;
       i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
-    var lastX = w, lastY = h - ((prices[prices.length-1] - min) / range) * (h - 8) - 4;
-    ctx.lineTo(lastX, h);
+    ctx.lineTo(w, h);
     ctx.lineTo(0, h);
     ctx.closePath();
     ctx.fillStyle = grad;
@@ -847,21 +901,14 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     var tc = document.getElementById('tradingContent');
     var tt = document.getElementById('tradingTime');
     if (!tc) return;
-
-    // Precios base con variacion aleatoria simulada
-    // Rotar 5 acciones diferentes cada ciclo
     _stockIdx = (_stockIdx + 5) % ALL_STOCKS.length;
     STOCKS = [];
     for (var si = 0; si < 5; si++) {
       STOCKS.push(ALL_STOCKS[(_stockIdx + si) % ALL_STOCKS.length]);
     }
-    var bases = {};
-    STOCKS.forEach(function(s) { bases[s.ticker] = s.base; });
-
     tc.innerHTML = STOCKS.map(function(s, idx) {
-      var base = bases[s.ticker];
       var change = ((Math.random() - 0.4) * 4).toFixed(2);
-      var pct = ((change / base) * 100).toFixed(2);
+      var pct = ((change / s.base) * 100).toFixed(2);
       var isUp = parseFloat(change) >= 0;
       var chColor = isUp ? '#00c853' : '#ff1744';
       var chSign = isUp ? '+' : '';
@@ -875,7 +922,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
         + '<span style="background:' + s.color + ';color:#000;font-size:9px;font-weight:700;padding:2px 8px;letter-spacing:.06em;">' + s.accion + '</span>'
         + '</div>'
         + '<div style="font-size:10px;color:#666;margin-bottom:10px;">' + s.nombre + '</div>'
-        + '<div style="font-family:Oswald,sans-serif;font-size:26px;font-weight:700;color:#fff;margin-bottom:4px;">$' + (base + parseFloat(change)).toFixed(2) + '</div>'
+        + '<div style="font-family:Oswald,sans-serif;font-size:26px;font-weight:700;color:#fff;margin-bottom:4px;">$' + (s.base + parseFloat(change)).toFixed(2) + '</div>'
         + '<div style="font-size:12px;color:' + chColor + ';font-weight:700;margin-bottom:10px;">' + chSign + change + ' (' + chSign + pct + '%)</div>'
         + '<div style="font-size:11px;color:#888;margin-bottom:8px;">' + s.razon + '</div>'
         + '<div style="display:flex;align-items:center;justify-content:space-between;">'
@@ -883,21 +930,18 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
         + '</div></div></div>';
     }).join('');
 
-    // Dibujar sparklines
     STOCKS.forEach(function(s, idx) {
-      var base = bases[s.ticker];
       var isUp = s.accion === 'COMPRAR';
-      var prices = genFakePrices(base, isUp);
+      var prices = genFakePrices(s.base, isUp);
       setTimeout(function() { drawSparkline('spark_' + idx, prices, s.color); }, 50);
     });
 
-    var now = new Date();
-    if (tt) tt.textContent = 'Actualizado: ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+    var n = new Date();
+    if (tt) tt.textContent = 'Actualizado: ' + n.getHours() + ':' + String(n.getMinutes()).padStart(2,'0');
   };
 
   loadTrading();
   setInterval(window.loadTrading, 60000);
-
 
 })();
 </script>
