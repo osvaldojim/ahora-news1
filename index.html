@@ -16,7 +16,6 @@
 <meta name="language" content="es">
 
 <!-- Open Graph -->
-
 <meta property="og:type" content="website">
 <meta property="og:title" content="AHORA.news — Noticias de República Dominicana y el Mundo">
 <meta property="og:description" content="Noticias de RD y el mundo en tiempo real, actualizadas por IA.">
@@ -28,23 +27,19 @@
 <meta property="og:site_name" content="AHORA.news">
 
 <!-- Twitter Card -->
-
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AHORA.news — Noticias de República Dominicana">
 <meta name="twitter:description" content="Noticias de RD y el mundo en tiempo real, actualizadas por IA.">
 <meta name="twitter:image" content="https://www.ahoranews.news/og-image.jpg">
 
 <!-- Canonical & Sitemap -->
-
 <link rel="canonical" href="https://www.ahoranews.news">
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
 <!-- Favicon embebido — sin archivo externo necesario -->
-
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23cc0000' rx='10'/><text x='32' y='50' font-family='Impact,Arial Black,sans-serif' font-size='54' font-weight='900' fill='white' text-anchor='middle'>A</text></svg>">
 
 <!-- Schema.org JSON-LD para Google -->
-
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -62,13 +57,10 @@
 </script>
 
 <!-- AdSense -->
-
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9762302016773646" crossorigin="anonymous"></script>
 
 <!-- Google Analytics -->
-
 <script async src="https://www.googletagmanager.com/gtag/js?id=G-0JBCQ28LDB"></script>
-
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -77,7 +69,6 @@
 </script>
 
 <!-- Fuentes optimizadas: solo las que se usan -->
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
@@ -188,7 +179,7 @@ nav{background:var(--red);}
 .load-more-btn:hover{background:var(--red);}
 .skeleton{background:linear-gradient(90deg,#e8e8e8 25%,#f0f0f0 50%,#e8e8e8 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.right-sb>+{margin-top:20px;}
+.right-sb>*+*{margin-top:20px;}
 .sb-box{background:var(--white);border:1px solid var(--border);}
 .sb-head{background:var(--dark);color:#fff;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;padding:10px 16px;letter-spacing:.08em;text-transform:uppercase;}
 .sb-head.red{background:var(--red);}
@@ -207,9 +198,9 @@ nav{background:var(--red);}
 .ai-val.r{color:var(--red);}
 .ad-banner{background:#f9f9f9;border:1px solid var(--border);text-align:center;padding:16px;margin:12px 0;min-height:90px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:12px;}
 .ad-sidebar{background:#f9f9f9;border:1px solid var(--border);text-align:center;padding:12px;min-height:250px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:12px;margin-bottom:20px;}
-.overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.75);overflow-y:auto;}
+.overlay{display:none;position:fixed;inset:0;z-index:500;background:rgba(0,0,0,.75);overflow-y:auto;-webkit-overflow-scrolling:touch;}
 .overlay.open{display:block;animation:fIn .2s ease;}
-.modal{max-width:1100px;margin:20px auto;background:var(--white);animation:sUp .3s ease;}
+.modal{max-width:1100px;margin:20px auto;background:var(--white);animation:sUp .3s ease;overflow-y:auto;max-height:90vh;}
 @keyframes sUp{from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1}}
 .mcls{position:fixed;top:16px;right:16px;background:var(--dark);border:none;color:#fff;width:36px;height:36px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:600;}
 .toast{position:fixed;bottom:20px;right:20px;background:var(--dark);color:#fff;border-left:4px solid var(--red);padding:13px 17px;display:flex;align-items:center;gap:10px;z-index:900;transform:translateY(80px);opacity:0;transition:all .4s cubic-bezier(.34,1.56,.64,1);min-width:260px;box-shadow:0 8px 30px rgba(0,0,0,.3);}
@@ -325,7 +316,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   .footer-inner{padding:0 12px;flex-direction:column;gap:12px;align-items:flex-start;}
 }
 </style>
-
 </head>
 <body>
 
@@ -414,7 +404,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 </div>
 
 <!-- TRADING WIDGET CON GRAFICAS -->
-
 <div style="max-width:1240px;margin:20px auto 0;padding:0 20px;">
   <div style="background:#0a0a0a;border-top:3px solid #cc0000;">
     <div class="trading-header-wrap" style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid #222;gap:8px;">
@@ -498,28 +487,26 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       </div>
     </div>
 
-
-<!-- VIRALES EN REDES -->
-<div class="sb-box">
-  <div class="sb-head red" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;">
-    <span>🔥 VIRAL EN REDES</span>
-    <div style="display:flex;align-items:center;gap:4px;">
-      <div class="ldot"></div>
-      <span style="font-size:9px;color:rgba(255,255,255,.7);">EN VIVO</span>
+    <!-- VIRALES EN REDES -->
+    <div class="sb-box">
+      <div class="sb-head red" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;">
+        <span>🔥 VIRAL EN REDES</span>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <div class="ldot"></div>
+          <span style="font-size:9px;color:rgba(255,255,255,.7);">EN VIVO</span>
+        </div>
+      </div>
+      <div style="display:flex;border-bottom:1px solid var(--border);">
+        <button onclick="viralTab('all')" id="vtAll" style="flex:1;background:#fff;border:none;border-bottom:2px solid var(--red);color:var(--red);font-size:10px;font-weight:700;padding:7px 2px;cursor:pointer;font-family:Oswald,sans-serif;letter-spacing:.04em;">TODO</button>
+        <button onclick="viralTab('tiktok')" id="vtTiktok" style="flex:1;background:#fff;border:none;border-bottom:2px solid transparent;color:var(--gray);font-size:10px;font-weight:700;padding:7px 2px;cursor:pointer;font-family:Oswald,sans-serif;">TIKTOK</button>
+        <button onclick="viralTab('twitter')" id="vtTwitter" style="flex:1;background:#fff;border:none;border-bottom:2px solid transparent;color:var(--gray);font-size:10px;font-weight:700;padding:7px 2px;cursor:pointer;font-family:Oswald,sans-serif;">X</button>
+        <button onclick="viralTab('instagram')" id="vtInsta" style="flex:1;background:#fff;border:none;border-bottom:2px solid transparent;color:var(--gray);font-size:10px;font-weight:700;padding:7px 2px;cursor:pointer;font-family:Oswald,sans-serif;">IG</button>
+      </div>
+      <div id="viralList" style="overflow-y:auto;max-height:380px;scrollbar-width:thin;scrollbar-color:var(--red) #f4f4f4;"></div>
+      <div style="padding:5px 12px;background:#f9f9f9;border-top:1px solid var(--border);text-align:center;">
+        <span style="font-size:9px;color:#aaa;">🤖 Detectado por IA · Actualiza cada 5 min</span>
+      </div>
     </div>
-  </div>
-  <div style="display:flex;border-bottom:1px solid var(--border);">
-    <button onclick="viralTab('all')" id="vtAll" style="flex:1;background:#fff;border:none;border-bottom:2px solid var(--red);color:var(--red);font-size:10px;font-weight:700;padding:7px 2px;cursor:pointer;font-family:Oswald,sans-serif;letter-spacing:.04em;">TODO</button>
-    <button onclick="viralTab('tiktok')" id="vtTiktok" style="flex:1;background:#fff;border:none;border-bottom:2px solid transparent;color:var(--gray);font-size:10px;font-weight:700;padding:7px 2px;cursor:pointer;font-family:Oswald,sans-serif;">TIKTOK</button>
-    <button onclick="viralTab('twitter')" id="vtTwitter" style="flex:1;background:#fff;border:none;border-bottom:2px solid transparent;color:var(--gray);font-size:10px;font-weight:700;padding:7px 2px;cursor:pointer;font-family:Oswald,sans-serif;">X</button>
-    <button onclick="viralTab('instagram')" id="vtInsta" style="flex:1;background:#fff;border:none;border-bottom:2px solid transparent;color:var(--gray);font-size:10px;font-weight:700;padding:7px 2px;cursor:pointer;font-family:Oswald,sans-serif;">IG</button>
-  </div>
-  <div id="viralList" style="overflow-y:auto;max-height:380px;scrollbar-width:thin;scrollbar-color:var(--red) #f4f4f4;"></div>
-  <div style="padding:5px 12px;background:#f9f9f9;border-top:1px solid var(--border);text-align:center;">
-    <span style="font-size:9px;color:#aaa;">🤖 Detectado por IA · Actualiza cada 5 min</span>
-  </div>
-</div>
-
 
   </aside>
 </div>
