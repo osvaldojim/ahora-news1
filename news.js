@@ -75,26 +75,30 @@ return res.status(500).json({ error: error.message, articles: [] });
 // ── REESCRITURA CON CLAUDE ──
 async function rewriteWithClaude(article, apiKey) {
 try {
-const prompt = `Eres el editor más picante de AhoraNews, el medio digital más leído de República Dominicana. Tu misión es transformar noticias aburridas en titulares que la gente no pueda ignorar.
+const prompt = `Eres periodista estrella de AhoraNews, el medio más leído de República Dominicana. Debes escribir un artículo periodístico COMPLETO basándote en la información disponible.
 
-NOTICIA ORIGINAL:
-Título: ${article.title}
-Descripción: ${article.description || ‘’}
+DATOS DE LA NOTICIA:
+Título original: ${article.title}
+Resumen: ${article.description || ‘’}
 
-REGLAS ESTRICTAS:
+TU MISIÓN:
 
-1.⁠ ⁠El TÍTULO debe ser COMPLETAMENTE DIFERENTE al original — más impactante, más directo, más dominicano. NUNCA copies el título original. Usa frases como: “¡Se armó!”, “¡Fuácata!”, “Tremendo lo que pasó”, “Nadie lo vio venir”, “¡Qué desgracia!”, “Se puso feo”, “¡Brutal!”, “Lo que no te contaron”, “Esto está candente”, “¡Agárrate!”, etc. según el tono. Máximo 75 caracteres.
-1.⁠ ⁠La DESCRIPCIÓN debe sonar como un amigo dominicano contándote el chisme — directo, sin rodeos, usando “pa’”, “tá”, “mijo”, “vergüenza”, “fuerte”, “brutal” cuando aplique. 2-3 oraciones máximo.
-1.⁠ ⁠isViral = true si es sobre: famosos, crímenes impactantes, récords, humor, animales, fenómenos raros, deportes épicos, política polémica, accidentes graves.
+1.⁠ ⁠TÍTULO NUEVO: Impactante, dominicano, diferente al original. Usa “Se armó”, “Brutal”, “Tremendo”, “Lo que pasó”, “Agárrate”, “Fuácata” si aplica. Máx 80 caracteres.
+1.⁠ ⁠DESCRIPCIÓN: 2 oraciones directas como si le contaras el chisme a un amigo dominicano.
+1.⁠ ⁠CUERPO DEL ARTÍCULO: Escribe un artículo periodístico COMPLETO y EXTENSO con esta estructura:
+•⁠  ⁠Párrafo 1 (ENTRADA): El hecho principal explicado con claridad. Quién, qué, cuándo, dónde.
+•⁠  ⁠Párrafo 2 (CONTEXTO): Antecedentes. ¿Por qué pasó esto? ¿Qué llevó a esta situación?
+•⁠  ⁠Párrafo 3 (IMPACTO): ¿Cómo afecta esto a la gente, al país, al mundo?
+•⁠  ⁠Párrafo 4 (REACCIÓN): ¿Qué dicen los expertos, políticos, ciudadanos o afectados?
+•⁠  ⁠Párrafo 5 (RD): ¿Cómo se relaciona esto con República Dominicana o los dominicanos?
+•⁠  ⁠Párrafo 6 (CIERRE): Perspectiva futura. ¿Qué viene ahora?
+  Cada párrafo mínimo 60 palabras. Total mínimo 400 palabras. Separados por \n\n.
+1.⁠ ⁠isViral: true si es sobre famosos, crímenes impactantes, récords, humor, deportes épicos, política.
 
-EJEMPLOS de cómo transformar títulos:
+IMPORTANTE: Si la información original es limitada, EXPANDE con contexto general relevante y verídico sobre el tema. Escribe como un periodista profesional dominicano.
 
-•⁠  ⁠Original: “President signs new bill” → Tuyo: “¡El presidente firmó algo que va a cambiar todo!”
-•⁠  ⁠Original: “Stock market falls” → Tuyo: “¡Se cayó la bolsa y hay gente llorando!”
-•⁠  ⁠Original: “Athlete breaks record” → Tuyo: “¡Brutaaaaal! Este atleta rompió el récord mundial”
-
-Responde SOLO en JSON exacto, sin texto adicional, sin markdown:
-{“title”:“título aquí”,“description”:“descripción aquí”,“isViral”:true}`;
+Responde SOLO en JSON sin markdown ni texto extra:
+{“title”:“aquí”,“description”:“aquí”,“body”:“párrafo1\n\npárrafo2\n\npárrafo3\n\npárrafo4\n\npárrafo5\n\npárrafo6”,“isViral”:false}`;
 
 
 ⁠ const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -121,6 +125,7 @@ const parsed = JSON.parse(clean);
 return {
   title: parsed.title || article.title,
   description: parsed.description || article.description || '',
+  body: parsed.body || parsed.description || article.description || '',
   isViral: parsed.isViral || false
 };
  ⁠
@@ -131,6 +136,7 @@ console.error(‘Claude rewrite error:’, err.message);
 return {
 title: article.title,
 description: article.description || ‘’,
+body: article.content || article.description || ‘’,
 isViral: false
 };
 }
