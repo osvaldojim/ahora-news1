@@ -188,7 +188,7 @@ nav{background:var(--red);}
 .load-more-btn:hover{background:var(--red);}
 .skeleton{background:linear-gradient(90deg,#e8e8e8 25%,#f0f0f0 50%,#e8e8e8 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
-.right-sb>*+*{margin-top:20px;}
+.right-sb>+{margin-top:20px;}
 .sb-box{background:var(--white);border:1px solid var(--border);}
 .sb-head{background:var(--dark);color:#fff;font-family:'Oswald',sans-serif;font-size:13px;font-weight:700;padding:10px 16px;letter-spacing:.08em;text-transform:uppercase;}
 .sb-head.red{background:var(--red);}
@@ -498,7 +498,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       </div>
     </div>
 
-```
+
 <!-- VIRALES EN REDES -->
 <div class="sb-box">
   <div class="sb-head red" style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;">
@@ -519,7 +519,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     <span style="font-size:9px;color:#aaa;">🤖 Detectado por IA · Actualiza cada 5 min</span>
   </div>
 </div>
-```
+
 
   </aside>
 </div>
@@ -571,7 +571,12 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
   // ── HELPERS ──
   function esc(s) {
-    return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    var r = String(s || '');
+    r = r.split('&').join('&amp;');
+    r = r.split('<').join('&lt;');
+    r = r.split('>').join('&gt;');
+    r = r.split('"').join('&quot;');
+    return r;
   }
 
   function ago(iso) {
@@ -1082,27 +1087,17 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   setInterval(window.loadTrading, 60000);
 
   // ── VIRALES EN REDES ──
-  var VIRAL_DATA = {
-    tiktok: [],
-    twitter: [],
-    instagram: []
-  };
+  var VIRAL_DATA = { tiktok: [], twitter: [], instagram: [] };
   var VIRAL_TAB = 'all';
 
   function viralTab(tab) {
     VIRAL_TAB = tab;
-    var tabs = ['all','tiktok','twitter','instagram'];
-    var ids = ['vtAll','vtTiktok','vtTwitter','vtInsta'];
-    tabs.forEach(function(t, i) {
-      var btn = el(ids[i]);
+    var tabs = {all:'vtAll', tiktok:'vtTiktok', twitter:'vtTwitter', instagram:'vtInsta'};
+    Object.keys(tabs).forEach(function(t) {
+      var btn = el(tabs[t]);
       if (!btn) return;
-      if (t === tab) {
-        btn.style.borderBottom = '2px solid var(--red)';
-        btn.style.color = 'var(--red)';
-      } else {
-        btn.style.borderBottom = '2px solid transparent';
-        btn.style.color = 'var(--gray)';
-      }
+      btn.style.borderBottom = t === tab ? '2px solid var(--red)' : '2px solid transparent';
+      btn.style.color = t === tab ? 'var(--red)' : 'var(--gray)';
     });
     renderVirales();
   }
@@ -1110,83 +1105,74 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   function renderVirales() {
     var list = el('viralList');
     if (!list) return;
-    var items = [];
-    if (VIRAL_TAB === 'all') {
-      items = [].concat(VIRAL_DATA.tiktok, VIRAL_DATA.twitter, VIRAL_DATA.instagram);
-    } else {
-      items = VIRAL_DATA[VIRAL_TAB] || [];
-    }
+    var items = VIRAL_TAB === 'all'
+      ? [].concat(VIRAL_DATA.tiktok, VIRAL_DATA.twitter, VIRAL_DATA.instagram)
+      : (VIRAL_DATA[VIRAL_TAB] || []);
     if (!items.length) {
       list.innerHTML = '<div style="padding:20px;text-align:center;color:#aaa;font-size:12px;">Cargando virales...</div>';
       return;
     }
-    list.innerHTML = items.map(function(v) {
-      var icon = v.red === 'tiktok' ? '🎵' : v.red === 'twitter' ? '🐦' : '📸';
-      var color = v.red === 'tiktok' ? '#010101' : v.red === 'twitter' ? '#1DA1F2' : '#E1306C';
-      return '<div style="padding:10px 12px;border-bottom:1px solid var(--border);cursor:pointer;" onclick="window.open('' + v.url + '','_blank')">'
-        + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">'
-        + '<span style="background:' + color + ';color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:2px;font-family:Oswald,sans-serif;">' + icon + ' ' + v.red.toUpperCase() + '</span>'
-        + '<span style="font-size:10px;color:var(--light);">' + v.views + '</span>'
-        + '</div>'
-        + '<div style="font-size:13px;font-weight:700;color:var(--dark);line-height:1.35;margin-bottom:4px;">' + esc(v.title) + '</div>'
-        + '<div style="font-size:11px;color:var(--light);">' + esc(v.source) + ' · ' + v.time + '</div>'
-        + '</div>';
-    }).join('');
+    var html = '';
+    for (var i = 0; i < items.length; i++) {
+      var v = items[i];
+      var icons = {tiktok:'&#127925;', twitter:'&#128038;', instagram:'&#128248;'};
+      var colors = {tiktok:'#010101', twitter:'#1DA1F2', instagram:'#E1306C'};
+      html += '<div class="viral-item" style="padding:10px 12px;border-bottom:1px solid #e0e0e0;cursor:pointer;" data-idx="' + i + '">';
+      html += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">';
+      html += '<span style="background:' + (colors[v.red]||'#333') + ';color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:2px;font-family:Oswald,sans-serif;">' + (icons[v.red]||'') + ' ' + (v.red||'').toUpperCase() + '</span>';
+      html += '<span style="font-size:10px;color:#888;">' + esc(v.views||'') + '</span>';
+      html += '</div>';
+      html += '<div style="font-size:13px;font-weight:700;color:#111;line-height:1.35;margin-bottom:4px;">' + esc(v.title||'') + '</div>';
+      html += '<div style="font-size:11px;color:#888;">' + esc(v.source||'') + ' · ' + esc(v.time||'') + '</div>';
+      html += '</div>';
+    }
+    list.innerHTML = html;
+    var stored = items;
+    list.querySelectorAll('.viral-item').forEach(function(div, idx) {
+      div.addEventListener('click', function() {
+        if (stored[idx] && stored[idx].url) window.open(stored[idx].url, '_blank');
+      });
+    });
   }
 
-  async function loadVirales() {
-    try {
-      var resp = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          model: 'claude-haiku-4-5-20251001',
-          max_tokens: 1000,
-          messages: [{
-            role: 'user',
-            content: 'Genera una lista de 15 temas virales actuales en redes sociales (TikTok, Twitter/X e Instagram) relevantes para República Dominicana y Latinoamérica. Incluye mezcla de entretenimiento, noticias, deportes, política y humor. Responde SOLO en JSON sin markdown: {"tiktok":[{"title":"título viral","source":"@usuario o medio","views":"2.3M vistas","time":"Hace 2h","url":"https://tiktok.com","red":"tiktok"}],"twitter":[...],"instagram":[...]}'
-          }]
-        })
+  function loadVirales() {
+    fetch('/api/virales')
+      .then(function(r) { return r.json(); })
+      .then(function(p) {
+        VIRAL_DATA.tiktok = p.tiktok || [];
+        VIRAL_DATA.twitter = p.twitter || [];
+        VIRAL_DATA.instagram = p.instagram || [];
+        renderVirales();
+      })
+      .catch(function() {
+        VIRAL_DATA.tiktok = [
+          {title:'Se armo! Pelea en el Congreso dominicano se hace viral',source:'@noticiasrd',views:'4.2M vistas',time:'Hace 1h',url:'https://tiktok.com',red:'tiktok'},
+          {title:'Dominicano gana $1 millon en concurso de cocina en EEUU',source:'@dominicanosalmundo',views:'2.8M vistas',time:'Hace 3h',url:'https://tiktok.com',red:'tiktok'},
+          {title:'Taxi volador aterriza en Santo Domingo por primera vez',source:'@techrdo',views:'1.5M vistas',time:'Hace 5h',url:'https://tiktok.com',red:'tiktok'},
+          {title:'Nina de 8 anos canta tan brutal que deja a jueces llorando',source:'@virallatino',views:'890K vistas',time:'Hace 6h',url:'https://tiktok.com',red:'tiktok'},
+          {title:'El truco del limon pa el calor que todo dominicano necesita',source:'@tipsrd',views:'670K vistas',time:'Hace 8h',url:'https://tiktok.com',red:'tiktok'}
+        ];
+        VIRAL_DATA.twitter = [
+          {title:'AbinaderPresidente trending: debate divide al pais',source:'Twitter/X RD',views:'45K tweets',time:'Hace 30min',url:'https://twitter.com',red:'twitter'},
+          {title:'Trump anuncia tarifas y dominicanos preguntan que pasa con nosotros',source:'Twitter/X',views:'28K tweets',time:'Hace 1h',url:'https://twitter.com',red:'twitter'},
+          {title:'Los Tigres del Licey ganaron y Twitter enloquecio',source:'Twitter/X Beisbol',views:'19K tweets',time:'Hace 2h',url:'https://twitter.com',red:'twitter'},
+          {title:'Cancion dominicana llega al top 10 global de Spotify',source:'Twitter/X Musica',views:'15K tweets',time:'Hace 4h',url:'https://twitter.com',red:'twitter'},
+          {title:'Video de apagon en Santiago se hace viral en redes',source:'Twitter/X Santiago',views:'12K tweets',time:'Hace 5h',url:'https://twitter.com',red:'twitter'}
+        ];
+        VIRAL_DATA.instagram = [
+          {title:'Influencer dominicana muestra su mansion y nadie lo puede creer',source:'@belladominicanard',views:'1.2M views',time:'Hace 2h',url:'https://instagram.com',red:'instagram'},
+          {title:'Chef famoso cocina mangu en Nueva York y se hace viral',source:'@chefdominicanony',views:'890K views',time:'Hace 4h',url:'https://instagram.com',red:'instagram'},
+          {title:'Bebe bailando merengue conquista el mundo entero',source:'@familiafelizrd',views:'760K views',time:'Hace 5h',url:'https://instagram.com',red:'instagram'},
+          {title:'Playa dominicana elegida la mas bella del Caribe 2026',source:'@visitdominicanrep',views:'540K views',time:'Hace 7h',url:'https://instagram.com',red:'instagram'},
+          {title:'Joven dominicano inventa app que traduce senas en tiempo real',source:'@innovacionrd',views:'320K views',time:'Hace 9h',url:'https://instagram.com',red:'instagram'}
+        ];
+        renderVirales();
       });
-      var data = await resp.json();
-      var text = (data.content && data.content[0] && data.content[0].text) || '{}';
-      var clean = text.replace(/```json|```/g,'').trim();
-      var parsed = JSON.parse(clean);
-      VIRAL_DATA.tiktok = parsed.tiktok || [];
-      VIRAL_DATA.twitter = parsed.twitter || [];
-      VIRAL_DATA.instagram = parsed.instagram || [];
-      renderVirales();
-    } catch(e) {
-      // Fallback con datos de ejemplo
-      VIRAL_DATA.tiktok = [
-        {title:'¡Tremenda pelea en el Congreso! Diputados se dan golpes en vivo',source:'@noticiasrd',views:'4.2M vistas',time:'Hace 1h',url:'https://tiktok.com',red:'tiktok'},
-        {title:'Este dominicano ganó $1 millón en un concurso de cocina en EEUU',source:'@dominicanosalmundo',views:'2.8M vistas',time:'Hace 3h',url:'https://tiktok.com',red:'tiktok'},
-        {title:'¡Fuácata! Taxi volador aterriza por primera vez en Santo Domingo',source:'@techrdo',views:'1.5M vistas',time:'Hace 5h',url:'https://tiktok.com',red:'tiktok'},
-        {title:'Niña de 8 años canta tan brutal que deja a jueces llorando',source:'@virallatino',views:'890K vistas',time:'Hace 6h',url:'https://tiktok.com',red:'tiktok'},
-        {title:'El truco del limón para el calor que todo dominicano necesita saber',source:'@tipsdominicanosrd',views:'670K vistas',time:'Hace 8h',url:'https://tiktok.com',red:'tiktok'}
-      ];
-      VIRAL_DATA.twitter = [
-        {title:'#AbinaderPresidente es trending — debate sobre agricultores divide al país',source:'Twitter/X RD',views:'45K tweets',time:'Hace 30min',url:'https://twitter.com',red:'twitter'},
-        {title:'Trump anuncia nuevas tarifas y dominicanos reaccionan: "¿Y nosotros qué?"',source:'Twitter/X',views:'28K tweets',time:'Hace 1h',url:'https://twitter.com',red:'twitter'},
-        {title:'¡Los Tigres del Licey ganaron y Twitter se volvió loco!',source:'Twitter/X Beisbol',views:'19K tweets',time:'Hace 2h',url:'https://twitter.com',red:'twitter'},
-        {title:'Canción dominicana llega al top 10 global de Spotify',source:'Twitter/X Música',views:'15K tweets',time:'Hace 4h',url:'https://twitter.com',red:'twitter'},
-        {title:'Video de apagón masivo en Santiago se hace viral: "Otra vez lo mismo"',source:'Twitter/X Santiago',views:'12K tweets',time:'Hace 5h',url:'https://twitter.com',red:'twitter'}
-      ];
-      VIRAL_DATA.instagram = [
-        {title:'Influencer dominicana muestra su mansión y la gente no lo puede creer',source:'@belladominicanard',views:'1.2M views',time:'Hace 2h',url:'https://instagram.com',red:'instagram'},
-        {title:'Chef famoso cocina mangú en Nueva York y se hace viral',source:'@chefdominicanony',views:'890K views',time:'Hace 4h',url:'https://instagram.com',red:'instagram'},
-        {title:'Bebé bailando merengue conquista el mundo entero',source:'@familiafelizrd',views:'760K views',time:'Hace 5h',url:'https://instagram.com',red:'instagram'},
-        {title:'Playa dominicana elegida la más bella del Caribe 2026',source:'@visitdominicanrep',views:'540K views',time:'Hace 7h',url:'https://instagram.com',red:'instagram'},
-        {title:'Joven dominicano inventa app que traduce señas en tiempo real',source:'@innovacionrd',views:'320K views',time:'Hace 9h',url:'https://instagram.com',red:'instagram'}
-      ];
-      renderVirales();
-    }
   }
 
   loadVirales();
-  setInterval(loadVirales, 5 * 60 * 1000); // cada 5 minutos
+  setInterval(loadVirales, 5 * 60 * 1000);
+
 
 })();
 </script>
