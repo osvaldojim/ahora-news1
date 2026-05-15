@@ -110,7 +110,7 @@ Responde SOLO en JSON sin markdown ni texto extra:
   },
   body: JSON.stringify({
     model: 'claude-haiku-4-5-20251001',
-    max_tokens: 300,
+    max_tokens: 2000,
     messages: [{ role: 'user', content: prompt }]
   })
 });
