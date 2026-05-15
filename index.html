@@ -21,7 +21,7 @@
 <meta property="og:title" content="AHORA.news — Noticias de República Dominicana y el Mundo">
 <meta property="og:description" content="Noticias de RD y el mundo en tiempo real, actualizadas por IA.">
 <meta property="og:url" content="https://www.ahoranews.news">
-<meta property="og:image" content="https://www.ahoranews.news/og-image.svg">
+<meta property="og:image" content="https://www.ahoranews.news/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:locale" content="es_DO">
@@ -32,7 +32,8 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AHORA.news — Noticias de República Dominicana">
 <meta name="twitter:description" content="Noticias de RD y el mundo en tiempo real, actualizadas por IA.">
-<meta name="twitter:image" content="https://www.ahoranews.news/og-image.svg">
+<meta name="twitter:image" content="https://www.ahoranews.news/og-image.jpg">
+
 <!-- Canonical & Sitemap -->
 
 <link rel="canonical" href="https://www.ahoranews.news">
@@ -182,8 +183,8 @@ nav{background:var(--red);}
 .card-meta b{color:var(--dark);}
 .like-btn{display:flex;align-items:center;gap:4px;background:none;border:none;font-size:12px;color:var(--light);cursor:pointer;font-family:'Source Sans 3',sans-serif;transition:.2s;padding:3px 6px;}
 .like-btn:hover,.like-btn.liked{color:var(--red);}
-.load-more-wrap{grid-column:span 3;text-align:center;padding:24px 0;}
-.load-more-btn{background:var(--dark);color:#fff;border:none;font-family:'Oswald',sans-serif;font-size:14px;font-weight:700;padding:13px 36px;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;transition:.2s;}
+.load-more-wrap{grid-column:1/-1;text-align:center;padding:24px 0;}
+.load-more-btn{background:var(--dark);color:#fff;border:none;font-family:'Oswald',sans-serif;font-size:14px;font-weight:700;padding:13px 36px;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;transition:.2s;width:100%;max-width:400px;}
 .load-more-btn:hover{background:var(--red);}
 .skeleton{background:linear-gradient(90deg,#e8e8e8 25%,#f0f0f0 50%,#e8e8e8 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
@@ -218,8 +219,109 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 .footer-logo{font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;color:#fff;}
 .footer-logo span{color:var(--red);}
 .footer-copy{font-size:11px;color:rgba(255,255,255,.3);}
-@media(max-width:1000px){.hero-inner,.main-wrap{grid-template-columns:1fr;}.hero-sidebar,.right-sb{display:none;}.hero-main{grid-template-columns:1fr;}.grid{grid-template-columns:repeat(2,1fr);}.dolar-widget{display:none;}}
-@media(max-width:580px){.grid{grid-template-columns:1fr;}.section-filters{display:none;}.load-more-wrap{grid-column:span 1;}}
+/* ── TABLET ── */
+@media(max-width:1000px){
+  .hero-inner,.main-wrap{grid-template-columns:1fr;}
+  .hero-sidebar,.right-sb{display:none;}
+  .hero-main{grid-template-columns:1fr 1fr;}
+  .grid{grid-template-columns:repeat(2,1fr);}
+  .dolar-widget{display:none;}
+  .header-tagline{display:none;}
+}
+
+/* ── MOBILE ── */
+@media(max-width:580px){
+  /* Topbar */
+  .topbar{padding:5px 0;}
+  .topbar-inner{padding:0 12px;gap:8px;}
+  .topbar-date{font-size:9px;letter-spacing:.02em;}
+  .live-dot-wrap{font-size:10px;}
+
+  /* Header */
+  header{padding:10px 0 0;}
+  .header-top{padding:0 12px;margin-bottom:10px;gap:8px;flex-wrap:nowrap;}
+  .logo-box{font-size:26px;padding:3px 9px;}
+  .logo-word{font-size:26px;}
+  .logo-ext{font-size:11px;}
+  .header-tagline{display:none;}
+  .dolar-widget{display:flex;padding:6px 10px;gap:6px;}
+  .dolar-icon{font-size:16px;}
+  .dolar-rate{font-size:15px;}
+  .dolar-sep{display:none;}
+  .dolar-cv{display:none;}
+  .dolar-arrow{display:none;}
+  .dolar-lbl{font-size:8px;}
+
+  /* Nav */
+  .nav-inner{padding:0 8px;}
+  .nav-inner a{font-size:11px;padding:10px 10px;}
+  .nav-ai{padding:5px 8px;font-size:9px;}
+
+  /* Hero */
+  .hero{padding:16px 0;}
+  .hero-inner{padding:0 12px;gap:16px;}
+  .hero-main{grid-template-columns:1fr;gap:16px;}
+  .hero-img-wrap img,.hero-img-ph{height:200px;}
+  .hero-title{font-size:20px;}
+  .hero-excerpt{font-size:13px;}
+
+  /* Trading widget mobile — scroll horizontal */
+  #tradingContent{
+    display:flex!important;
+    overflow-x:auto;
+    scrollbar-width:none;
+    -webkit-overflow-scrolling:touch;
+    scroll-snap-type:x mandatory;
+  }
+  #tradingContent::-webkit-scrollbar{display:none;}
+  #tradingContent>div{
+    min-width:160px!important;
+    flex-shrink:0;
+    scroll-snap-align:start;
+  }
+
+  /* Trading header mobile */
+  .trading-header-wrap{flex-wrap:wrap;gap:6px;}
+
+  /* Section bar */
+  .section-bar{padding:0 12px;margin-top:14px;}
+  .section-label{font-size:12px;padding:7px 12px;}
+  .news-count{font-size:10px;padding:7px 10px;}
+  .section-filters{display:flex;gap:4px;margin-left:8px;overflow-x:auto;scrollbar-width:none;}
+  .section-filters::-webkit-scrollbar{display:none;}
+  .fcat{font-size:10px;padding:4px 8px;white-space:nowrap;}
+
+  /* Grid noticias — 1 columna en mobile */
+  .main-wrap{padding:12px 12px 30px;gap:16px;}
+  .grid{grid-template-columns:1fr;gap:12px;}
+
+  /* Cards mobile — horizontal layout */
+  .card{flex-direction:row;height:110px;}
+  .card-img-wrap{width:110px;flex-shrink:0;}
+  .card-img-wrap img{height:110px;width:110px;}
+  .card-img-ph{height:110px;width:110px;font-size:20px;}
+  .card-cat{font-size:9px;padding:2px 6px;}
+  .card-src{font-size:8px;padding:2px 5px;}
+  .card-body{padding:10px;flex:1;overflow:hidden;}
+  .card-title{font-size:13px;line-height:1.3;-webkit-line-clamp:3;}
+  .card-excerpt{display:none;}
+  .card-footer{padding-top:6px;}
+  .card-meta{font-size:10px;}
+
+  /* Ad banner mobile */
+  .ad-banner{min-height:60px;margin:8px 0;}
+
+  /* Modal mobile */
+  .mcls{top:8px;right:8px;width:32px;height:32px;font-size:16px;}
+  .modal{margin:0;border-radius:0;}
+
+  /* Toast mobile */
+  .toast{bottom:10px;right:10px;left:10px;min-width:unset;}
+
+  /* Footer mobile */
+  footer{padding:20px 0;}
+  .footer-inner{padding:0 12px;flex-direction:column;gap:12px;align-items:flex-start;}
+}
 </style>
 
 </head>
@@ -313,17 +415,17 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
 <div style="max-width:1240px;margin:20px auto 0;padding:0 20px;">
   <div style="background:#0a0a0a;border-top:3px solid #cc0000;">
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid #222;">
-      <div style="display:flex;align-items:center;gap:10px;">
-        <span style="background:#cc0000;color:#fff;font-family:Oswald,sans-serif;font-size:12px;font-weight:700;padding:4px 12px;letter-spacing:.08em;text-transform:uppercase;">📈 RECOMENDACIONES DE COMPRA EN EL MERCADO</span>
+    <div class="trading-header-wrap" style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid #222;gap:8px;">
+      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+        <span style="background:#cc0000;color:#fff;font-family:Oswald,sans-serif;font-size:12px;font-weight:700;padding:4px 12px;letter-spacing:.08em;text-transform:uppercase;">📈 MERCADO</span>
         <div style="display:flex;align-items:center;gap:5px;"><div class="ldot"></div><span style="color:#00ff88;font-size:10px;font-weight:700;font-family:Oswald,sans-serif;">EN VIVO</span></div>
       </div>
-      <div style="display:flex;align-items:center;gap:12px;">
-        <span style="color:rgba(255,255,255,.4);font-size:11px;" id="tradingTime">Cargando...</span>
-        <button onclick="window.loadTrading()" style="background:#cc0000;border:none;color:#fff;font-size:10px;font-weight:700;padding:4px 10px;cursor:pointer;font-family:Oswald,sans-serif;letter-spacing:.06em;">↻ ACTUALIZAR</button>
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span style="color:rgba(255,255,255,.4);font-size:10px;" id="tradingTime">Cargando...</span>
+        <button onclick="window.loadTrading()" style="background:#cc0000;border:none;color:#fff;font-size:10px;font-weight:700;padding:4px 10px;cursor:pointer;font-family:Oswald,sans-serif;letter-spacing:.06em;">↻</button>
       </div>
     </div>
-    <div id="tradingContent" style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-bottom:1px solid #222;"></div>
+    <div id="tradingContent" style="display:grid;grid-template-columns:repeat(5,1fr);gap:0;border-bottom:1px solid #222;overflow-x:auto;-webkit-overflow-scrolling:touch;"></div>
     <div style="padding:8px 18px;display:flex;align-items:center;justify-content:space-between;">
       <span style="font-size:10px;color:#555;">⚠ Solo fines informativos. No es asesoría financiera.</span>
       <span style="font-size:10px;color:#555;">Fuente: Yahoo Finance</span>
@@ -447,12 +549,17 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
   function ago(iso) {
     if (!iso) return 'Ahora mismo';
-    var m = Math.floor((Date.now() - new Date(iso).getTime()) / 60000);
+    var d = new Date(iso);
+    if (isNaN(d.getTime())) return 'Ahora mismo';
+    var m = Math.floor((Date.now() - d.getTime()) / 60000);
+    if (isNaN(m) || m < 0) return 'Ahora mismo';
     if (m < 1) return 'Hace unos segundos';
     if (m < 60) return 'Hace ' + m + ' min';
     var h = Math.floor(m / 60);
     if (h < 24) return 'Hace ' + h + 'h';
-    return 'Hace ' + Math.floor(h / 24) + ' días';
+    var days = Math.floor(h / 24);
+    if (days === 1) return 'Hace 1 día';
+    return 'Hace ' + days + ' días';
   }
 
   function el(id) { return document.getElementById(id); }
