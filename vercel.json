@@ -1,5 +1,19 @@
 {
   "version": 2,
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{"type": "host", "value": "ahoranews.news"}],
+      "destination": "https://www.ahoranews.news/$1",
+      "permanent": true
+    },
+    {
+      "source": "/(.*)",
+      "has": [{"type": "host", "value": "ahora-news1.vercel.app"}],
+      "destination": "https://www.ahoranews.news/$1",
+      "permanent": true
+    }
+  ],
   "routes": [
     { "src": "/api/news", "dest": "/api/news.js" },
     { "src": "/api/publish", "dest": "/api/publish.js" },
