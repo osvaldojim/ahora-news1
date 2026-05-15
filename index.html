@@ -447,6 +447,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     <button class="fcat" id="fcatTech">Tech</button>
     <button class="fcat" id="fcatCiencia">Ciencia</button>
     <button class="fcat" id="fcatMundo">Mundo</button>
+    <button class="fcat" id="fcatViral" style="background:#ff4500;border-color:#ff4500;color:#fff;">🔥 Viral</button>
   </div>
 </div>
 
@@ -627,7 +628,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       likes: Math.floor(Math.random() * 2000) + 50,
       liked: false,
       comments: [],
-      isEditor: isEditor
+      isEditor: isEditor,
+      isViral: a.isViral || false
     };
   }
 
@@ -704,7 +706,9 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   }
 
   function getFiltered() {
-    return FILTER ? NEWS.filter(function(n) { return n.cat === FILTER; }) : NEWS;
+    if (!FILTER) return NEWS;
+    if (FILTER === 'Viral') return NEWS.filter(function(n) { return n.isViral; });
+    return NEWS.filter(function(n) { return n.cat === FILTER; });
   }
 
   function renderGrid() {
@@ -841,6 +845,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   el('fcatTech').addEventListener('click', function() { setFilter('Tecnología', 'navTecnologia'); this.classList.add('on'); });
   el('fcatCiencia').addEventListener('click', function() { setFilter('Ciencia', 'navCiencia'); this.classList.add('on'); });
   el('fcatMundo').addEventListener('click', function() { setFilter('Mundo', 'navMundo'); this.classList.add('on'); });
+  el('fcatViral').addEventListener('click', function() { setFilter('Viral', null); this.classList.add('on'); });
 
   // ── DÓLAR con fallback a memoria ──
   function applyDolar(r) {
