@@ -294,6 +294,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   /* Grid noticias — 1 columna en mobile */
   .main-wrap{padding:12px 12px 30px;gap:16px;}
   .grid{grid-template-columns:1fr;gap:12px;}
+  .load-more-wrap{grid-column:1/-1 !important;display:block !important;}
+  .load-more-btn{width:100%;max-width:100%;}
 
   /* Cards mobile — horizontal layout */
   .card{flex-direction:row;height:110px;}
@@ -463,9 +465,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       <div class="card"><div class="skeleton" style="height:195px;"></div><div class="card-body"><div class="skeleton" style="height:16px;margin:0 0 8px;border-radius:3px;"></div><div class="skeleton" style="height:16px;margin:0 0 8px;border-radius:3px;width:75%;"></div><div class="skeleton" style="height:12px;border-radius:3px;"></div></div></div>
     </div>
   </div>
-  <div id="loadMoreBtn" style="text-align:center;padding:20px 12px;">
-    <button class="load-more-btn" onclick="window._more()">Ver más</button>
-  </div>
   <aside class="right-sb">
     <div class="ad-sidebar"><span style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;">Publicidad</span></div>
     <div class="sb-box">
@@ -531,10 +530,10 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   var NEWS = [];
   var FILTER = '';
   var PAGE = 1;
-  var PAGE_SIZE = 12;
+  var PAGE_SIZE = 24;
   var CYCLE = 40;
   var CACHE_KEY = 'ahora_v4_cache';
-  var CACHE_TTL = 24 * 60 * 60 * 1000;
+  var CACHE_TTL = 2 * 60 * 60 * 1000; // 2 horas
   var DOLAR_KEY = 'ahora_v3_dolar';
   var DOLAR_TTL = 3600000;
 
@@ -602,13 +601,16 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
   function mergeNews(old, fresh) {
     var seen = {};
-    old.forEach(function(n) { seen[n.url] = true; });
-    var added = fresh.filter(function(n) {
+    // Fresh news always first, old ones fill the rest
+    fresh.forEach(function(n) { seen[n.url] = true; });
+    var kept = old.filter(function(n) {
       if (seen[n.url]) return false;
       seen[n.url] = true;
       return true;
     });
-    return added.concat(old);
+    var merged = fresh.concat(kept);
+    // Cap at 300 to keep performance
+    return merged.slice(0, 300);
   }
 
   // ── CARGAR NOTICIAS ──
@@ -733,23 +735,11 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
         + '</div></div></div>';
     }
 
-    el('newsGrid').innerHTML = htm || '<div style="text-align:center;padding:40px;color:#888;">No hay noticias en esta categoría.</div>';
-
-    // Botón Ver más — siempre visible si hay noticias
-    var lmb = el('loadMoreBtn');
-    if (lmb) {
-      lmb.style.display = 'block';
-      var btn = lmb.querySelector('button');
-      if (hasMore) {
-        btn.textContent = 'Ver más · ' + list.length + ' noticias en total';
-        btn.disabled = false;
-        btn.style.opacity = '1';
-      } else {
-        btn.textContent = '✓ Todas las noticias cargadas (' + list.length + ')';
-        btn.disabled = true;
-        btn.style.opacity = '.5';
-      }
+    if (hasMore) {
+      htm += '<div class="load-more-wrap"><button class="load-more-btn" onclick="window._more()">Ver más · ' + list.length + ' noticias en total</button></div>';
     }
+
+    el('newsGrid').innerHTML = htm || '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#888;">No hay noticias en esta categoría.</div>';
   }
 
   function renderTrends() {
@@ -785,7 +775,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   };
 
   window._more = function() {
-    PAGE = PAGE + 1;
+    PAGE = 99999;
     renderGrid();
   };
 
