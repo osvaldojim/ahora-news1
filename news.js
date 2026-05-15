@@ -117,10 +117,33 @@ Responde SOLO en JSON sin markdown ni texto extra:
 
 const data = await response.json();
 const text = data.content?.[0]?.text || '{}';
+console.log('Claude raw response length:', text.length);
 
-// Parse JSON response
-const clean = text.replace(/ ⁠json|⁠ /g, '').trim();
-const parsed = JSON.parse(clean);
+// Parse JSON response - handle multiline body
+let parsed = {};
+try {
+  const clean = text.replace(/ ⁠json|⁠ /g, '').trim();
+  parsed = JSON.parse(clean);
+} catch(parseErr) {
+  // Try to extract fields manually if JSON is broken
+  console.error('JSON parse error, trying manual extraction');
+  const titleMatch = text.match(/"title"\s*:\s*"([^"]+)"/);
+  const descMatch = text.match(/"description"\s*:\s*"([^"]+)"/);
+  const bodyMatch = text.match(/"body"\s*:\s*"([\s\S]+?)(?:","isViral|"\s*})/);
+  const viralMatch = text.match(/"isViral"\s*:\s*(true|false)/);
+  parsed = {
+    title: titleMatch ? titleMatch[1] : article.title,
+    description: descMatch ? descMatch[1] : (article.description || ''),
+    body: bodyMatch ? bodyMatch[1].replace(/\n/g, '
+ ⁠
+
+’) : (article.description || ‘’),
+isViral: viralMatch ? viralMatch[1] === ‘true’ : false
+};
+}
+
+
+console.log('Body length:', (parsed.body || '').length);
 
 return {
   title: parsed.title || article.title,
@@ -128,7 +151,7 @@ return {
   body: parsed.body || parsed.description || article.description || '',
   isViral: parsed.isViral || false
 };
- ⁠
+
 
 } catch (err) {
 console.error(‘Claude rewrite error:’, err.message);
