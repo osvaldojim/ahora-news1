@@ -463,7 +463,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       <div class="card"><div class="skeleton" style="height:195px;"></div><div class="card-body"><div class="skeleton" style="height:16px;margin:0 0 8px;border-radius:3px;"></div><div class="skeleton" style="height:16px;margin:0 0 8px;border-radius:3px;width:75%;"></div><div class="skeleton" style="height:12px;border-radius:3px;"></div></div></div>
     </div>
   </div>
-  <div id="loadMoreBtn" style="display:none;text-align:center;padding:20px 12px;">
+  <div id="loadMoreBtn" style="text-align:center;padding:20px 12px;">
     <button class="load-more-btn" onclick="window._more()">Ver más</button>
   </div>
   <aside class="right-sb">
@@ -735,14 +735,19 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
     el('newsGrid').innerHTML = htm || '<div style="text-align:center;padding:40px;color:#888;">No hay noticias en esta categoría.</div>';
 
-    // Botón fuera del grid para mobile
+    // Botón Ver más — siempre visible si hay noticias
     var lmb = el('loadMoreBtn');
     if (lmb) {
+      lmb.style.display = 'block';
+      var btn = lmb.querySelector('button');
       if (hasMore) {
-        lmb.style.display = 'block';
-        lmb.querySelector('button').textContent = 'Ver más · ' + list.length + ' noticias en total';
+        btn.textContent = 'Ver más · ' + list.length + ' noticias en total';
+        btn.disabled = false;
+        btn.style.opacity = '1';
       } else {
-        lmb.style.display = 'none';
+        btn.textContent = '✓ Todas las noticias cargadas (' + list.length + ')';
+        btn.disabled = true;
+        btn.style.opacity = '.5';
       }
     }
   }
