@@ -75,24 +75,26 @@ return res.status(500).json({ error: error.message, articles: [] });
 // ── REESCRITURA CON CLAUDE ──
 async function rewriteWithClaude(article, apiKey) {
 try {
-const prompt = `Eres el editor jefe de AhoraNews, el medio de noticias más popular de República Dominicana. Tu trabajo es reescribir noticias internacionales en un estilo dominicano: directo, con impacto, usando expresiones del habla dominicana cuando aplique, fácil de entender para cualquier persona.
+const prompt = `Eres el editor más picante de AhoraNews, el medio digital más leído de República Dominicana. Tu misión es transformar noticias aburridas en titulares que la gente no pueda ignorar.
 
 NOTICIA ORIGINAL:
 Título: ${article.title}
 Descripción: ${article.description || ‘’}
 
-INSTRUCCIONES:
+REGLAS ESTRICTAS:
 
-1.⁠ ⁠Reescribe el TÍTULO con más impacto y gancho — que dé ganas de leerlo. Máximo 80 caracteres. Puedes usar expresiones como “¡Fuácata!”, “Se armó”, “Tremendo”, “Brutal”, “Lo que nadie esperaba”, etc. cuando aplique al tono de la noticia.
-1.⁠ ⁠Reescribe la DESCRIPCIÓN en 2-3 oraciones en español dominicano claro y directo. Sin tecnicismos. Como si le contaras la noticia a un amigo.
-1.⁠ ⁠Determina si esta noticia es VIRAL (true/false) — es viral si trata de algo que la gente comparte mucho en redes: chismes de famosos, récords, situaciones insólitas, humor, animales, fenómenos raros, deportes épicos.
+1.⁠ ⁠El TÍTULO debe ser COMPLETAMENTE DIFERENTE al original — más impactante, más directo, más dominicano. NUNCA copies el título original. Usa frases como: “¡Se armó!”, “¡Fuácata!”, “Tremendo lo que pasó”, “Nadie lo vio venir”, “¡Qué desgracia!”, “Se puso feo”, “¡Brutal!”, “Lo que no te contaron”, “Esto está candente”, “¡Agárrate!”, etc. según el tono. Máximo 75 caracteres.
+1.⁠ ⁠La DESCRIPCIÓN debe sonar como un amigo dominicano contándote el chisme — directo, sin rodeos, usando “pa’”, “tá”, “mijo”, “vergüenza”, “fuerte”, “brutal” cuando aplique. 2-3 oraciones máximo.
+1.⁠ ⁠isViral = true si es sobre: famosos, crímenes impactantes, récords, humor, animales, fenómenos raros, deportes épicos, política polémica, accidentes graves.
 
-Responde SOLO en este formato JSON exacto, sin texto adicional:
-{
-“title”: “título reescrito aquí”,
-“description”: “descripción reescrita aquí”,
-“isViral”: true o false
-}`;
+EJEMPLOS de cómo transformar títulos:
+
+•⁠  ⁠Original: “President signs new bill” → Tuyo: “¡El presidente firmó algo que va a cambiar todo!”
+•⁠  ⁠Original: “Stock market falls” → Tuyo: “¡Se cayó la bolsa y hay gente llorando!”
+•⁠  ⁠Original: “Athlete breaks record” → Tuyo: “¡Brutaaaaal! Este atleta rompió el récord mundial”
+
+Responde SOLO en JSON exacto, sin texto adicional, sin markdown:
+{“title”:“título aquí”,“description”:“descripción aquí”,“isViral”:true}`;
 
 
 ⁠ const response = await fetch('https://api.anthropic.com/v1/messages', {
