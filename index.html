@@ -138,7 +138,7 @@ nav{background:var(--red);}
 .hero-inner{max-width:1240px;margin:0 auto;padding:0 20px;display:grid;grid-template-columns:1fr 320px;gap:32px;}
 .hero-main{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;}
 .hero-cat{display:inline-block;background:var(--red);color:#fff;font-size:11px;font-weight:700;padding:3px 10px;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px;}
-.hero-title{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;line-height:1.25;color:var(--dark);margin-bottom:12px;cursor:pointer;}
+.hero-title{font-family:Georgia,serif;font-size:28px;font-weight:700;line-height:1.25;color:var(--dark);margin-bottom:12px;cursor:pointer;}
 .hero-title:hover{color:var(--red);}
 .hero-excerpt{font-size:15px;color:var(--gray);line-height:1.65;margin-bottom:14px;}
 .hero-meta{font-size:12px;color:var(--light);display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
@@ -176,7 +176,7 @@ nav{background:var(--red);}
 .card-cat{position:absolute;bottom:0;left:0;background:var(--red);color:#fff;font-size:10px;font-weight:700;padding:3px 9px;letter-spacing:.08em;text-transform:uppercase;}
 .card-src{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.72);color:#fff;font-size:9px;font-weight:700;padding:3px 8px;}
 .card-body{padding:14px;flex:1;display:flex;flex-direction:column;}
-.card-title{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;line-height:1.38;color:var(--dark);margin-bottom:8px;flex:1;}
+.card-title{font-family:Georgia,serif;font-size:16px;font-weight:700;line-height:1.38;color:var(--dark);margin-bottom:8px;flex:1;}
 .card-excerpt{font-size:13px;color:var(--gray);line-height:1.58;margin-bottom:10px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
 .card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:10px;border-top:1px solid var(--border);}
 .card-meta{font-size:11px;color:var(--light);}
@@ -792,8 +792,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   window._openN = function(idx) {
     var n = NEWS[idx];
     if (!n) return;
-    if (n.isEditor || !n.url || n.url === '#') { showModal(n); return; }
-    showIframe(n);
+    showModal(n);
   };
 
   window._like = function(idx, btn) {
@@ -826,16 +825,27 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   }
 
   function showModal(n) {
-    var imgH = n.img ? '<img src="' + esc(n.img) + '" style="width:100%;height:360px;object-fit:cover;display:block;" alt="">' : '';
-    var paras = (n.body || n.excerpt || '').split('\n').filter(function(p) { return p.trim(); }).map(function(p) { return '<p style="margin-bottom:14px;">' + esc(p) + '</p>'; }).join('');
+    var imgH = n.img ? '<img src="' + esc(n.img) + '" style="width:100%;max-height:380px;object-fit:cover;display:block;" alt="' + esc(n.title) + '">' : '';
+    var paras = (n.body || n.excerpt || '').split('\n').filter(function(p) { return p.trim(); }).map(function(p) { return '<p style="margin-bottom:16px;font-size:17px;line-height:1.8;color:#333;">' + esc(p) + '</p>'; }).join('');
+    var sourceLink = n.url && n.url !== '#'
+      ? '<a href="' + esc(n.url) + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:#888;font-size:11px;text-decoration:none;border:1px solid #e0e0e0;padding:5px 12px;border-radius:20px;margin-top:24px;">Ver fuente original: ' + esc(n.originalSource || n.source) + ' &#8599;</a>'
+      : '';
     el('modalEl').innerHTML = imgH
-      + '<div style="padding:28px 36px 36px;">'
-      + '<span style="background:#cc0000;color:#fff;font-size:10px;font-weight:700;padding:3px 10px;text-transform:uppercase;">' + esc(n.cat) + '</span>'
-      + '<h1 style="font-family:Playfair Display,serif;font-size:28px;font-weight:700;line-height:1.25;color:#111;margin:14px 0 12px;">' + esc(n.title) + '</h1>'
-      + '<div style="font-size:12px;color:#888;margin-bottom:20px;border-bottom:1px solid #e0e0e0;padding-bottom:14px;">'
-      + '<strong style="color:#111;">' + esc(n.source) + '</strong> · ' + n.time + ' · <span style="color:#0066cc;">🤖 IA</span>'
+      + '<div style="padding:24px 28px 36px;">'
+      + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">'
+      + '<span style="background:#cc0000;color:#fff;font-size:10px;font-weight:700;padding:3px 10px;text-transform:uppercase;border-radius:2px;">' + esc(n.cat) + '</span>'
+      + '<span style="background:#f0faf4;color:#007a3d;font-size:10px;font-weight:700;padding:3px 10px;border-radius:2px;">&#x1F916; Reescrito por IA</span>'
       + '</div>'
-      + '<div style="font-size:16px;line-height:1.85;color:#333;">' + paras + '</div>'
+      + '<h1 style="font-family:Georgia,serif;font-size:26px;font-weight:700;line-height:1.3;color:#111;margin-bottom:14px;">' + esc(n.title) + '</h1>'
+      + '<div style="display:flex;align-items:center;gap:12px;font-size:12px;color:#888;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #e0e0e0;">'
+      + '<span style="background:#cc0000;color:#fff;font-weight:700;padding:2px 8px;font-size:11px;">AHORA.news</span>'
+      + '<span>' + n.time + '</span>'
+      + '<span style="color:#007a3d;font-weight:600;">&#x2705; Tiempo Real</span>'
+      + '</div>'
+      + '<div>' + paras + '</div>'
+      + '<div style="margin-top:28px;padding-top:20px;border-top:1px solid #e0e0e0;">'
+      + sourceLink
+      + '</div>'
       + '</div>';
     el('overlay').classList.add('open');
     document.body.style.overflow = 'hidden';
