@@ -49,15 +49,16 @@ const processed = await Promise.all(
       : { title: article.title, description: article.description || '' };
 
     return {
-      title:       rewritten.title,
-      description: rewritten.description,
-      content:     rewritten.description,
-      url:         article.url,
-      urlToImage:  article.urlToImage,
-      publishedAt: article.publishedAt,
-      source:      { name: 'AhoraNews' },
-      category:    detectCategory(article),
-      isViral:     rewritten.isViral || false,
+      title:          rewritten.title,
+      description:    rewritten.description,
+      content:        rewritten.body || rewritten.description,
+      body:           rewritten.body || rewritten.description,
+      url:            article.url,
+      urlToImage:     article.urlToImage,
+      publishedAt:    article.publishedAt,
+      source:         { name: 'AhoraNews' },
+      category:       detectCategory(article),
+      isViral:        rewritten.isViral || false,
       originalSource: article.source?.name || 'Unknown'
     };
   })
