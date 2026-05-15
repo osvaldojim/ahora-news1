@@ -463,6 +463,9 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       <div class="card"><div class="skeleton" style="height:195px;"></div><div class="card-body"><div class="skeleton" style="height:16px;margin:0 0 8px;border-radius:3px;"></div><div class="skeleton" style="height:16px;margin:0 0 8px;border-radius:3px;width:75%;"></div><div class="skeleton" style="height:12px;border-radius:3px;"></div></div></div>
     </div>
   </div>
+  <div id="loadMoreBtn" style="display:none;text-align:center;padding:20px 12px;">
+    <button class="load-more-btn" onclick="window._more()">Ver más</button>
+  </div>
   <aside class="right-sb">
     <div class="ad-sidebar"><span style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;">Publicidad</span></div>
     <div class="sb-box">
@@ -730,11 +733,18 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
         + '</div></div></div>';
     }
 
-    if (hasMore) {
-      htm += '<div class="load-more-wrap"><button class="load-more-btn" onclick="window._more()">Ver más · ' + list.length + ' noticias en total</button></div>';
-    }
+    el('newsGrid').innerHTML = htm || '<div style="text-align:center;padding:40px;color:#888;">No hay noticias en esta categoría.</div>';
 
-    el('newsGrid').innerHTML = htm || '<div style="grid-column:span 3;text-align:center;padding:40px;color:#888;">No hay noticias en esta categoría.</div>';
+    // Botón fuera del grid para mobile
+    var lmb = el('loadMoreBtn');
+    if (lmb) {
+      if (hasMore) {
+        lmb.style.display = 'block';
+        lmb.querySelector('button').textContent = 'Ver más · ' + list.length + ' noticias en total';
+      } else {
+        lmb.style.display = 'none';
+      }
+    }
   }
 
   function renderTrends() {
@@ -770,7 +780,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   };
 
   window._more = function() {
-    PAGE = 99999;
+    PAGE = PAGE + 1;
     renderGrid();
   };
 
