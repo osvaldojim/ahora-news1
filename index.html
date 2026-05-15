@@ -608,9 +608,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       seen[n.url] = true;
       return true;
     });
-    var merged = fresh.concat(kept);
-    // Cap at 300 to keep performance
-    return merged.slice(0, 300);
+    return fresh.concat(kept);
   }
 
   // ── CARGAR NOTICIAS ──
