@@ -177,6 +177,7 @@ nav{background:var(--red);}
 .load-more-wrap{grid-column:1/-1;text-align:center;padding:24px 0;}
 .load-more-btn{background:var(--dark);color:#fff;border:none;font-family:'Oswald',sans-serif;font-size:14px;font-weight:700;padding:13px 36px;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;transition:.2s;width:100%;max-width:400px;}
 .load-more-btn:hover{background:var(--red);}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 .skeleton{background:linear-gradient(90deg,#e8e8e8 25%,#f0f0f0 50%,#e8e8e8 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;}
 @keyframes shimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
 .right-sb>*+*{margin-top:20px;}
@@ -542,9 +543,9 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   var NEWS = [];
   var FILTER = '';
   var PAGE = 1;
-  var PAGE_SIZE = 24;
+  var PAGE_SIZE = 12;
   var CYCLE = 40;
-  var CACHE_KEY = 'ahora_v8_ondemand';
+  var CACHE_KEY = 'ahora_v9_fix';
   var CACHE_TTL = 2 * 60 * 60 * 1000; // 2 horas
   var DOLAR_KEY = 'ahora_v3_dolar';
   var DOLAR_TTL = 3600000;
@@ -779,12 +780,34 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   window._openN = function(idx) {
     var n = NEWS[idx];
     if (!n) return;
-    // Show modal immediately with existing content
-    showModal(n);
-    // If needs rewrite, call Claude and update modal
-    if (n.needsRewrite) {
-      rewriteArticle(n, idx);
-    }
+    // Show loading modal first
+    el('modalEl').innerHTML = '<div style="padding:60px;text-align:center;">'
+      + '<div style="font-family:Oswald,sans-serif;font-size:14px;color:#888;margin-bottom:16px;">REDACCION AHORANEWS</div>'
+      + '<div style="font-family:Oswald,sans-serif;font-size:18px;font-weight:700;color:#111;margin-bottom:20px;">Preparando articulo completo...</div>'
+      + '<div style="width:40px;height:40px;border:3px solid #f4f4f4;border-top:3px solid #cc0000;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;"></div>'
+      + '</div>';
+    el('overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
+    // Rewrite article with Claude
+    fetch('/api/rewrite', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: n.title, description: n.description, content: n.body || n.description })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.title) {
+        NEWS[idx].title = data.title;
+        NEWS[idx].description = data.description;
+        NEWS[idx].body = data.body;
+        NEWS[idx].source = { name: 'AhoraNews' };
+        NEWS[idx].needsRewrite = false;
+      }
+      showModal(NEWS[idx]);
+    })
+    .catch(function() {
+      showModal(n);
+    });
   };
 
   function rewriteArticle(n, idx) {
