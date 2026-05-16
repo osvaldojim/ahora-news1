@@ -544,7 +544,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   var PAGE = 1;
   var PAGE_SIZE = 24;
   var CYCLE = 40;
-  var CACHE_KEY = 'ahora_v7_fresh';
+  var CACHE_KEY = 'ahora_v8_ondemand';
   var CACHE_TTL = 2 * 60 * 60 * 1000; // 2 horas
   var DOLAR_KEY = 'ahora_v3_dolar';
   var DOLAR_TTL = 3600000;
@@ -779,8 +779,37 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   window._openN = function(idx) {
     var n = NEWS[idx];
     if (!n) return;
+    // Show modal immediately with existing content
     showModal(n);
+    // If needs rewrite, call Claude and update modal
+    if (n.needsRewrite) {
+      rewriteArticle(n, idx);
+    }
   };
+
+  function rewriteArticle(n, idx) {
+    fetch('/api/rewrite', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ title: n.title, description: n.description, content: n.body })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.title) {
+        NEWS[idx].title = data.title;
+        NEWS[idx].description = data.description;
+        NEWS[idx].body = data.body;
+        NEWS[idx].source = { name: 'AhoraNews' };
+        NEWS[idx].needsRewrite = false;
+        // Update modal if still open
+        var overlay = el('overlay');
+        if (overlay && overlay.classList.contains('open')) {
+          showModal(NEWS[idx]);
+        }
+      }
+    })
+    .catch(function() {});
+  }
 
   window._like = function(idx, btn) {
     var n = NEWS[idx];
