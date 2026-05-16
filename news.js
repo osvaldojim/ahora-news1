@@ -76,56 +76,65 @@ export default async function handler(req, res) {
   }
 }
 
-// ── IMAGEN COHERENTE CON LA NOTICIA ──
-async function getCoherentImage(article, apiKey) {
-  // If no API key, return original
-  if (!apiKey) return article.urlToImage;
-  
+// ── IMAGEN COHERENTE CON PEXELS ──
+async function getCoherentImage(article, claudeKey) {
   try {
-    // Ask Claude what search term would find a relevant image
-    const prompt = `Given this news headline: "${article.title}"
+    const PEXELS_KEY = 'F0AAtd8PycNzm8mqfyumWqHXtyblVYQlxqUlScxjRST1J5Owq5VYFQQv';
     
-Return ONLY a 2-3 word English search query that would find a relevant stock photo for this news story. Examples:
-- "Abinader viaja a Miami" → "Dominican president travel"
-- "Precio del dólar sube" → "US dollar currency"
-- "Tigres ganan campeonato" → "baseball celebration trophy"
-- "Huracán azota el Caribe" → "hurricane storm damage"
-
-Return ONLY the search query, nothing else.`;
-
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01'
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 20,
-        messages: [{ role: 'user', content: prompt }]
-      })
-    });
-
-    const data = await resp.json();
-    const query = data.content?.[0]?.text?.trim() || '';
+    // Use Claude to get a smart English search query
+    let searchQuery = '';
     
-    if (query) {
-      // Search Unsplash with the English query
-      const UNSPLASH_KEY = process.env.UNSPLASH_KEY || 'oWykQr_yKA2gqa2VdovxsHeScXLLqLWZymdPjXealCc';
-      const imgResp = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape&client_id=${UNSPLASH_KEY}`);
-      const imgData = await imgResp.json();
-      if (imgData.results?.length > 0) {
-        return imgData.results[0].urls.regular;
-      }
+    if (claudeKey) {
+      const resp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-api-key': claudeKey,
+          'anthropic-version': '2023-06-01'
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 15,
+          messages: [{ role: 'user', content: 'Give me a 2-3 word English photo search query for this news headline. Only the query, nothing else: ' + article.title }]
+        })
+      });
+      const data = await resp.json();
+      searchQuery = (data.content?.[0]?.text || '').trim().replace(/[^a-zA-Z0-9 ]/g, '');
+    }
+
+    // Fallback query from category
+    if (!searchQuery) {
+      const catMap = {
+        'Deportes': 'sports athlete',
+        'Economía': 'business finance',
+        'Tecnología': 'technology computer',
+        'Política': 'government politics',
+        'Ciencia': 'science research',
+        'Mundo': 'world news city',
+        'Nacionales': 'Dominican Republic'
+      };
+      searchQuery = catMap[article.category] || 'news world';
+    }
+
+    // Search Pexels
+    const pexResp = await fetch(
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(searchQuery)}&per_page=5&orientation=landscape`,
+      { headers: { 'Authorization': PEXELS_KEY } }
+    );
+    const pexData = await pexResp.json();
+    
+    if (pexData.photos && pexData.photos.length > 0) {
+      const idx = Math.floor(Math.random() * Math.min(5, pexData.photos.length));
+      return pexData.photos[idx].src.large;
     }
     return article.urlToImage;
   } catch(e) {
+    console.error('Pexels error:', e.message);
     return article.urlToImage;
   }
 }
 
-// ── REESCRITURA CON CLAUDE ──// ── REESCRITURA CON CLAUDE ──
+// ── REESCRITURA CON CLAUDE ──// ── REESCRITURA CON CLAUDE ──// ── REESCRITURA CON CLAUDE ──
 async function rewriteWithClaude(article, apiKey) {
   try {
     const prompt = `Eres periodista estrella de AhoraNews, el medio más leído de República Dominicana. Debes escribir un artículo periodístico COMPLETO basándote en la información disponible.
