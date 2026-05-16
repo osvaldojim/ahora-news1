@@ -545,7 +545,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   var PAGE = 1;
   var PAGE_SIZE = 12;
   var CYCLE = 40;
-  var CACHE_KEY = 'ahora_v11_delay';
+  var CACHE_KEY = 'ahora_v12_source';
   var CACHE_TTL = 2 * 60 * 60 * 1000; // 2 horas
   var DOLAR_KEY = 'ahora_v3_dolar';
   var DOLAR_TTL = 3600000;
@@ -717,7 +717,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       var mI = m.img
         ? '<img class="si-img" loading="lazy" src="' + esc(m.img) + '" alt="" onerror="this.outerHTML=\'<div class=si-img-ph>📰</div>\'">'
         : '<div class="si-img-ph">📰</div>';
-      sH += '<div class="sidebar-item" onclick="window._openN(' + idx + ')">' + mI + '<div><div class="si-cat">' + esc(m.cat) + '</div><div class="si-title">' + esc(m.title.slice(0, 75)) + '</div><div class="si-time">' + esc(m.source) + ' · ' + m.time + '</div></div></div>';
+      sH += '<div class="sidebar-item" onclick="window._openN(' + idx + ')">' + mI + '<div><div class="si-cat">' + esc(m.cat) + '</div><div class="si-title">' + esc(m.title.slice(0, 75)) + '</div><div class="si-time">' + 'AhoraNews · ' + m.time + '</div></div></div>';
     }
     el('heroSidebar').innerHTML = sH;
   }
@@ -748,7 +748,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
         + '<span class="card-src">' + esc(n.source) + '</span></div>'
         + '<div class="card-body"><div class="card-title">' + esc(n.title) + '</div>'
         + '<p class="card-excerpt">' + esc((n.excerpt || '').slice(0, 120)) + '</p>'
-        + '<div class="card-footer"><div class="card-meta"><b>' + esc(n.source) + '</b> · ' + n.time + '</div>'
+        + '<div class="card-footer"><div class="card-meta"><b>AhoraNews</b> · ' + n.time + '</div>'
         + '<button class="like-btn' + (n.liked ? ' liked' : '') + '" onclick="event.stopPropagation();window._like(' + globalIdx + ',this)">'
         + (n.liked ? '❤️' : '🤍') + ' <span>' + n.likes.toLocaleString() + '</span></button>'
         + '</div></div></div>';
