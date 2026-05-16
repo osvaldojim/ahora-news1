@@ -456,6 +456,9 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       <div class="card"><div class="skeleton" style="height:195px;"></div><div class="card-body"><div class="skeleton" style="height:16px;margin:0 0 8px;border-radius:3px;"></div><div class="skeleton" style="height:16px;margin:0 0 8px;border-radius:3px;width:75%;"></div><div class="skeleton" style="height:12px;border-radius:3px;"></div></div></div>
     </div>
   </div>
+  <div id="loadMoreBtn" style="text-align:center;padding:24px 20px;">
+    <button class="load-more-btn" onclick="window._more()">Cargar más noticias</button>
+  </div>
   <aside class="right-sb">
     <div class="ad-sidebar"><span style="font-size:9px;letter-spacing:.08em;text-transform:uppercase;">Publicidad</span></div>
     <div class="sb-box">
@@ -545,7 +548,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   var PAGE = 1;
   var PAGE_SIZE = 12;
   var CYCLE = 40;
-  var CACHE_KEY = 'ahora_v13_allsource';
+  var CACHE_KEY = 'ahora_v16_nodup';
   var CACHE_TTL = 2 * 60 * 60 * 1000; // 2 horas
   var DOLAR_KEY = 'ahora_v3_dolar';
   var DOLAR_TTL = 3600000;
@@ -618,12 +621,18 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   }
 
   function mergeNews(old, fresh) {
-    var seen = {};
-    // Fresh news always first, old ones fill the rest
-    fresh.forEach(function(n) { seen[n.url] = true; });
+    var seenUrl = {};
+    var seenImg = {};
+    // Fresh news always first
+    fresh.forEach(function(n) {
+      seenUrl[n.url] = true;
+      if (n.img) seenImg[n.img] = true;
+    });
     var kept = old.filter(function(n) {
-      if (seen[n.url]) return false;
-      seen[n.url] = true;
+      if (seenUrl[n.url]) return false;
+      if (n.img && seenImg[n.img]) return false;
+      seenUrl[n.url] = true;
+      if (n.img) seenImg[n.img] = true;
       return true;
     });
     return fresh.concat(kept);
@@ -844,8 +853,27 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   };
 
   window._more = function() {
-    PAGE = 99999;
-    renderGrid();
+    var categories = ['Mundo','Política','Economía','Tecnología','Deportes','Ciencia'];
+    var cat = categories[Math.floor(Math.random() * categories.length)];
+    fetch('/api/news?category=' + encodeURIComponent(cat))
+      .then(function(r) { return r.json(); })
+      .then(function(data) {
+        if (data.articles && data.articles.length) {
+          data.articles.forEach(function(a) {
+            var exists = NEWS.some(function(n) { return n.url === a.url; });
+            if (!exists) {
+              NEWS.unshift(mapArticle(a));
+            }
+          });
+          PAGE = Math.ceil(NEWS.length / PAGE_SIZE);
+          renderGrid();
+          try { localStorage.setItem(CACHE_KEY, JSON.stringify({ts: Date.now(), list: NEWS})); } catch(e){}
+        }
+      })
+      .catch(function() {
+        PAGE = PAGE + 1;
+        renderGrid();
+      });
   };
 
   // ── MODALES ──
