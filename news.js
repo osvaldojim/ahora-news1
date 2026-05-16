@@ -37,8 +37,15 @@ export default async function handler(req, res) {
       throw new Error(data.message || 'NewsAPI error');
     }
 
+    // Filter out removed, missing images, and duplicate images
+    const seenImgs = new Set();
     const raw = (data.articles || [])
-      .filter(a => a.title && a.title !== '[Removed]' && a.urlToImage);
+      .filter(a => {
+        if (!a.title || a.title === '[Removed]' || !a.urlToImage) return false;
+        if (seenImgs.has(a.urlToImage)) return false;
+        seenImgs.add(a.urlToImage);
+        return true;
+      });
 
     const processed = raw.map((article) => ({
       title:          article.title,
