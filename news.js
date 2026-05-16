@@ -5,14 +5,23 @@ export default async function handler(req, res) {
 
   const { category } = req.query;
 
-  // Dominican Republic RSS feeds - images always match their stories
+  // Dominican Republic + International RSS feeds
   const RSS_FEEDS = [
+    // Dominican Republic
     'https://www.listindiario.com/rss/portada.xml',
     'https://noticiassin.com/feed/',
     'https://www.diariolibre.com/rss/portada.xml',
     'https://www.elcaribe.com.do/feed/',
     'https://almomento.net/feed/',
-    'https://acento.com.do/feed/'
+    'https://acento.com.do/feed/',
+    'https://www.deultimominuto.com/feed/',
+    'https://elnacional.com.do/feed/',
+    'https://www.hoy.com.do/feed/',
+    // International Spanish
+    'https://feeds.bbci.co.uk/mundo/rss.xml',
+    'https://www.infobae.com/feeds/rss/',
+    'https://rss.nytimes.com/services/xml/rss/nyt/es/World.xml',
+    'https://feeds.elpais.com/mrss-s/pages/ep/site/elpais.com/portada'
   ];
 
   try {
