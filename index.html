@@ -548,7 +548,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   var PAGE = 1;
   var PAGE_SIZE = 12;
   var CYCLE = 40;
-  var CACHE_KEY = 'ahora_v16_nodup';
+  var CACHE_KEY = 'ahora_v99_permanent';
   var CACHE_TTL = 2 * 60 * 60 * 1000; // 2 horas
   var DOLAR_KEY = 'ahora_v3_dolar';
   var DOLAR_TTL = 3600000;
@@ -853,27 +853,29 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   };
 
   window._more = function() {
-    var categories = ['Mundo','Política','Economía','Tecnología','Deportes','Ciencia'];
-    var cat = categories[Math.floor(Math.random() * categories.length)];
-    fetch('/api/news?category=' + encodeURIComponent(cat))
-      .then(function(r) { return r.json(); })
-      .then(function(data) {
-        if (data.articles && data.articles.length) {
-          data.articles.forEach(function(a) {
-            var exists = NEWS.some(function(n) { return n.url === a.url; });
-            if (!exists) {
-              NEWS.unshift(mapArticle(a));
+    PAGE = PAGE + 1;
+    renderGrid();
+    // If we're near the end, fetch more
+    var list = getFiltered();
+    if (PAGE * PAGE_SIZE >= list.length - 6) {
+      var cats = ['Mundo','Política','Economía','Tecnología','Deportes','Ciencia'];
+      var cat = cats[Math.floor(Math.random() * cats.length)];
+      fetch('/api/news?category=' + encodeURIComponent(cat))
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.articles && data.articles.length) {
+            var added = 0;
+            data.articles.forEach(function(a) {
+              var exists = NEWS.some(function(n) { return n.url === a.url || (n.img && n.img === a.urlToImage); });
+              if (!exists) { NEWS.push(mapArticle(a)); added++; }
+            });
+            if (added > 0) {
+              try { localStorage.setItem(CACHE_KEY, JSON.stringify({ts: Date.now(), list: NEWS})); } catch(e){}
+              renderGrid();
             }
-          });
-          PAGE = Math.ceil(NEWS.length / PAGE_SIZE);
-          renderGrid();
-          try { localStorage.setItem(CACHE_KEY, JSON.stringify({ts: Date.now(), list: NEWS})); } catch(e){}
-        }
-      })
-      .catch(function() {
-        PAGE = PAGE + 1;
-        renderGrid();
-      });
+          }
+        }).catch(function(){});
+    }
   };
 
   // ── MODALES ──
