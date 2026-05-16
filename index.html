@@ -545,7 +545,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   var PAGE = 1;
   var PAGE_SIZE = 12;
   var CYCLE = 40;
-  var CACHE_KEY = 'ahora_v10_hybrid';
+  var CACHE_KEY = 'ahora_v11_delay';
   var CACHE_TTL = 2 * 60 * 60 * 1000; // 2 horas
   var DOLAR_KEY = 'ahora_v3_dolar';
   var DOLAR_TTL = 3600000;
@@ -780,10 +780,15 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   window._openN = function(idx) {
     var n = NEWS[idx];
     if (!n) return;
-    // Always open immediately
-    showModal(n);
-    // If needs rewrite, do it silently in background
-    if (!n.needsRewrite) return;
+    // Show spinner while Claude writes
+    el('modalEl').innerHTML = '<div style="padding:80px 40px;text-align:center;">'
+      + '<div style="background:#cc0000;color:#fff;font-family:Oswald,sans-serif;font-size:11px;font-weight:700;padding:4px 14px;display:inline-block;margin-bottom:16px;letter-spacing:.08em;">REDACCION AHORANEWS</div>'
+      + '<div style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#111;margin-bottom:24px;line-height:1.4;">' + esc(n.title) + '</div>'
+      + '<div style="width:36px;height:36px;border:3px solid #f0f0f0;border-top:3px solid #cc0000;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px;"></div>'
+      + '<div style="font-size:12px;color:#999;font-family:Oswald,sans-serif;letter-spacing:.06em;">Preparando articulo completo...</div>'
+      + '</div>';
+    el('overlay').classList.add('open');
+    document.body.style.overflow = 'hidden';
     fetch('/api/rewrite', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -797,14 +802,12 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
         NEWS[idx].body = data.body;
         NEWS[idx].source = { name: 'AhoraNews' };
         NEWS[idx].needsRewrite = false;
-        // Update modal silently if still open
-        var overlay = el('overlay');
-        if (overlay && overlay.classList.contains('open')) {
-          showModal(NEWS[idx]);
-        }
       }
+      showModal(NEWS[idx]);
     })
-    .catch(function() {});
+    .catch(function() {
+      showModal(n);
+    });
   };
 
   function rewriteArticle(n, idx) {
