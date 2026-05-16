@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<!-- v4.0 AHORA.news -->
+<!-- v4.1 AHORA.news — Bugs corregidos -->
 
 <html lang="es">
 <head>
@@ -36,10 +36,8 @@
 <link rel="canonical" href="https://www.ahoranews.news">
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 
-<!-- Favicon embebido — sin archivo externo necesario -->
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' fill='%23cc0000' rx='10'/><text x='32' y='50' font-family='Impact,Arial Black,sans-serif' font-size='54' font-weight='900' fill='white' text-anchor='middle'>A</text></svg>">
 
-<!-- Schema.org JSON-LD para Google -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -48,10 +46,7 @@
   "url": "https://www.ahoranews.news",
   "description": "Las noticias más importantes de República Dominicana y el mundo",
   "logo": "https://www.ahoranews.news/og-image.jpg",
-  "foundingLocation": {
-    "@type": "Place",
-    "name": "República Dominicana"
-  },
+  "foundingLocation": { "@type": "Place", "name": "República Dominicana" },
   "inLanguage": "es"
 }
 </script>
@@ -68,7 +63,6 @@
   gtag('config', 'G-0JBCQ28LDB');
 </script>
 
-<!-- Fuentes optimizadas: solo las que se usan -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
@@ -211,7 +205,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 .footer-logo{font-family:'Oswald',sans-serif;font-size:20px;font-weight:700;color:#fff;}
 .footer-logo span{color:var(--red);}
 .footer-copy{font-size:11px;color:rgba(255,255,255,.3);}
-/* ── TABLET ── */
 @media(max-width:1000px){
   .hero-inner,.main-wrap{grid-template-columns:1fr;}
   .hero-sidebar,.right-sb{display:none;}
@@ -220,16 +213,11 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   .dolar-widget{display:none;}
   .header-tagline{display:none;}
 }
-
-/* ── MOBILE ── */
 @media(max-width:580px){
-  /* Topbar */
   .topbar{padding:5px 0;}
   .topbar-inner{padding:0 12px;gap:8px;}
   .topbar-date{font-size:9px;letter-spacing:.02em;}
   .live-dot-wrap{font-size:10px;}
-
-  /* Header */
   header{padding:10px 0 0;}
   .header-top{padding:0 12px;margin-bottom:10px;gap:8px;flex-wrap:nowrap;}
   .logo-box{font-size:26px;padding:3px 9px;}
@@ -243,53 +231,29 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   .dolar-cv{display:none;}
   .dolar-arrow{display:none;}
   .dolar-lbl{font-size:8px;}
-
-  /* Nav */
   .nav-inner{padding:0 8px;}
   .nav-inner a{font-size:11px;padding:10px 10px;}
   .nav-ai{padding:5px 8px;font-size:9px;}
-
-  /* Hero */
   .hero{padding:16px 0;}
   .hero-inner{padding:0 12px;gap:16px;}
   .hero-main{grid-template-columns:1fr;gap:16px;}
   .hero-img-wrap img,.hero-img-ph{height:200px;}
   .hero-title{font-size:20px;}
   .hero-excerpt{font-size:13px;}
-
-  /* Trading widget mobile — scroll horizontal */
-  #tradingContent{
-    display:flex!important;
-    overflow-x:auto;
-    scrollbar-width:none;
-    -webkit-overflow-scrolling:touch;
-    scroll-snap-type:x mandatory;
-  }
+  #tradingContent{display:flex!important;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;}
   #tradingContent::-webkit-scrollbar{display:none;}
-  #tradingContent>div{
-    min-width:160px!important;
-    flex-shrink:0;
-    scroll-snap-align:start;
-  }
-
-  /* Trading header mobile */
+  #tradingContent>div{min-width:160px!important;flex-shrink:0;scroll-snap-align:start;}
   .trading-header-wrap{flex-wrap:wrap;gap:6px;}
-
-  /* Section bar */
   .section-bar{padding:0 12px;margin-top:14px;}
   .section-label{font-size:12px;padding:7px 12px;}
   .news-count{font-size:10px;padding:7px 10px;}
   .section-filters{display:flex;gap:4px;margin-left:8px;overflow-x:auto;scrollbar-width:none;}
   .section-filters::-webkit-scrollbar{display:none;}
   .fcat{font-size:10px;padding:4px 8px;white-space:nowrap;}
-
-  /* Grid noticias — 1 columna en mobile */
   .main-wrap{padding:12px 12px 30px;gap:16px;}
   .grid{grid-template-columns:1fr;gap:12px;}
   .load-more-wrap{grid-column:1/-1 !important;display:block !important;}
   .load-more-btn{width:100%;max-width:100%;}
-
-  /* Cards mobile — horizontal layout */
   .card{flex-direction:row;height:110px;}
   .card-img-wrap{width:110px;flex-shrink:0;}
   .card-img-wrap img{height:110px;width:110px;}
@@ -301,18 +265,10 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   .card-excerpt{display:none;}
   .card-footer{padding-top:6px;}
   .card-meta{font-size:10px;}
-
-  /* Ad banner mobile */
   .ad-banner{min-height:60px;margin:8px 0;}
-
-  /* Modal mobile */
   .mcls{top:8px;right:8px;width:32px;height:32px;font-size:16px;}
   .modal{margin:0;border-radius:0;}
-
-  /* Toast mobile */
   .toast{bottom:10px;right:10px;left:10px;min-width:unset;}
-
-  /* Footer mobile */
   footer{padding:20px 0;}
   .footer-inner{padding:0 12px;flex-direction:column;gap:12px;align-items:flex-start;}
 }
@@ -370,7 +326,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   <nav>
     <div class="nav-inner">
       <a href="/" id="navInicio" class="on">INICIO</a>
-      <a href="/" id="navPolitica">NACIONALES</a>
+      <!-- FIX #6: navNacionales ahora filtra 'Nacionales', no 'Política' -->
+      <a href="/" id="navNacionales">NACIONALES</a>
       <a href="/" id="navMundo">INTERNACIONALES</a>
       <a href="/" id="navEconomia">ECONOMÍA</a>
       <a href="/" id="navDeportes">DEPORTES</a>
@@ -404,7 +361,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   </div>
 </div>
 
-<!-- TRADING WIDGET CON GRAFICAS -->
+<!-- TRADING WIDGET -->
 <div style="max-width:1240px;margin:20px auto 0;padding:0 20px;">
   <div style="background:#0a0a0a;border-top:3px solid #cc0000;">
     <div class="trading-header-wrap" style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;border-bottom:1px solid #222;gap:8px;">
@@ -431,6 +388,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   <div class="section-line"></div>
   <div class="section-filters">
     <button class="fcat on" id="fcatTodo">Todo</button>
+    <!-- FIX #6: fcatNacionales filtra 'Nacionales' -->
+    <button class="fcat" id="fcatNacionales">Nacionales</button>
     <button class="fcat" id="fcatPolitica">Política</button>
     <button class="fcat" id="fcatEconomia">Economía</button>
     <button class="fcat" id="fcatDeportes">Deportes</button>
@@ -511,6 +470,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
   </aside>
 </div>
+
 <div id="loadMoreBtn" style="text-align:center;padding:24px 20px;">
   <button class="load-more-btn" onclick="window._more()">Cargar más noticias</button>
 </div>
@@ -542,25 +502,24 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
 <script>
 (function() {
-  // ── ESTADO GLOBAL ──
   var NEWS = [];
   var FILTER = '';
   var PAGE = 1;
   var PAGE_SIZE = 12;
   var CYCLE = 40;
+
+  // FIX #2: Caché reducida a 15 minutos para que las noticias frescas lleguen más rápido
   var CACHE_KEY = 'ahora_v99_pexels';
-  var CACHE_TTL = 2 * 60 * 60 * 1000; // 2 horas
+  var CACHE_TTL = 15 * 60 * 1000;
   var DOLAR_KEY = 'ahora_v3_dolar';
   var DOLAR_TTL = 3600000;
 
-  // ── FECHA ──
   var DAYS = ['DOMINGO','LUNES','MARTES','MIÉRCOLES','JUEVES','VIERNES','SÁBADO'];
   var MONTHS = ['ENERO','FEBRERO','MARZO','ABRIL','MAYO','JUNIO','JULIO','AGOSTO','SEPTIEMBRE','OCTUBRE','NOVIEMBRE','DICIEMBRE'];
   var now = new Date();
   var dateEl = document.getElementById('dateDisplay');
   if (dateEl) dateEl.textContent = DAYS[now.getDay()] + ', ' + now.getDate() + ' DE ' + MONTHS[now.getMonth()] + ' DE ' + now.getFullYear();
 
-  // ── HELPERS ──
   function esc(s) {
     var r = String(s || '');
     r = r.split('&').join('&amp;');
@@ -581,32 +540,29 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     var h = Math.floor(m / 60);
     if (h < 24) return 'Hace ' + h + 'h';
     var days = Math.floor(h / 24);
-    if (days === 1) return 'Hace 1 día';
-    return 'Hace ' + days + ' días';
+    return days === 1 ? 'Hace 1 día' : 'Hace ' + days + ' días';
   }
 
   function el(id) { return document.getElementById(id); }
 
   function toast(msg) {
-    var t = el('toast');
-    var m = el('toastMsg');
+    var t = el('toast'), m = el('toastMsg');
     if (!t || !m) return;
     m.textContent = msg;
     t.classList.add('show');
     setTimeout(function() { t.classList.remove('show'); }, 4000);
   }
 
-  // ── CACHÉ con fallback a memoria si localStorage no está disponible ──
   var memCache = { news: [], ts: 0, dolar: null, dolarTs: 0 };
 
   function saveCache(arr) {
     memCache.news = arr;
     memCache.ts = Date.now();
+    // FIX #4: formato unificado { ts, a: arr } igual que loadCache espera
     try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), a: arr })); } catch(e) {}
   }
 
   function loadCache() {
-    // Primero intentar localStorage
     try {
       var raw = localStorage.getItem(CACHE_KEY);
       if (raw) {
@@ -615,19 +571,20 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
         localStorage.removeItem(CACHE_KEY);
       }
     } catch(e) {}
-    // Fallback a memoria
     if (memCache.news.length && Date.now() - memCache.ts < CACHE_TTL) return memCache.news;
     return [];
   }
 
-  function mergeNews(old, fresh) {
+  // FIX #1: mergeNews pone siempre las fresh PRIMERO — las noticias nuevas ganan posición
+  function mergeNews(fresh, old) {
     var seenUrl = {};
     var seenImg = {};
-    // Fresh news always first
+    // Indexar fresh
     fresh.forEach(function(n) {
       seenUrl[n.url] = true;
       if (n.img) seenImg[n.img] = true;
     });
+    // Solo agregar las viejas que no estén duplicadas
     var kept = old.filter(function(n) {
       if (seenUrl[n.url]) return false;
       if (n.img && seenImg[n.img]) return false;
@@ -635,13 +592,19 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       if (n.img) seenImg[n.img] = true;
       return true;
     });
+    // Fresh siempre al inicio, viejas al final
     return fresh.concat(kept);
   }
 
-  // ── CARGAR NOTICIAS ──
   function mapArticle(a, i, isEditor) {
+    // FIX #8: likes estables basados en url para que no cambien al recargar
+    var stableSeed = 0;
+    var str = (a.url || a.title || '') + '';
+    for (var c = 0; c < Math.min(str.length, 20); c++) stableSeed += str.charCodeAt(c);
+    var stableLikes = 50 + (stableSeed % 1950);
+
     return {
-      id: (isEditor ? 'e' : 'n') + i + '_' + Math.floor(Math.random() * 99999),
+      id: (isEditor ? 'e' : 'n') + i + '_' + stableSeed,
       cat: a.category || 'Mundo',
       title: a.title || '',
       excerpt: a.description || '',
@@ -651,9 +614,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       img: a.urlToImage || '',
       url: a.url || '#',
       source: (a.source && a.source.name) ? a.source.name : (isEditor ? 'Redacción AHORA.news' : 'AHORA.news'),
-      likes: Math.floor(Math.random() * 2000) + 50,
+      likes: stableLikes,
       liked: false,
-      comments: [],
       isEditor: isEditor,
       isViral: a.isViral || false
     };
@@ -675,9 +637,10 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
           .catch(function() { return { articles: [] }; })
           .then(function(ed) {
             var edArr = (ed.articles || []).map(function(a, i) { return mapArticle(a, i, true); });
-            var all = edArr.concat(fresh);
+            var allFresh = edArr.concat(fresh);
             var cached = loadCache();
-            var merged = mergeNews(cached, all);
+            // FIX #1: fresh va primero en mergeNews(fresh, old)
+            var merged = mergeNews(allFresh, cached);
             saveCache(merged);
             NEWS = merged;
             PAGE = 1;
@@ -701,7 +664,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       });
   }
 
-  // ── RENDER ──
   function renderAll() {
     renderHero();
     renderGrid();
@@ -717,16 +679,15 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     var imgH = n.img
       ? '<div class="hero-img-wrap" onclick="window._openN(0)"><img loading="lazy" src="' + esc(n.img) + '" alt="' + esc(n.title) + '" onerror="this.parentNode.innerHTML=\'<div class=hero-img-ph>📰</div>\'"></div>'
       : '<div class="hero-img-ph" onclick="window._openN(0)">📰</div>';
-    el('heroMain').innerHTML = imgH + '<div><span class="hero-cat">' + esc(n.cat) + '</span><h1 class="hero-title" onclick="window._openN(0)">' + esc(n.title) + '</h1><p class="hero-excerpt">' + esc((n.excerpt || '')) + '...</p><div class="hero-meta"><span class="src-name">' + (n.isEditor ? '✍️' : '📰') + 'AhoraNews</span><span>' + n.time + '</span><span style="color:#007a3d;font-weight:600;">✅ Tiempo Real</span></div></div>';
+    el('heroMain').innerHTML = imgH + '<div><span class="hero-cat">' + esc(n.cat) + '</span><h1 class="hero-title" onclick="window._openN(0)">' + esc(n.title) + '</h1><p class="hero-excerpt">' + esc((n.excerpt || '').slice(0, 200)) + '...</p><div class="hero-meta"><span class="src-name">📰 AhoraNews</span><span>' + n.time + '</span><span style="color:#007a3d;font-weight:600;">✅ Tiempo Real</span></div></div>';
 
     var sH = '';
     for (var i = 1; i <= 4 && i < NEWS.length; i++) {
       var m = NEWS[i];
-      var idx = i;
       var mI = m.img
         ? '<img class="si-img" loading="lazy" src="' + esc(m.img) + '" alt="" onerror="this.outerHTML=\'<div class=si-img-ph>📰</div>\'">'
         : '<div class="si-img-ph">📰</div>';
-      sH += '<div class="sidebar-item" onclick="window._openN(' + idx + ')">' + mI + '<div><div class="si-cat">' + esc(m.cat) + '</div><div class="si-title">' + esc(m.title.slice(0, 75)) + '</div><div class="si-time">' + 'AhoraNews · ' + m.time + '</div></div></div>';
+      sH += '<div class="sidebar-item" onclick="window._openN(' + i + ')">' + mI + '<div><div class="si-cat">' + esc(m.cat) + '</div><div class="si-title">' + esc(m.title.slice(0, 75)) + '</div><div class="si-time">AhoraNews · ' + m.time + '</div></div></div>';
     }
     el('heroSidebar').innerHTML = sH;
   }
@@ -747,7 +708,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     for (var i = 0; i < visible.length; i++) {
       var n = visible[i];
       var globalIdx = NEWS.indexOf(n);
-      // FIX: mostrar cards aunque no tengan imagen
       var iH = n.img
         ? '<img loading="lazy" src="' + esc(n.img) + '" alt="' + esc(n.title) + '" onerror="this.parentNode.innerHTML=\'<div class=card-img-ph>📰</div>\'">'
         : '<div class="card-img-ph">📰</div>';
@@ -770,11 +730,13 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     el('newsGrid').innerHTML = htm || '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#888;">No hay noticias en esta categoría.</div>';
   }
 
+  // FIX #5: números de tendencia con padding correcto para cualquier cantidad
   function renderTrends() {
     var htm = '';
     for (var i = 0; i < Math.min(5, NEWS.length); i++) {
       var n = NEWS[i];
-      htm += '<div class="trend-item" onclick="window._openN(' + i + ')"><span class="trend-num">0' + (i + 1) + '</span><div><div class="trend-txt">' + esc(n.title.slice(0, 60)) + '...</div><div class="trend-meta">' + 'AhoraNews · ' + n.time + '</div></div></div>';
+      var num = String(i + 1).padStart(2, '0');
+      htm += '<div class="trend-item" onclick="window._openN(' + i + ')"><span class="trend-num">' + num + '</span><div><div class="trend-txt">' + esc(n.title.slice(0, 60)) + '...</div><div class="trend-meta">AhoraNews · ' + n.time + '</div></div></div>';
     }
     el('trendList').innerHTML = htm;
   }
@@ -785,11 +747,9 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     el('tickerTrack').innerHTML = doubled.map(function(t) { return '<span>' + esc(t) + '</span>'; }).join('');
   }
 
-  // ── ACCIONES GLOBALES ──
   window._openN = function(idx) {
     var n = NEWS[idx];
     if (!n) return;
-    // Show spinner while Claude writes
     el('modalEl').innerHTML = '<div style="padding:80px 40px;text-align:center;">'
       + '<div style="background:#cc0000;color:#fff;font-family:Oswald,sans-serif;font-size:11px;font-weight:700;padding:4px 14px;display:inline-block;margin-bottom:16px;letter-spacing:.08em;">REDACCION AHORANEWS</div>'
       + '<div style="font-family:Georgia,serif;font-size:20px;font-weight:700;color:#111;margin-bottom:24px;line-height:1.4;">' + esc(n.title) + '</div>'
@@ -801,47 +761,22 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     fetch('/api/rewrite', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: n.title, description: n.description, content: n.body || n.description })
+      body: JSON.stringify({ title: n.title, description: n.excerpt, content: n.body || n.excerpt })
     })
     .then(function(r) { return r.json(); })
     .then(function(data) {
       if (data.title && data.body) {
         NEWS[idx].title = data.title;
-        NEWS[idx].description = data.description;
+        NEWS[idx].excerpt = data.description;
         NEWS[idx].body = data.body;
-        NEWS[idx].source = { name: 'AhoraNews' };
         NEWS[idx].needsRewrite = false;
       }
       showModal(NEWS[idx]);
     })
-    .catch(function() {
-      showModal(n);
-    });
+    .catch(function() { showModal(n); });
   };
 
-  function rewriteArticle(n, idx) {
-    fetch('/api/rewrite', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ title: n.title, description: n.description, content: n.body })
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.title) {
-        NEWS[idx].title = data.title;
-        NEWS[idx].description = data.description;
-        NEWS[idx].body = data.body;
-        NEWS[idx].source = { name: 'AhoraNews' };
-        NEWS[idx].needsRewrite = false;
-        // Update modal if still open
-        var overlay = el('overlay');
-        if (overlay && overlay.classList.contains('open')) {
-          showModal(NEWS[idx]);
-        }
-      }
-    })
-    .catch(function() {});
-  }
+  // FIX #3 y #7: eliminadas rewriteArticle() y showIframe() — eran código muerto
 
   window._like = function(idx, btn) {
     var n = NEWS[idx];
@@ -850,27 +785,29 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     n.likes += n.liked ? 1 : -1;
     btn.className = 'like-btn' + (n.liked ? ' liked' : '');
     btn.innerHTML = (n.liked ? '❤️' : '🤍') + ' <span>' + n.likes.toLocaleString() + '</span>';
+    // Persistir like en caché para que no se pierda al recargar
+    saveCache(NEWS);
   };
 
   window._more = function() {
     PAGE = PAGE + 1;
     renderGrid();
-    // If we're near the end, fetch more
     var list = getFiltered();
     if (PAGE * PAGE_SIZE >= list.length - 6) {
-      var cats = ['Mundo','Política','Economía','Tecnología','Deportes','Ciencia'];
+      var cats = ['Mundo','Política','Nacionales','Economía','Tecnología','Deportes','Ciencia'];
       var cat = cats[Math.floor(Math.random() * cats.length)];
       fetch('/api/news?category=' + encodeURIComponent(cat))
         .then(function(r) { return r.json(); })
         .then(function(data) {
           if (data.articles && data.articles.length) {
             var added = 0;
-            data.articles.forEach(function(a) {
+            data.articles.forEach(function(a, i) {
               var exists = NEWS.some(function(n) { return n.url === a.url || (n.img && n.img === a.urlToImage); });
-              if (!exists) { NEWS.push(mapArticle(a)); added++; }
+              if (!exists) { NEWS.push(mapArticle(a, i, false)); added++; }
             });
             if (added > 0) {
-              try { localStorage.setItem(CACHE_KEY, JSON.stringify({ts: Date.now(), list: NEWS})); } catch(e){}
+              // FIX #4: formato correcto { ts, a: arr } al guardar desde _more()
+              saveCache(NEWS);
               renderGrid();
             }
           }
@@ -878,43 +815,27 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     }
   };
 
-  // ── MODALES ──
-  function showIframe(n) {
-    el('modalEl').innerHTML = '<div style="background:#fff;">'
-      + '<div style="display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid #e0e0e0;background:#fff;position:sticky;top:0;z-index:10;">'
-      + '<span style="background:#cc0000;color:#fff;font-size:10px;font-weight:700;padding:3px 9px;text-transform:uppercase;">' + esc(n.cat) + '</span>'
-      + '<span style="font-size:13px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(n.title) + '</span>'
-      + '<a href="' + esc(n.url) + '" target="_blank" rel="noopener" style="background:#cc0000;color:#fff;font-size:11px;font-weight:700;padding:6px 12px;text-decoration:none;">ABRIR ↗️</a>'
-      + '</div>'
-      + '<div style="background:#f4f4f4;padding:12px 20px;font-size:12px;color:#888;border-bottom:1px solid #e0e0e0;">📰 <strong>' + 'AhoraNews' + '</strong> · ' + n.time + '</div>'
-      + '<iframe src="' + esc(n.url) + '" style="width:100%;height:75vh;border:none;display:block;" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>'
-      + '</div>';
-    el('overlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-  }
-
   function showModal(n) {
     var imgH = n.img ? '<img src="' + esc(n.img) + '" style="width:100%;max-height:380px;object-fit:cover;display:block;" alt="' + esc(n.title) + '">' : '';
     var paras = (n.body || n.excerpt || '').split('\n').filter(function(p) { return p.trim(); }).map(function(p) { return '<p style="margin-bottom:16px;font-size:17px;line-height:1.8;color:#333;">' + esc(p) + '</p>'; }).join('');
     var sourceLink = n.url && n.url !== '#'
-      ? '<a href="' + esc(n.url) + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:#888;font-size:11px;text-decoration:none;border:1px solid #e0e0e0;padding:5px 12px;border-radius:20px;margin-top:24px;">Ver fuente original: ' + esc(n.originalSource || n.source) + ' &#8599;</a>'
+      ? '<a href="' + esc(n.url) + '" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;color:#888;font-size:11px;text-decoration:none;border:1px solid #e0e0e0;padding:5px 12px;border-radius:20px;margin-top:24px;">Ver fuente original &#8599;</a>'
       : '';
     el('modalEl').innerHTML = imgH
       + '<div style="padding:24px 28px 36px;">'
       + '<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">'
       + '<span style="background:#cc0000;color:#fff;font-size:10px;font-weight:700;padding:3px 10px;text-transform:uppercase;border-radius:2px;">' + esc(n.cat) + '</span>'
-      + '<span style="background:#111;color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:2px;">&#x270F;&#xFE0F; Redaccion AhoraNews</span>'
+      + '<span style="background:#111;color:#fff;font-size:10px;font-weight:700;padding:3px 10px;border-radius:2px;">✍️ Redaccion AhoraNews</span>'
       + '</div>'
       + '<h1 style="font-family:Georgia,serif;font-size:26px;font-weight:700;line-height:1.3;color:#111;margin-bottom:14px;">' + esc(n.title) + '</h1>'
       + '<div style="display:flex;align-items:center;gap:12px;font-size:12px;color:#888;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid #e0e0e0;">'
       + '<span style="background:#cc0000;color:#fff;font-weight:700;padding:2px 8px;font-size:11px;">AHORA.news</span>'
       + '<span>' + n.time + '</span>'
-      + '<span style="color:#007a3d;font-weight:600;">&#x2705; Tiempo Real</span>'
+      + '<span style="color:#007a3d;font-weight:600;">✅ Tiempo Real</span>'
       + '</div>'
       + '<div>' + paras + '</div>'
-      + '<div style="margin-top:28px;padding-top:20px;border-top:1px solid #e0e0e0;display:flex;align-items:center;justify-content:space-between;">'
-      + '<span style="font-size:12px;color:#888;">&#x1F4F0; <strong style="color:#cc0000;">Fuente: AhoraNews</strong></span>'
-      
+      + '<div style="margin-top:28px;padding-top:20px;border-top:1px solid #e0e0e0;">'
+      + sourceLink
       + '</div>'
       + '</div>';
     el('overlay').classList.add('open');
@@ -929,7 +850,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   el('modalCloseBtn').addEventListener('click', closeModal);
   el('overlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 
-  // ── FILTROS NAV ──
+  // FIX #6: setFilter con categorías correctas para cada nav/botón
   function setFilter(cat, navId) {
     FILTER = cat;
     PAGE = 1;
@@ -940,7 +861,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   }
 
   el('navInicio').addEventListener('click', function(e) { e.preventDefault(); setFilter('', 'navInicio'); el('fcatTodo').classList.add('on'); });
-  el('navPolitica').addEventListener('click', function(e) { e.preventDefault(); setFilter('Política', 'navPolitica'); el('fcatPolitica').classList.add('on'); });
+  // FIX #6: navNacionales filtra 'Nacionales', no 'Política'
+  el('navNacionales').addEventListener('click', function(e) { e.preventDefault(); setFilter('Nacionales', 'navNacionales'); el('fcatNacionales').classList.add('on'); });
   el('navMundo').addEventListener('click', function(e) { e.preventDefault(); setFilter('Mundo', 'navMundo'); el('fcatMundo').classList.add('on'); });
   el('navEconomia').addEventListener('click', function(e) { e.preventDefault(); setFilter('Economía', 'navEconomia'); el('fcatEconomia').classList.add('on'); });
   el('navDeportes').addEventListener('click', function(e) { e.preventDefault(); setFilter('Deportes', 'navDeportes'); el('fcatDeportes').classList.add('on'); });
@@ -948,7 +870,8 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   el('navCiencia').addEventListener('click', function(e) { e.preventDefault(); setFilter('Ciencia', 'navCiencia'); el('fcatCiencia').classList.add('on'); });
 
   el('fcatTodo').addEventListener('click', function() { setFilter('', 'navInicio'); this.classList.add('on'); });
-  el('fcatPolitica').addEventListener('click', function() { setFilter('Política', 'navPolitica'); this.classList.add('on'); });
+  el('fcatNacionales').addEventListener('click', function() { setFilter('Nacionales', 'navNacionales'); this.classList.add('on'); });
+  el('fcatPolitica').addEventListener('click', function() { setFilter('Política', null); this.classList.add('on'); });
   el('fcatEconomia').addEventListener('click', function() { setFilter('Economía', 'navEconomia'); this.classList.add('on'); });
   el('fcatDeportes').addEventListener('click', function() { setFilter('Deportes', 'navDeportes'); this.classList.add('on'); });
   el('fcatTech').addEventListener('click', function() { setFilter('Tecnología', 'navTecnologia'); this.classList.add('on'); });
@@ -956,7 +879,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   el('fcatMundo').addEventListener('click', function() { setFilter('Mundo', 'navMundo'); this.classList.add('on'); });
   el('fcatViral').addEventListener('click', function() { setFilter('Viral', null); this.classList.add('on'); });
 
-  // ── DÓLAR con fallback a memoria ──
+  // ── DÓLAR ──
   function applyDolar(r) {
     if (el('dolarRate')) el('dolarRate').textContent = 'RD$ ' + r.usd;
     if (el('dolarCompra')) el('dolarCompra').innerHTML = 'Compra: <b>' + r.compra + '</b>';
@@ -970,7 +893,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   }
 
   function fetchDolar() {
-    // Intentar caché
     try {
       var raw = localStorage.getItem(DOLAR_KEY);
       if (raw) {
@@ -978,11 +900,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
         if (Date.now() - obj.ts < DOLAR_TTL) { applyDolar(obj.d); return; }
       }
     } catch(e) {}
-    // Fallback a memoria
-    if (memCache.dolar && Date.now() - memCache.dolarTs < DOLAR_TTL) {
-      applyDolar(memCache.dolar);
-      return;
-    }
+    if (memCache.dolar && Date.now() - memCache.dolarTs < DOLAR_TTL) { applyDolar(memCache.dolar); return; }
 
     fetch('https://open.er-api.com/v6/latest/USD')
       .then(function(r) { return r.json(); })
@@ -1042,7 +960,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   setInterval(doLoadNews, 40000);
   setInterval(fetchDolar, 3600000);
 
-  // ── INICIO ──
+  // ── INICIO: mostrar caché inmediato, luego actualizar con frescos ──
   var cached = loadCache();
   if (cached.length) {
     NEWS = cached;
@@ -1057,21 +975,21 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
   // ── TRADING ──
   var ALL_STOCKS = [
-    { ticker: 'NVDA', nombre: 'NVIDIA Corp', accion: 'COMPRAR', razon: 'Lider en chips IA, demanda record', confianza: 'Alta', color: '#00c853', base: 875 },
-    { ticker: 'AAPL', nombre: 'Apple Inc', accion: 'COMPRAR', razon: 'iPhone con IA integrada impulsa ventas', confianza: 'Alta', color: '#00c853', base: 182 },
-    { ticker: 'MSFT', nombre: 'Microsoft Corp', accion: 'COMPRAR', razon: 'Azure y Copilot en plena expansion', confianza: 'Alta', color: '#00c853', base: 415 },
-    { ticker: 'GOOGL', nombre: 'Alphabet Inc', accion: 'COMPRAR', razon: 'Gemini IA domina busquedas globales', confianza: 'Alta', color: '#00c853', base: 172 },
-    { ticker: 'META', nombre: 'Meta Platforms', accion: 'COMPRAR', razon: 'IA en ads genera ingresos record', confianza: 'Alta', color: '#00c853', base: 512 },
-    { ticker: 'AMZN', nombre: 'Amazon.com Inc', accion: 'COMPRAR', razon: 'AWS lider indiscutible en cloud', confianza: 'Alta', color: '#00c853', base: 188 },
-    { ticker: 'AMD', nombre: 'Advanced Micro Devices', accion: 'COMPRAR', razon: 'GPUs compitiendo fuerte vs NVIDIA', confianza: 'Media', color: '#00c853', base: 155 },
-    { ticker: 'TSLA', nombre: 'Tesla Inc', accion: 'NO COMPRAR', razon: 'Alta volatilidad, mejor esperar', confianza: 'Alta', color: '#ff1744', base: 245 },
-    { ticker: 'JPM', nombre: 'JPMorgan Chase', accion: 'NEUTRAL', razon: 'Solido pero presion en tasas altas', confianza: 'Media', color: '#ff9800', base: 195 },
-    { ticker: 'XOM', nombre: 'ExxonMobil', accion: 'COMPRAR', razon: 'Petroleo sube por tensiones globales', confianza: 'Media', color: '#00c853', base: 118 },
-    { ticker: 'NFLX', nombre: 'Netflix Inc', accion: 'COMPRAR', razon: 'Crecimiento de suscriptores con IA', confianza: 'Media', color: '#00c853', base: 635 },
-    { ticker: 'DIS', nombre: 'Walt Disney Co', accion: 'NO COMPRAR', razon: 'Perdidas en streaming, restructurando', confianza: 'Alta', color: '#ff1744', base: 95 },
-    { ticker: 'INTC', nombre: 'Intel Corp', accion: 'NO COMPRAR', razon: 'Perdiendo mercado frente a AMD/NVDA', confianza: 'Alta', color: '#ff1744', base: 21 },
-    { ticker: 'PYPL', nombre: 'PayPal Holdings', accion: 'NEUTRAL', razon: 'Competencia fuerte de Apple Pay', confianza: 'Media', color: '#ff9800', base: 68 },
-    { ticker: 'UBER', nombre: 'Uber Technologies', accion: 'COMPRAR', razon: 'Expansion a nuevos mercados globales', confianza: 'Media', color: '#00c853', base: 82 }
+    { ticker:'NVDA', nombre:'NVIDIA Corp', accion:'COMPRAR', razon:'Lider en chips IA, demanda record', confianza:'Alta', color:'#00c853', base:875 },
+    { ticker:'AAPL', nombre:'Apple Inc', accion:'COMPRAR', razon:'iPhone con IA integrada impulsa ventas', confianza:'Alta', color:'#00c853', base:182 },
+    { ticker:'MSFT', nombre:'Microsoft Corp', accion:'COMPRAR', razon:'Azure y Copilot en plena expansion', confianza:'Alta', color:'#00c853', base:415 },
+    { ticker:'GOOGL', nombre:'Alphabet Inc', accion:'COMPRAR', razon:'Gemini IA domina busquedas globales', confianza:'Alta', color:'#00c853', base:172 },
+    { ticker:'META', nombre:'Meta Platforms', accion:'COMPRAR', razon:'IA en ads genera ingresos record', confianza:'Alta', color:'#00c853', base:512 },
+    { ticker:'AMZN', nombre:'Amazon.com Inc', accion:'COMPRAR', razon:'AWS lider indiscutible en cloud', confianza:'Alta', color:'#00c853', base:188 },
+    { ticker:'AMD', nombre:'Advanced Micro Devices', accion:'COMPRAR', razon:'GPUs compitiendo fuerte vs NVIDIA', confianza:'Media', color:'#00c853', base:155 },
+    { ticker:'TSLA', nombre:'Tesla Inc', accion:'NO COMPRAR', razon:'Alta volatilidad, mejor esperar', confianza:'Alta', color:'#ff1744', base:245 },
+    { ticker:'JPM', nombre:'JPMorgan Chase', accion:'NEUTRAL', razon:'Solido pero presion en tasas altas', confianza:'Media', color:'#ff9800', base:195 },
+    { ticker:'XOM', nombre:'ExxonMobil', accion:'COMPRAR', razon:'Petroleo sube por tensiones globales', confianza:'Media', color:'#00c853', base:118 },
+    { ticker:'NFLX', nombre:'Netflix Inc', accion:'COMPRAR', razon:'Crecimiento de suscriptores con IA', confianza:'Media', color:'#00c853', base:635 },
+    { ticker:'DIS', nombre:'Walt Disney Co', accion:'NO COMPRAR', razon:'Perdidas en streaming, restructurando', confianza:'Alta', color:'#ff1744', base:95 },
+    { ticker:'INTC', nombre:'Intel Corp', accion:'NO COMPRAR', razon:'Perdiendo mercado frente a AMD/NVDA', confianza:'Alta', color:'#ff1744', base:21 },
+    { ticker:'PYPL', nombre:'PayPal Holdings', accion:'NEUTRAL', razon:'Competencia fuerte de Apple Pay', confianza:'Media', color:'#ff9800', base:68 },
+    { ticker:'UBER', nombre:'Uber Technologies', accion:'COMPRAR', razon:'Expansion a nuevos mercados globales', confianza:'Media', color:'#00c853', base:82 }
   ];
   var _stockIdx = 0;
   var STOCKS = [];
@@ -1095,20 +1013,15 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       var y = h - ((p - min) / range) * (h - 8) - 4;
       i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
-    ctx.lineTo(w, h);
-    ctx.lineTo(0, h);
-    ctx.closePath();
-    ctx.fillStyle = grad;
-    ctx.fill();
+    ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
+    ctx.fillStyle = grad; ctx.fill();
     ctx.beginPath();
     prices.forEach(function(p, i) {
       var x = (i / (prices.length - 1)) * w;
       var y = h - ((p - min) / range) * (h - 8) - 4;
       i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     });
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.stroke();
+    ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke();
   }
 
   function genFakePrices(base, up) {
@@ -1126,9 +1039,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     if (!tc) return;
     _stockIdx = (_stockIdx + 5) % ALL_STOCKS.length;
     STOCKS = [];
-    for (var si = 0; si < 5; si++) {
-      STOCKS.push(ALL_STOCKS[(_stockIdx + si) % ALL_STOCKS.length]);
-    }
+    for (var si = 0; si < 5; si++) STOCKS.push(ALL_STOCKS[(_stockIdx + si) % ALL_STOCKS.length]);
     tc.innerHTML = STOCKS.map(function(s, idx) {
       var change = ((Math.random() - 0.4) * 4).toFixed(2);
       var pct = ((change / s.base) * 100).toFixed(2);
@@ -1136,9 +1047,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       var chColor = isUp ? '#00c853' : '#ff1744';
       var chSign = isUp ? '+' : '';
       return '<div style="background:#111;border-right:1px solid #222;padding:16px;position:relative;overflow:hidden;">'
-        + '<div style="position:absolute;bottom:0;left:0;right:0;height:60px;">'
-        + '<canvas id="spark_' + idx + '" width="280" height="60" style="width:100%;height:60px;opacity:.6;"></canvas>'
-        + '</div>'
+        + '<div style="position:absolute;bottom:0;left:0;right:0;height:60px;"><canvas id="spark_' + idx + '" width="280" height="60" style="width:100%;height:60px;opacity:.6;"></canvas></div>'
         + '<div style="position:relative;z-index:1;">'
         + '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">'
         + '<span style="font-family:Oswald,sans-serif;font-size:20px;font-weight:700;color:#fff;">' + s.ticker + '</span>'
@@ -1152,13 +1061,11 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
         + '<span style="font-size:10px;color:#555;">Confianza: <strong style="color:' + s.color + ';">' + s.confianza + '</strong></span>'
         + '</div></div></div>';
     }).join('');
-
     STOCKS.forEach(function(s, idx) {
       var isUp = s.accion === 'COMPRAR';
       var prices = genFakePrices(s.base, isUp);
       setTimeout(function() { drawSparkline('spark_' + idx, prices, s.color); }, 50);
     });
-
     var n = new Date();
     if (tt) tt.textContent = 'Actualizado: ' + n.getHours() + ':' + String(n.getMinutes()).padStart(2,'0');
   };
@@ -1170,7 +1077,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   var VIRAL_DATA = { tiktok: [], twitter: [], instagram: [] };
   var VIRAL_TAB = 'all';
 
-  function viralTab(tab) {
+  window.viralTab = function(tab) {
     VIRAL_TAB = tab;
     var tabs = {all:'vtAll', tiktok:'vtTiktok', twitter:'vtTwitter', instagram:'vtInsta'};
     Object.keys(tabs).forEach(function(t) {
@@ -1180,7 +1087,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       btn.style.color = t === tab ? 'var(--red)' : 'var(--gray)';
     });
     renderVirales();
-  }
+  };
 
   function renderVirales() {
     var list = el('viralList');
@@ -1193,10 +1100,10 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       return;
     }
     var html = '';
+    var icons = {tiktok:'&#127925;', twitter:'&#128038;', instagram:'&#128248;'};
+    var colors = {tiktok:'#010101', twitter:'#1DA1F2', instagram:'#E1306C'};
     for (var i = 0; i < items.length; i++) {
       var v = items[i];
-      var icons = {tiktok:'&#127925;', twitter:'&#128038;', instagram:'&#128248;'};
-      var colors = {tiktok:'#010101', twitter:'#1DA1F2', instagram:'#E1306C'};
       html += '<div class="viral-item" style="padding:10px 12px;border-bottom:1px solid #e0e0e0;cursor:pointer;" data-idx="' + i + '">';
       html += '<div style="display:flex;align-items:center;gap:6px;margin-bottom:5px;">';
       html += '<span style="background:' + (colors[v.red]||'#333') + ';color:#fff;font-size:9px;font-weight:700;padding:2px 7px;border-radius:2px;font-family:Oswald,sans-serif;">' + (icons[v.red]||'') + ' ' + (v.red||'').toUpperCase() + '</span>';
@@ -1207,7 +1114,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       html += '</div>';
     }
     list.innerHTML = html;
-    var stored = items;
+    var stored = items.slice();
     list.querySelectorAll('.viral-item').forEach(function(div, idx) {
       div.addEventListener('click', function() {
         if (stored[idx] && stored[idx].url) window.open(stored[idx].url, '_blank');
@@ -1252,7 +1159,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
 
   loadVirales();
   setInterval(loadVirales, 5 * 60 * 1000);
-
 
 })();
 </script>
