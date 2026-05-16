@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     // Get relevant images from Unsplash for each article
     const processed = await Promise.all(
       raw.map(async (article) => {
-        const img = await getUnsplashImage(article.title, detectCategory(article), article.urlToImage);
+        const img = await getCoherentImage(article, ANTHROPIC_API_KEY);
         return {
           title:          article.title,
           description:    article.description || '',
@@ -76,106 +76,56 @@ export default async function handler(req, res) {
   }
 }
 
-// ── BUSCAR IMAGEN EN UNSPLASH ──
-async function getUnsplashImage(title, category, fallbackImg) {
+// ── IMAGEN COHERENTE CON LA NOTICIA ──
+async function getCoherentImage(article, apiKey) {
+  // If no API key, return original
+  if (!apiKey) return article.urlToImage;
+  
   try {
-    const UNSPLASH_KEY = process.env.UNSPLASH_KEY || 'oWykQr_yKA2gqa2VdovxsHeScXLLqLWZymdPjXealCc';
+    // Ask Claude what search term would find a relevant image
+    const prompt = `Given this news headline: "${article.title}"
+    
+Return ONLY a 2-3 word English search query that would find a relevant stock photo for this news story. Examples:
+- "Abinader viaja a Miami" → "Dominican president travel"
+- "Precio del dólar sube" → "US dollar currency"
+- "Tigres ganan campeonato" → "baseball celebration trophy"
+- "Huracán azota el Caribe" → "hurricane storm damage"
 
-    // Smart keyword mapping - translate Spanish concepts to English for better results
-    const keywordMap = {
-      // People & Politics
-      'abinader': 'Dominican president',
-      'presidente': 'president speech',
-      'gobierno': 'government building',
-      'congreso': 'congress building',
-      'senado': 'senate',
-      'elecciones': 'elections voting',
-      'trump': 'Donald Trump',
-      'biden': 'Joe Biden',
-      'politica': 'politics',
-      // Places
-      'miami': 'Miami Florida',
-      'santo domingo': 'Santo Domingo Dominican Republic',
-      'nueva york': 'New York City',
-      'estados unidos': 'United States',
-      'republica dominicana': 'Dominican Republic',
-      'haiti': 'Haiti',
-      'china': 'China Beijing',
-      'rusia': 'Russia Moscow',
-      // Economy
-      'dolar': 'US dollar money',
-      'economia': 'economy finance',
-      'banco': 'bank finance',
-      'inflacion': 'inflation economy',
-      'mercado': 'stock market',
-      'precio': 'price market',
-      // Sports
-      'beisbol': 'baseball',
-      'futbol': 'soccer football',
-      'nba': 'NBA basketball',
-      'atletismo': 'athletics track',
-      'olimpicos': 'olympic games',
-      // Crime & Security
-      'crimen': 'crime police',
-      'policia': 'police officer',
-      'ejercito': 'military army',
-      'violencia': 'protest street',
-      'asesinato': 'crime scene police',
-      // Technology
-      'tecnologia': 'technology computer',
-      'inteligencia artificial': 'artificial intelligence AI',
-      'iphone': 'iPhone Apple',
-      // Health
-      'salud': 'health medical',
-      'hospital': 'hospital medical',
-      'vacuna': 'vaccine medical',
-      // Nature
-      'huracan': 'hurricane storm',
-      'terremoto': 'earthquake disaster',
-      'clima': 'weather climate'
-    };
+Return ONLY the search query, nothing else.`;
 
-    // Try to match keywords from title
-    const titleLower = title.toLowerCase();
-    let searchQuery = '';
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 20,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
 
-    for (const [spanish, english] of Object.entries(keywordMap)) {
-      if (titleLower.includes(spanish)) {
-        searchQuery = english;
-        break;
+    const data = await resp.json();
+    const query = data.content?.[0]?.text?.trim() || '';
+    
+    if (query) {
+      // Search Unsplash with the English query
+      const UNSPLASH_KEY = process.env.UNSPLASH_KEY || 'oWykQr_yKA2gqa2VdovxsHeScXLLqLWZymdPjXealCc';
+      const imgResp = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape&client_id=${UNSPLASH_KEY}`);
+      const imgData = await imgResp.json();
+      if (imgData.results?.length > 0) {
+        return imgData.results[0].urls.regular;
       }
     }
-
-    // Fallback: use category
-    if (!searchQuery) {
-      const categoryMap = {
-        'Deportes': 'sports action',
-        'Economía': 'business economy',
-        'Tecnología': 'technology digital',
-        'Política': 'politics government',
-        'Ciencia': 'science research',
-        'Mundo': 'world news',
-        'Nacionales': 'Dominican Republic'
-      };
-      searchQuery = categoryMap[category] || 'news world';
-    }
-
-    const url = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(searchQuery)}&per_page=3&orientation=landscape&client_id=${UNSPLASH_KEY}`;
-    const resp = await fetch(url);
-    const data = await resp.json();
-
-    if (data.results && data.results.length > 0) {
-      // Pick random from top 3 results for variety
-      const idx = Math.floor(Math.random() * Math.min(3, data.results.length));
-      return data.results[idx].urls.regular;
-    }
-    return fallbackImg;
+    return article.urlToImage;
   } catch(e) {
-    return fallbackImg;
+    return article.urlToImage;
   }
 }
 
-// ── REESCRITURA CON CLAUDE ──
+// ── REESCRITURA CON CLAUDE ──// ── REESCRITURA CON CLAUDE ──
 async function rewriteWithClaude(article, apiKey) {
   try {
     const prompt = `Eres periodista estrella de AhoraNews, el medio más leído de República Dominicana. Debes escribir un artículo periodístico COMPLETO basándote en la información disponible.
