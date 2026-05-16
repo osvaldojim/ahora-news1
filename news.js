@@ -40,21 +40,30 @@ export default async function handler(req, res) {
     const raw = (data.articles || [])
       .filter(a => a.title && a.title !== '[Removed]' && a.urlToImage);
 
-    // Pass raw articles - Claude rewrites on demand when user opens article
-    const processed = raw.map((article) => ({
-      title:          article.title,
-      description:    article.description || '',
-      content:        article.content || article.description || '',
-      body:           article.content || article.description || '',
-      url:            article.url,
-      urlToImage:     article.urlToImage,
-      publishedAt:    article.publishedAt,
-      source:         article.source || { name: 'Unknown' },
-      category:       detectCategory(article),
-      isViral:        false,
-      originalSource: article.source?.name || 'Unknown',
-      needsRewrite:   true
-    }));
+    // Rewrite first 3 articles with Claude (hero + top stories)
+    // Rest pass through as-is for speed
+    const processed = await Promise.all(
+      raw.map(async (article, i) => {
+        const rewritten = (ANTHROPIC_API_KEY && i < 3)
+          ? await rewriteWithClaude(article, ANTHROPIC_API_KEY)
+          : null;
+
+        return {
+          title:          rewritten ? rewritten.title : article.title,
+          description:    rewritten ? rewritten.description : (article.description || ''),
+          content:        rewritten ? rewritten.body : (article.content || article.description || ''),
+          body:           rewritten ? rewritten.body : (article.content || article.description || ''),
+          url:            article.url,
+          urlToImage:     article.urlToImage,
+          publishedAt:    article.publishedAt,
+          source:         rewritten ? { name: 'AhoraNews' } : (article.source || { name: 'Unknown' }),
+          category:       detectCategory(article),
+          isViral:        rewritten ? (rewritten.isViral || false) : false,
+          originalSource: article.source?.name || 'Unknown',
+          needsRewrite:   !rewritten
+        };
+      })
+    );
 
     return res.status(200).json({ articles: processed, total: processed.length });
 
