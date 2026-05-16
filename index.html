@@ -780,15 +780,16 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   window._openN = function(idx) {
     var n = NEWS[idx];
     if (!n) return;
-    // Show loading modal first
-    el('modalEl').innerHTML = '<div style="padding:60px;text-align:center;">'
-      + '<div style="font-family:Oswald,sans-serif;font-size:14px;color:#888;margin-bottom:16px;">REDACCION AHORANEWS</div>'
-      + '<div style="font-family:Oswald,sans-serif;font-size:18px;font-weight:700;color:#111;margin-bottom:20px;">Preparando articulo completo...</div>'
-      + '<div style="width:40px;height:40px;border:3px solid #f4f4f4;border-top:3px solid #cc0000;border-radius:50%;animation:spin 1s linear infinite;margin:0 auto;"></div>'
-      + '</div>';
-    el('overlay').classList.add('open');
-    document.body.style.overflow = 'hidden';
-    // Rewrite article with Claude
+    // Open immediately with what we have
+    showModal(n);
+    // If already rewritten, done
+    if (!n.needsRewrite) return;
+    // Otherwise update in background - show subtle loading indicator
+    var loadingDiv = document.createElement('div');
+    loadingDiv.id = 'articleLoading';
+    loadingDiv.style.cssText = 'position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#111;color:#fff;padding:8px 20px;border-radius:20px;font-family:Oswald,sans-serif;font-size:12px;z-index:9999;display:flex;align-items:center;gap:8px;';
+    loadingDiv.innerHTML = '<div style="width:12px;height:12px;border:2px solid #444;border-top:2px solid #cc0000;border-radius:50%;animation:spin 1s linear infinite;"></div> Redaccion AhoraNews escribiendo...';
+    document.body.appendChild(loadingDiv);
     fetch('/api/rewrite', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -796,17 +797,24 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     })
     .then(function(r) { return r.json(); })
     .then(function(data) {
+      var ld = document.getElementById('articleLoading');
+      if (ld) ld.remove();
       if (data.title) {
         NEWS[idx].title = data.title;
         NEWS[idx].description = data.description;
         NEWS[idx].body = data.body;
         NEWS[idx].source = { name: 'AhoraNews' };
         NEWS[idx].needsRewrite = false;
+        // Update modal if still open
+        var overlay = el('overlay');
+        if (overlay && overlay.classList.contains('open')) {
+          showModal(NEWS[idx]);
+        }
       }
-      showModal(NEWS[idx]);
     })
     .catch(function() {
-      showModal(n);
+      var ld = document.getElementById('articleLoading');
+      if (ld) ld.remove();
     });
   };
 
