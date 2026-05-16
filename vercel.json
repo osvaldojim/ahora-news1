@@ -18,6 +18,8 @@
     { "src": "/api/news", "dest": "/api/news.js" },
     { "src": "/api/publish", "dest": "/api/publish.js" },
     { "src": "/api/trading", "dest": "/api/trading.js" },
+    { "src": "/api/virales", "dest": "/api/virales.js" },
+    { "src": "/api/rewrite", "dest": "/api/rewrite.js" },
     { "src": "/robots.txt", "dest": "/robots.txt" },
     { "src": "/sitemap.xml", "dest": "/sitemap.xml" },
     { "src": "/ads.txt", "dest": "/ads.txt" },
