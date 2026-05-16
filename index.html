@@ -545,7 +545,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   var PAGE = 1;
   var PAGE_SIZE = 12;
   var CYCLE = 40;
-  var CACHE_KEY = 'ahora_v12_source';
+  var CACHE_KEY = 'ahora_v13_allsource';
   var CACHE_TTL = 2 * 60 * 60 * 1000; // 2 horas
   var DOLAR_KEY = 'ahora_v3_dolar';
   var DOLAR_TTL = 3600000;
@@ -708,7 +708,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     var imgH = n.img
       ? '<div class="hero-img-wrap" onclick="window._openN(0)"><img loading="lazy" src="' + esc(n.img) + '" alt="' + esc(n.title) + '" onerror="this.parentNode.innerHTML=\'<div class=hero-img-ph>📰</div>\'"></div>'
       : '<div class="hero-img-ph" onclick="window._openN(0)">📰</div>';
-    el('heroMain').innerHTML = imgH + '<div><span class="hero-cat">' + esc(n.cat) + '</span><h1 class="hero-title" onclick="window._openN(0)">' + esc(n.title) + '</h1><p class="hero-excerpt">' + esc((n.excerpt || '')) + '...</p><div class="hero-meta"><span class="src-name">' + (n.isEditor ? '✍️' : '📰') + ' ' + esc(n.source) + '</span><span>' + n.time + '</span><span style="color:#007a3d;font-weight:600;">✅ Tiempo Real</span></div></div>';
+    el('heroMain').innerHTML = imgH + '<div><span class="hero-cat">' + esc(n.cat) + '</span><h1 class="hero-title" onclick="window._openN(0)">' + esc(n.title) + '</h1><p class="hero-excerpt">' + esc((n.excerpt || '')) + '...</p><div class="hero-meta"><span class="src-name">' + (n.isEditor ? '✍️' : '📰') + 'AhoraNews</span><span>' + n.time + '</span><span style="color:#007a3d;font-weight:600;">✅ Tiempo Real</span></div></div>';
 
     var sH = '';
     for (var i = 1; i <= 4 && i < NEWS.length; i++) {
@@ -745,7 +745,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       htm += '<div class="card" onclick="window._openN(' + globalIdx + ')">'
         + '<div class="card-img-wrap">' + iH
         + '<span class="card-cat">' + esc(n.cat) + '</span>'
-        + '<span class="card-src">' + esc(n.source) + '</span></div>'
+        + '<span class="card-src">AhoraNews</span></div>'
         + '<div class="card-body"><div class="card-title">' + esc(n.title) + '</div>'
         + '<p class="card-excerpt">' + esc((n.excerpt || '').slice(0, 120)) + '</p>'
         + '<div class="card-footer"><div class="card-meta"><b>AhoraNews</b> · ' + n.time + '</div>'
@@ -765,7 +765,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     var htm = '';
     for (var i = 0; i < Math.min(5, NEWS.length); i++) {
       var n = NEWS[i];
-      htm += '<div class="trend-item" onclick="window._openN(' + i + ')"><span class="trend-num">0' + (i + 1) + '</span><div><div class="trend-txt">' + esc(n.title.slice(0, 60)) + '...</div><div class="trend-meta">' + esc(n.source) + ' · ' + n.time + '</div></div></div>';
+      htm += '<div class="trend-item" onclick="window._openN(' + i + ')"><span class="trend-num">0' + (i + 1) + '</span><div><div class="trend-txt">' + esc(n.title.slice(0, 60)) + '...</div><div class="trend-meta">' + 'AhoraNews · ' + n.time + '</div></div></div>';
     }
     el('trendList').innerHTML = htm;
   }
@@ -856,7 +856,7 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       + '<span style="font-size:13px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + esc(n.title) + '</span>'
       + '<a href="' + esc(n.url) + '" target="_blank" rel="noopener" style="background:#cc0000;color:#fff;font-size:11px;font-weight:700;padding:6px 12px;text-decoration:none;">ABRIR ↗️</a>'
       + '</div>'
-      + '<div style="background:#f4f4f4;padding:12px 20px;font-size:12px;color:#888;border-bottom:1px solid #e0e0e0;">📰 <strong>' + esc(n.source) + '</strong> · ' + n.time + '</div>'
+      + '<div style="background:#f4f4f4;padding:12px 20px;font-size:12px;color:#888;border-bottom:1px solid #e0e0e0;">📰 <strong>' + 'AhoraNews' + '</strong> · ' + n.time + '</div>'
       + '<iframe src="' + esc(n.url) + '" style="width:100%;height:75vh;border:none;display:block;" loading="lazy" sandbox="allow-scripts allow-same-origin allow-popups allow-forms"></iframe>'
       + '</div>';
     el('overlay').classList.add('open');
