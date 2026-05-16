@@ -569,7 +569,17 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       var raw = localStorage.getItem(CACHE_KEY);
       if (raw) {
         var obj = JSON.parse(raw);
-        if (Date.now() - obj.ts < CACHE_TTL) return obj.a || [];
+        if (Date.now() - obj.ts < CACHE_TTL) {
+          var arr = obj.a || [];
+          // Recalcular tiempo relativo y re-ordenar por fecha al cargar del caché
+          arr.forEach(function(n) { n.time = ago(n.rawTime); });
+          arr.sort(function(a, b) {
+            var da = a.rawTime ? new Date(a.rawTime).getTime() : 0;
+            var db = b.rawTime ? new Date(b.rawTime).getTime() : 0;
+            return db - da;
+          });
+          return arr;
+        }
         localStorage.removeItem(CACHE_KEY);
       }
     } catch(e) {}
@@ -577,16 +587,13 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     return [];
   }
 
-  // FIX #1: mergeNews pone siempre las fresh PRIMERO — las noticias nuevas ganan posición
   function mergeNews(fresh, old) {
     var seenUrl = {};
     var seenImg = {};
-    // Indexar fresh
     fresh.forEach(function(n) {
       seenUrl[n.url] = true;
       if (n.img) seenImg[n.img] = true;
     });
-    // Solo agregar las viejas que no estén duplicadas
     var kept = old.filter(function(n) {
       if (seenUrl[n.url]) return false;
       if (n.img && seenImg[n.img]) return false;
@@ -594,8 +601,14 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       if (n.img) seenImg[n.img] = true;
       return true;
     });
-    // Fresh siempre al inicio, viejas al final
-    return fresh.concat(kept);
+    var combined = fresh.concat(kept);
+    // Ordenar SIEMPRE por fecha de publicación, más reciente primero
+    combined.sort(function(a, b) {
+      var da = a.rawTime ? new Date(a.rawTime).getTime() : 0;
+      var db = b.rawTime ? new Date(b.rawTime).getTime() : 0;
+      return db - da;
+    });
+    return combined;
   }
 
   function mapArticle(a, i, isEditor) {
