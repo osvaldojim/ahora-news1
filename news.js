@@ -244,11 +244,36 @@ function cleanText(text) {
 
 function detectCategory(article) {
   const text = ((article.title || '') + ' ' + (article.description || '')).toLowerCase();
-  if (text.match(/futbol|soccer|nba|nfl|beisbol|baseball|mlb|deporte|atletismo|campeonato|torneo|jugador|partido/)) return 'Deportes';
-  if (text.match(/tech|iphone|android|ia|inteligencia artificial|software|app|google|apple|microsoft/)) return 'Tecnología';
-  if (text.match(/economia|bolsa|mercado|precio|inflacion|banco|dolar|peso|finanza|impuesto/)) return 'Economía';
-  if (text.match(/ciencia|nasa|espacio|planeta|medicina|vacuna|virus|investigacion|descubrimiento|clima/)) return 'Ciencia';
-  if (text.match(/gobierno|presidente|congreso|eleccion|senado|ley|politica|ministro|partido|abinader/)) return 'Política';
-  if (text.match(/nacional|dominicana|dominicano|santo domingo|santiago|haiti|rd |republica/)) return 'Nacionales';
+
+  // ── DEPORTES — primero y con la regex más amplia ──
+  if (text.match(
+    /futbol|football|soccer|nba|nfl|nhl|mlb|mls|pga|lpga|uefa|fifa|conmebol|concacaf|premier.?league|la.?liga|serie.?a|bundesliga|ligue.?1|champions.?league|europa.?league|copa.?del.?mundo|world.?cup|super.?bowl|stanley.?cup|wimbledon|us.?open|roland.?garros|australian.?open|tour.?de.?france|formula.?1|f1|moto.?gp|nascar|beisbol|baseball|baloncesto|basketball|tenis|tennis|golf|natacion|atletismo|olimpico|olimpiada|olympic|deporte|deportes|jugador|jugadora|entrenador|tecnico|gol|golazo|cancha|estadio|liga|torneo|campeonato|copa|medalla|podio|carrera|corredor|ciclismo|boxeo|pelea|knockout|ufc|mma|wrestl|yankee|dodger|laker|celtic|socceroo|striker|pitcher|quarterback|touchdown|homerun|home.?run|slam.?dunk|wicket|cricket|rugby|preakness|kentucky.?derby|belmont|indy.?500|draft|playoff|final|semifinal|cuartos|clasico|derby|fixture|marcador|resultado|victoria|derrota|empate|penalti|penalty|penal|fuera.?de.?juego|offside|var|arbitro|referee|coach|manager.?deportivo|fichaje|transferencia|traspaso|contrato.?deportivo|salario.?deportivo|lesion.?deportivo|mph|km\/h|velocidad.?lanzamiento|recta|curveball|slider|fastball|innings|strikes|batting|pitching|outfield|infield|shortstop|catcher|batter/
+  )) return 'Deportes';
+
+  // ── TECNOLOGÍA ──
+  if (text.match(
+    /tecnolog|tech|iphone|android|smartphone|tablet|laptop|computadora|ordenador|inteligencia.?artificial|machine.?learning|deep.?learning|chatgpt|openai|anthropic|gemini|gpt|llm|robot|robotica|software|hardware|app|aplicacion|startup|silicon.?valley|google|apple|microsoft|amazon|meta|nvidia|amd|intel|samsung|huawei|tesla.?tech|spacex|starlink|satellite|drone|ciberseguridad|hacker|malware|ransomware|criptomoneda|bitcoin|ethereum|blockchain|nft|metaverso|realidad.?virtual|realidad.?aumentada|5g|6g|internet|wifi|cloud|nube.?digital|data.?center|servidor|programacion|codigo|desarrollador|developer|github|linux|windows|macos|ios|android|pixel|galaxy|ipad|macbook/
+  )) return 'Tecnología';
+
+  // ── ECONOMÍA ──
+  if (text.match(
+    /econom|bolsa|mercado|wall.?street|nyse|nasdaq|dow.?jones|s&p|sp500|acciones|stock|precio|inflacion|deflacion|banco|fed|reserva.?federal|banco.?central|bcrd|tasa.?de.?interes|hipoteca|prestamo|credito|deuda|deficit|superavit|pib|gdp|desempleo|empleo|trabajo|salario|sueldo|sindicato|huelga|comercio|exportacion|importacion|tarifa|arancel|sancion|embargo|oil|petroleo|gas|energia|electricidad|factura|impuesto|iva|reforma.?fiscal|presupuesto|deuda.?publica|fmi|fondo.?monetario|banco.?mundial|ocde|g7|g20|recesion|crecimiento.?economico|inflacion|dolar|euro|peso|yen|libra|moneda|tipo.?de.?cambio|remesa|inversion|inversionista|hedge.?fund|private.?equity|ipo|fusion|adquisicion|quiebra|bancarrota/
+  )) return 'Economía';
+
+  // ── CIENCIA ──
+  if (text.match(
+    /ciencia|nasa|esa|spacex|cohete|cohetes|lanzamiento.?espacial|planeta|asteroide|cometa|galaxia|universo|agujero.?negro|big.?bang|telescopio|hubble|james.?webb|marte|luna|mercurio|venus|jupiter|saturno|urano|neptuno|pluton|exoplaneta|astrofisica|cosmologia|fisica|quimica|biologia|genetica|adn|dna|celula|bacteria|virus|pandemia|vacuna|medicina|cirugia|cancer|alzheimer|diabetes|covid|variante|mutacion|farmaco|ensayo.?clinico|investigacion|estudio|descubrimiento|hallazgo|laboratorio|experiment|particula|quantum|cuantico|hidrogeno|nuclear|fusion.?nuclear|cambio.?climatico|calentamiento|temperatura|glaciar|antartica|artico|biodiversidad|extincion|ecosistema|oceano|terremoto|volcan|tsunami|huracan|tifon|tormenta.?tropical|inundacion|sequia|incendio.?forestal/
+  )) return 'Ciencia';
+
+  // ── POLÍTICA ──
+  if (text.match(
+    /politic|gobierno|presidente|presidenta|primer.?ministro|canciller|congreso|senado|diputado|parlamento|asamblea|eleccion|elecciones|votacion|referendum|campaña.?electoral|partido.?politico|democracia|dictadura|golpe.?de.?estado|protesta|manifestacion|marcha|huelga.?general|ley|decreto|reforma|constitucion|tribunal|corte|juicio|fiscal|procurador|embajador|embajada|diplomatico|tratado|acuerdo|cumbre|otan|nato|onu|union.?europea|abinader|leonel|danilo|luis.?abinader|fuerza.?del.?pueblo|pld|prd|prm|gobierno.?dominicano|casa.?nacional|palacio.?nacional|trump|biden|harris|obama|putin|xi.?jinping|macron|merkel|scholz|zelensky|netanyahu|modi|lula|milei|maduro|ortega|bukele|guerra|conflicto|invasion|ataque.?militar|bomba|misil|soldado|ejercito|fuerzas.?armadas|paz|ceasefire|alto.?al.?fuego/
+  )) return 'Política';
+
+  // ── NACIONALES ──
+  if (text.match(
+    /dominicana|dominicano|republica.?dominicana|santo.?domingo|santiago|la.?romana|san.?pedro|puerto.?plata|la.?vega|san.?francisco|bani|azua|barahona|cotui|cotuí|moca|bonao|higuey|higüey|punta.?cana|bavaro|bajos.?de.?haina|haiti|haitiano|frontera.?dominicana|policía.?nacional|policia.?nacional|digesett|dncd|ejercito.?dominicano|armada.?dominicana|fuerza.?aerea|ministerio.*dominic|congreso.?dominicano|senado.?dominicano|camara.?de.?diputados|ayuntamiento|alcalde|jce|tse|me.?rd|salud.?publica|listín|listin.?diario|diario.?libre|el.?caribe|noticias.?sin|acento\.com|elnacional|hoy\.com|ultimahora\.do|almomento|deultimominuto|rd\$|peso.?dominicano|edesur|edenorte|edeeste|edes|corte.?electrica|apagon|caasd|inapa|intrant|amet|mopc|obras.?publicas|indrhi/
+  )) return 'Nacionales';
+
   return 'Mundo';
 }
