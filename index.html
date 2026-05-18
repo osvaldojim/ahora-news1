@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<!-- v4.1 AHORA.news — Bugs corregidos -->
+<!-- v4.2 AHORA.news — Cache 24h + orden por fecha corregido -->
 
 <html lang="es">
 <head>
@@ -326,7 +326,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   <nav>
     <div class="nav-inner">
       <a href="/" id="navInicio" class="on">INICIO</a>
-      <!-- FIX #6: navNacionales ahora filtra 'Nacionales', no 'Política' -->
       <a href="/" id="navNacionales">NACIONALES</a>
       <a href="/" id="navMundo">INTERNACIONALES</a>
       <a href="/" id="navEconomia">ECONOMÍA</a>
@@ -388,7 +387,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   <div class="section-line"></div>
   <div class="section-filters">
     <button class="fcat on" id="fcatTodo">Todo</button>
-    <!-- FIX #6: fcatNacionales filtra 'Nacionales' -->
     <button class="fcat" id="fcatNacionales">Nacionales</button>
     <button class="fcat" id="fcatPolitica">Política</button>
     <button class="fcat" id="fcatEconomia">Economía</button>
@@ -510,9 +508,9 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   var HERO_IDX = 0;
   var HERO_TIMER = null;
 
-  // FIX #2: Caché reducida a 15 minutos para que las noticias frescas lleguen más rápido
+  // FIX: Caché de 24 horas para que las noticias persistan todo el día
   var CACHE_KEY = 'ahora_v99_pexels';
-  var CACHE_TTL = 15 * 60 * 1000;
+  var CACHE_TTL = 24 * 60 * 60 * 1000; // 24 horas
   var DOLAR_KEY = 'ahora_v3_dolar';
   var DOLAR_TTL = 3600000;
 
@@ -560,7 +558,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   function saveCache(arr) {
     memCache.news = arr;
     memCache.ts = Date.now();
-    // FIX #4: formato unificado { ts, a: arr } igual que loadCache espera
     try { localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), a: arr })); } catch(e) {}
   }
 
@@ -571,11 +568,12 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
         var obj = JSON.parse(raw);
         if (Date.now() - obj.ts < CACHE_TTL) {
           var arr = obj.a || [];
-          // Recalcular tiempo relativo y re-ordenar por fecha al cargar del caché
+          // FIX: usar Date.now() para noticias sin fecha, así no se van al fondo
+          var nowLoad = Date.now();
           arr.forEach(function(n) { n.time = ago(n.rawTime); });
           arr.sort(function(a, b) {
-            var da = a.rawTime ? new Date(a.rawTime).getTime() : 0;
-            var db = b.rawTime ? new Date(b.rawTime).getTime() : 0;
+            var da = a.rawTime ? new Date(a.rawTime).getTime() : nowLoad;
+            var db = b.rawTime ? new Date(b.rawTime).getTime() : nowLoad;
             return db - da;
           });
           return arr;
@@ -602,17 +600,17 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
       return true;
     });
     var combined = fresh.concat(kept);
-    // Ordenar SIEMPRE por fecha de publicación, más reciente primero
+    // FIX: noticias sin fecha se tratan como "ahora" para no hundirse al fondo
+    var nowMs = Date.now();
     combined.sort(function(a, b) {
-      var da = a.rawTime ? new Date(a.rawTime).getTime() : 0;
-      var db = b.rawTime ? new Date(b.rawTime).getTime() : 0;
+      var da = a.rawTime ? new Date(a.rawTime).getTime() : nowMs;
+      var db = b.rawTime ? new Date(b.rawTime).getTime() : nowMs;
       return db - da;
     });
     return combined;
   }
 
   function mapArticle(a, i, isEditor) {
-    // FIX #8: likes estables basados en url para que no cambien al recargar
     var stableSeed = 0;
     var str = (a.url || a.title || '') + '';
     for (var c = 0; c < Math.min(str.length, 20); c++) stableSeed += str.charCodeAt(c);
@@ -637,7 +635,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   }
 
   function doLoadNews() {
-    // Solo cargamos sin filtro de categoría para tener todas las noticias siempre
     fetch('/api/news')
       .then(function(r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -654,12 +651,9 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
             var edArr = (ed.articles || []).map(function(a, i) { return mapArticle(a, i, true); });
             var allFresh = edArr.concat(fresh);
             var cached = loadCache();
-            // Fresh SIEMPRE primero, viejas complementan al final
             var merged = mergeNews(allFresh, cached);
             saveCache(merged);
 
-            // FIX #2 y #3: resetear hero al índice 0 cuando llegan noticias nuevas
-            // solo si la primera noticia cambió (hay noticias realmente nuevas)
             var heroChanged = !NEWS.length || (merged.length && NEWS[0] && merged[0].url !== NEWS[0].url);
             NEWS = merged;
             PAGE = 1;
@@ -696,7 +690,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     if (nc) nc.textContent = NEWS.length + ' noticias';
   }
 
-  // FIX #3: el hero rota automáticamente entre las primeras noticias cada 8s
   function startHeroRotation() {
     if (HERO_TIMER) clearInterval(HERO_TIMER);
     HERO_TIMER = setInterval(function() {
@@ -766,7 +759,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     el('newsGrid').innerHTML = htm || '<div style="grid-column:1/-1;text-align:center;padding:40px;color:#888;">No hay noticias en esta categoría.</div>';
   }
 
-  // FIX #5: números de tendencia con padding correcto para cualquier cantidad
   function renderTrends() {
     var htm = '';
     for (var i = 0; i < Math.min(5, NEWS.length); i++) {
@@ -812,8 +804,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     .catch(function() { showModal(n); });
   };
 
-  // FIX #3 y #7: eliminadas rewriteArticle() y showIframe() — eran código muerto
-
   window._like = function(idx, btn) {
     var n = NEWS[idx];
     if (!n) return;
@@ -821,7 +811,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
     n.likes += n.liked ? 1 : -1;
     btn.className = 'like-btn' + (n.liked ? ' liked' : '');
     btn.innerHTML = (n.liked ? '❤️' : '🤍') + ' <span>' + n.likes.toLocaleString() + '</span>';
-    // Persistir like en caché para que no se pierda al recargar
     saveCache(NEWS);
   };
 
@@ -842,7 +831,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
               if (!exists) { NEWS.push(mapArticle(a, i, false)); added++; }
             });
             if (added > 0) {
-              // FIX #4: formato correcto { ts, a: arr } al guardar desde _more()
               saveCache(NEWS);
               renderGrid();
             }
@@ -886,7 +874,6 @@ footer{background:var(--dark);color:rgba(255,255,255,.55);padding:28px 0;}
   el('modalCloseBtn').addEventListener('click', closeModal);
   el('overlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 
-  // FILTROS — setFilter solo cambia estado visual y re-renderiza el grid con NEWS ya cargado
   function setFilter(cat, navId, fcatId) {
     FILTER = cat;
     PAGE = 1;
