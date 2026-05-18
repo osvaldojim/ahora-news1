@@ -16,7 +16,6 @@ async function getPexelsImage(query) {
     const photos = data?.photos || [];
     if (!photos.length) return null;
 
-    // Elegir foto aleatoria de las primeras 5 para variedad
     const photo = photos[Math.floor(Math.random() * photos.length)];
     const img = photo.src?.large || photo.src?.medium || null;
     if (img) pexelsCache[key] = img;
@@ -26,9 +25,7 @@ async function getPexelsImage(query) {
   }
 }
 
-// Extraer keywords relevantes del título para buscar en Pexels
 function extractKeywords(title) {
-  // Palabras vacías en español
   const stopwords = new Set([
     'de','la','el','los','las','en','un','una','que','por','con','del','al','se',
     'es','su','para','como','pero','más','este','esta','estos','estas','son','fue',
@@ -48,13 +45,13 @@ function extractKeywords(title) {
 export default async function handler(req, res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET');
-  // FIX: reducir stale-while-revalidate para que el usuario vea noticias frescas más rápido
-  res.setHeader('Cache-Control', 's-maxage=60, stale-while-revalidate=20');
+  // FIX: s-maxage=86400 = Vercel guarda respuesta 24h en edge cache
+  // stale-while-revalidate=300 = sirve desde cache mientras refresca en background
+  res.setHeader('Cache-Control', 's-maxage=86400, stale-while-revalidate=300');
 
   const { category } = req.query;
 
   const RSS_FEEDS = [
-    // República Dominicana
     'https://www.listindiario.com/rss/portada.xml',
     'https://noticiassin.com/feed/',
     'https://www.diariolibre.com/rss/portada.xml',
@@ -64,7 +61,6 @@ export default async function handler(req, res) {
     'https://www.deultimominuto.com/feed/',
     'https://elnacional.com.do/feed/',
     'https://www.hoy.com.do/feed/',
-    // Internacional en español
     'https://feeds.bbci.co.uk/mundo/rss.xml',
     'https://www.infobae.com/feeds/rss/',
     'https://rss.nytimes.com/services/xml/rss/nyt/es/World.xml',
@@ -105,14 +101,19 @@ export default async function handler(req, res) {
       allArticles = allArticles.filter(a => detectCategory(a) === category);
     }
 
-    // Ordenar por fecha - más recientes primero
-    allArticles.sort((a, b) => new Date(b.publishedAt) - new Date(a.publishedAt));
+    // FIX: Ordenar por fecha — más recientes primero
+    // Artículos sin fecha válida van al final, no al frente
+    const now = Date.now();
+    allArticles.sort((a, b) => {
+      const da = a.publishedAt ? new Date(a.publishedAt).getTime() : 0;
+      const db = b.publishedAt ? new Date(b.publishedAt).getTime() : 0;
+      return db - da;
+    });
 
-    // Tomar top 20 para tener margen luego del filtro de imágenes
+    // Tomar top 20
     const top = allArticles.slice(0, 20);
 
-    // FIX PRINCIPAL: Para artículos sin imagen, buscar en Pexels con keywords del título
-    // Hacerlo en paralelo para no demorar
+    // Asignar imágenes Pexels a los que no tienen
     const withImages = await Promise.all(
       top.map(async (article) => {
         let img = article.urlToImage;
@@ -122,7 +123,6 @@ export default async function handler(req, res) {
           if (keywords) {
             img = await getPexelsImage(keywords);
           }
-          // Si Pexels tampoco encuentra, usar imagen genérica por categoría
           if (!img) {
             img = getCategoryFallback(detectCategory(article));
           }
@@ -132,7 +132,7 @@ export default async function handler(req, res) {
       })
     );
 
-    // Deduplicar imágenes DESPUÉS de asignar Pexels (para no mostrar la misma foto dos veces)
+    // Deduplicar imágenes
     const seenImgs = new Set();
     const processed = withImages
       .filter(a => {
@@ -165,7 +165,6 @@ export default async function handler(req, res) {
   }
 }
 
-// Imagen de fallback por categoría (fotos neutras de Pexels hardcodeadas)
 function getCategoryFallback(category) {
   const fallbacks = {
     'Deportes':    'https://images.pexels.com/photos/46798/the-ball-stadion-football-the-pitch-46798.jpeg?auto=compress&cs=tinysrgb&w=800',
@@ -179,7 +178,6 @@ function getCategoryFallback(category) {
   return fallbacks[category] || fallbacks['Mundo'];
 }
 
-// ── PARSE RSS XML ──
 function parseRSS(xml) {
   const articles = [];
   try {
@@ -192,7 +190,6 @@ function parseRSS(xml) {
       const pubDate = extractTag(item, 'pubDate');
       const source = extractTag(item, 'source') || '';
 
-      // Extraer imagen - múltiples métodos
       let img = '';
       const mediaMatch = item.match(/media:content[^>]*url="([^"]+)"/);
       if (mediaMatch) img = mediaMatch[1];
@@ -205,15 +202,14 @@ function parseRSS(xml) {
         if (ogMatch) img = ogMatch[1];
       }
 
-      // FIX: ya no descartamos artículos sin imagen — Pexels los rescata arriba
       if (title && link) {
         articles.push({
           title:       cleanText(title),
           description: cleanText(description || '').slice(0, 200),
           content:     cleanText(description || ''),
           url:         link,
-          urlToImage:  img || null,   // null si no hay, se resuelve con Pexels
-          publishedAt: pubDate ? new Date(pubDate).toISOString() : new Date().toISOString(),
+          urlToImage:  img || null,
+          publishedAt: pubDate ? new Date(pubDate).toISOString() : null, // FIX: null si no hay fecha real
           source:      source
         });
       }
@@ -245,32 +241,26 @@ function cleanText(text) {
 function detectCategory(article) {
   const text = ((article.title || '') + ' ' + (article.description || '')).toLowerCase();
 
-  // ── DEPORTES — primero y con la regex más amplia ──
   if (text.match(
     /futbol|football|soccer|nba|nfl|nhl|mlb|mls|pga|lpga|uefa|fifa|conmebol|concacaf|premier.?league|la.?liga|serie.?a|bundesliga|ligue.?1|champions.?league|europa.?league|copa.?del.?mundo|world.?cup|super.?bowl|stanley.?cup|wimbledon|us.?open|roland.?garros|australian.?open|tour.?de.?france|formula.?1|f1|moto.?gp|nascar|beisbol|baseball|baloncesto|basketball|tenis|tennis|golf|natacion|atletismo|olimpico|olimpiada|olympic|deporte|deportes|jugador|jugadora|entrenador|tecnico|gol|golazo|cancha|estadio|liga|torneo|campeonato|copa|medalla|podio|carrera|corredor|ciclismo|boxeo|pelea|knockout|ufc|mma|wrestl|yankee|dodger|laker|celtic|socceroo|striker|pitcher|quarterback|touchdown|homerun|home.?run|slam.?dunk|wicket|cricket|rugby|preakness|kentucky.?derby|belmont|indy.?500|draft|playoff|final|semifinal|cuartos|clasico|derby|fixture|marcador|resultado|victoria|derrota|empate|penalti|penalty|penal|fuera.?de.?juego|offside|var|arbitro|referee|coach|manager.?deportivo|fichaje|transferencia|traspaso|contrato.?deportivo|salario.?deportivo|lesion.?deportivo|mph|km\/h|velocidad.?lanzamiento|recta|curveball|slider|fastball|innings|strikes|batting|pitching|outfield|infield|shortstop|catcher|batter/
   )) return 'Deportes';
 
-  // ── TECNOLOGÍA ──
   if (text.match(
     /tecnolog|tech|iphone|android|smartphone|tablet|laptop|computadora|ordenador|inteligencia.?artificial|machine.?learning|deep.?learning|chatgpt|openai|anthropic|gemini|gpt|llm|robot|robotica|software|hardware|app|aplicacion|startup|silicon.?valley|google|apple|microsoft|amazon|meta|nvidia|amd|intel|samsung|huawei|tesla.?tech|spacex|starlink|satellite|drone|ciberseguridad|hacker|malware|ransomware|criptomoneda|bitcoin|ethereum|blockchain|nft|metaverso|realidad.?virtual|realidad.?aumentada|5g|6g|internet|wifi|cloud|nube.?digital|data.?center|servidor|programacion|codigo|desarrollador|developer|github|linux|windows|macos|ios|android|pixel|galaxy|ipad|macbook/
   )) return 'Tecnología';
 
-  // ── ECONOMÍA ──
   if (text.match(
     /econom|bolsa|mercado|wall.?street|nyse|nasdaq|dow.?jones|s&p|sp500|acciones|stock|precio|inflacion|deflacion|banco|fed|reserva.?federal|banco.?central|bcrd|tasa.?de.?interes|hipoteca|prestamo|credito|deuda|deficit|superavit|pib|gdp|desempleo|empleo|trabajo|salario|sueldo|sindicato|huelga|comercio|exportacion|importacion|tarifa|arancel|sancion|embargo|oil|petroleo|gas|energia|electricidad|factura|impuesto|iva|reforma.?fiscal|presupuesto|deuda.?publica|fmi|fondo.?monetario|banco.?mundial|ocde|g7|g20|recesion|crecimiento.?economico|inflacion|dolar|euro|peso|yen|libra|moneda|tipo.?de.?cambio|remesa|inversion|inversionista|hedge.?fund|private.?equity|ipo|fusion|adquisicion|quiebra|bancarrota/
   )) return 'Economía';
 
-  // ── CIENCIA ──
   if (text.match(
     /ciencia|nasa|esa|spacex|cohete|cohetes|lanzamiento.?espacial|planeta|asteroide|cometa|galaxia|universo|agujero.?negro|big.?bang|telescopio|hubble|james.?webb|marte|luna|mercurio|venus|jupiter|saturno|urano|neptuno|pluton|exoplaneta|astrofisica|cosmologia|fisica|quimica|biologia|genetica|adn|dna|celula|bacteria|virus|pandemia|vacuna|medicina|cirugia|cancer|alzheimer|diabetes|covid|variante|mutacion|farmaco|ensayo.?clinico|investigacion|estudio|descubrimiento|hallazgo|laboratorio|experiment|particula|quantum|cuantico|hidrogeno|nuclear|fusion.?nuclear|cambio.?climatico|calentamiento|temperatura|glaciar|antartica|artico|biodiversidad|extincion|ecosistema|oceano|terremoto|volcan|tsunami|huracan|tifon|tormenta.?tropical|inundacion|sequia|incendio.?forestal/
   )) return 'Ciencia';
 
-  // ── POLÍTICA ──
   if (text.match(
     /politic|gobierno|presidente|presidenta|primer.?ministro|canciller|congreso|senado|diputado|parlamento|asamblea|eleccion|elecciones|votacion|referendum|campaña.?electoral|partido.?politico|democracia|dictadura|golpe.?de.?estado|protesta|manifestacion|marcha|huelga.?general|ley|decreto|reforma|constitucion|tribunal|corte|juicio|fiscal|procurador|embajador|embajada|diplomatico|tratado|acuerdo|cumbre|otan|nato|onu|union.?europea|abinader|leonel|danilo|luis.?abinader|fuerza.?del.?pueblo|pld|prd|prm|gobierno.?dominicano|casa.?nacional|palacio.?nacional|trump|biden|harris|obama|putin|xi.?jinping|macron|merkel|scholz|zelensky|netanyahu|modi|lula|milei|maduro|ortega|bukele|guerra|conflicto|invasion|ataque.?militar|bomba|misil|soldado|ejercito|fuerzas.?armadas|paz|ceasefire|alto.?al.?fuego/
   )) return 'Política';
 
-  // ── NACIONALES ──
   if (text.match(
     /dominicana|dominicano|republica.?dominicana|santo.?domingo|santiago|la.?romana|san.?pedro|puerto.?plata|la.?vega|san.?francisco|bani|azua|barahona|cotui|cotuí|moca|bonao|higuey|higüey|punta.?cana|bavaro|bajos.?de.?haina|haiti|haitiano|frontera.?dominicana|policía.?nacional|policia.?nacional|digesett|dncd|ejercito.?dominicano|armada.?dominicana|fuerza.?aerea|ministerio.*dominic|congreso.?dominicano|senado.?dominicano|camara.?de.?diputados|ayuntamiento|alcalde|jce|tse|me.?rd|salud.?publica|listín|listin.?diario|diario.?libre|el.?caribe|noticias.?sin|acento\.com|elnacional|hoy\.com|ultimahora\.do|almomento|deultimominuto|rd\$|peso.?dominicano|edesur|edenorte|edeeste|edes|corte.?electrica|apagon|caasd|inapa|intrant|amet|mopc|obras.?publicas|indrhi/
   )) return 'Nacionales';
